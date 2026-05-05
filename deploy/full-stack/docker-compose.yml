@@ -1,0 +1,58 @@
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: deploy/full-stack/Dockerfile.backend
+    image: darlink/api:latest
+    container_name: darlink-api
+    restart: always
+    expose:
+      - "8000"
+    env_file:
+      - .env.production
+    volumes:
+      # data 卷在 api 和 dashboard 之间共享，两个容器看同一个 sqlite
+      - darlink-data:/app/data
+      - darlink-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  dashboard:
+    build:
+      context: ../..
+      dockerfile: deploy/full-stack/Dockerfile.dashboard
+    image: darlink/dashboard:latest
+    container_name: darlink-dashboard
+    restart: always
+    expose:
+      - "8501"
+    volumes:
+      - darlink-data:/app/data:ro       # 看板只读
+      - darlink-reports:/app/scripts/reports
+      - darlink-exports:/app/scripts/exports
+    depends_on:
+      api:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: darlink-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+      - dashboard
+
+volumes:
+  darlink-data:
+    driver: local
+  darlink-reports:
+    driver: local
+  darlink-exports:
+    driver: local

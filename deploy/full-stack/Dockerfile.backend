@@ -1,0 +1,31 @@
+# Darlink API + frontend 容器（FastAPI 已经直接 mount frontend 静态目录）
+FROM python:3.11-slim AS base
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+# 系统依赖（sentence-transformers 用 torch，需要 build-essential 给 numpy/torch 编译时用）
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# 先拷依赖文件以利用 Docker 层缓存
+COPY backend/requirements.txt /tmp/backend-requirements.txt
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install -r /tmp/backend-requirements.txt
+
+# 拷代码
+COPY backend/ /app/backend/
+COPY frontend/ /app/frontend/
+COPY persona_registry.py /app/
+
+WORKDIR /app/backend
+
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
