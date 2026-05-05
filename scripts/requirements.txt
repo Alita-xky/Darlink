@@ -1,0 +1,11 @@
+# P0 — 仅用 Python 3.11+ 标准库（sqlite3 / argparse / json / pathlib）
+# 不需要 pip install 任何东西即可运行 P0 全部脚本
+
+# P1 — 备份/增量/质量分析增强
+# 备份 + 增量导出仍只用 stdlib；下面两项是质量分析图表用
+pandas>=2.0
+matplotlib>=3.7
+
+# P2 — Streamlit 交互看板（dashboard.py）
+streamlit>=1.30
+plotly>=5.18,<7.0    # 全部图表都用 plotly，必装

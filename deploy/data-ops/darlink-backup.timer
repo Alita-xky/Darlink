@@ -1,0 +1,11 @@
+[Unit]
+Description=Darlink — schedule daily backup at 03:00
+Requires=darlink-backup.service
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+# Persistent=true：服务器关机错过的备份在开机后立即补跑
+
+[Install]
+WantedBy=timers.target
