@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# Data engineer 产物（运行时生成）
+data/
+backups/
+scripts/exports/
+scripts/reports/
+scripts/logs/
+scripts/.export_state.json
+
+# 后端导出
+backend/exports/
+
+# 本地配置
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store

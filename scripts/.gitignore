@@ -1,0 +1,7 @@
+# 数据产物不入库
+exports/
+reports/
+logs/
+.export_state.json
+__pycache__/
+*.pyc
