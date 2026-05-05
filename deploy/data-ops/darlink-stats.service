@@ -1,0 +1,18 @@
+[Unit]
+Description=Darlink — daily stats report
+After=network.target
+ConditionPathExists=/opt/darlink/data/darlink.sqlite
+
+[Service]
+Type=oneshot
+User=darlink
+Group=darlink
+WorkingDirectory=/opt/darlink
+ExecStart=/opt/darlink/.venv/bin/python /opt/darlink/scripts/generate_stats_report.py --md
+ExecStartPost=/opt/darlink/.venv/bin/python /opt/darlink/scripts/analyze_conversation_quality.py --charts
+StandardOutput=append:/opt/darlink/scripts/logs/stats.log
+StandardError=append:/opt/darlink/scripts/logs/stats.err
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target

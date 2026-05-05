@@ -1,0 +1,19 @@
+[Unit]
+Description=Darlink — daily SQLite backup
+After=network.target
+# 用 simple service + Type=oneshot：跑完就退出，由 timer 触发
+ConditionPathExists=/opt/darlink/data/darlink.sqlite
+
+[Service]
+Type=oneshot
+User=darlink
+Group=darlink
+WorkingDirectory=/opt/darlink
+# 运行用户必须能 cd 到这里 + 读 data/ + 写 backups/
+ExecStart=/opt/darlink/.venv/bin/python /opt/darlink/scripts/backup_db.py --keep 14
+StandardOutput=append:/opt/darlink/scripts/logs/backup.log
+StandardError=append:/opt/darlink/scripts/logs/backup.err
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target
