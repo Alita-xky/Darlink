@@ -39,12 +39,13 @@ async def index():
     return HTMLResponse("<h1>Darlink</h1><p>Front-end not found</p>")
 
 
-from routes import auth, persona, chat, profile
+from routes import auth, persona, chat, profile, distill
 
 app.include_router(auth.router)
 app.include_router(persona.router)
 app.include_router(chat.router)
 app.include_router(profile.router)
+app.include_router(distill.router)
 
 
 @app.get('/health')

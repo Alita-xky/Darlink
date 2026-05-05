@@ -63,7 +63,7 @@ def create_session(user_token: str, persona_id: int):
     return create_session_with_skill(user_token, persona_id, None)
 
 
-def create_session_with_skill(user_token: str, persona_id: int, skill_name: str | None = None):
+def create_session_with_skill(user_token: str, persona_id: int, skill_name=None):
     db = SessionLocal()
     try:
         user = db.query(User).filter_by(user_token=user_token).first()
