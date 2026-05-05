@@ -138,6 +138,32 @@ sqlite3 data/darlink.sqlite < scripts/sql_templates/02_top_active_users.sql
 | `06_daily_activity.sql` | 近 14 天每日活跃 |
 | `07_low_quality_sessions.sql` | 低质量会话定位 |
 
+### dashboard.py — 交互式看板（P2，浅色温暖主题）
+
+启动：
+```bash
+pip install -r scripts/requirements.txt   # 含 streamlit + plotly + pandas
+streamlit run scripts/dashboard.py
+```
+
+四个 Tab，共享侧边栏全局过滤器（日期范围 / Persona 多选 / 用户多选）：
+
+| Tab | 内容 |
+|---|---|
+| 📊 总览 | 4 KPI 卡片 + 双轴折线（消息+会话）+ Top 5 用户/Persona 横向柱状 |
+| 🎭 Persona | 气泡图（活跃度×对话深度）+ 排行 + 用户×Persona 热力图 + 数据表（CSV 下载） |
+| 🔍 质量分析 | 3 KPI + 长度直方图（user/bot/全部）+ 散点图（轮次×长度，红=低质量）+ 低质量会话列表 |
+| 💬 会话明细 | 选 session → 类聊天 UI（左 bot / 右 user 气泡）+ 元信息卡 + JSON 下载按钮 |
+
+主题：浅色·温暖（米色底 `#FAF7F2` + 暑红主色 `#EF4444`），配置在 `.streamlit/config.toml`。
+
+**模块拆分**：
+- `dashboard.py` — 渲染入口、Tab 编排
+- `data_layer.py` — 所有 SQL（参数化、`Filters` 数据类、`@st.cache_data` 60s）
+- `_dashboard_styles.py` — CSS、配色 (`WARM_PALETTE` / `PLOTLY_COLORWAY`)、卡片渲染函数
+
+修改任何一块互不干扰。
+
 ---
 
 ## 依赖与环境

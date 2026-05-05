@@ -6,6 +6,6 @@
 pandas>=2.0
 matplotlib>=3.7
 
-# P2 — Streamlit 看板
+# P2 — Streamlit 交互看板（dashboard.py）
 streamlit>=1.30
-plotly>=5.18
+plotly>=5.18,<7.0    # 全部图表都用 plotly，必装
