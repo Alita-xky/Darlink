@@ -8,7 +8,7 @@ font = "sans serif"
 
 [server]
 headless = true
-runOnSave = false
+runOnSave = true
 fileWatcherType = "auto"
 
 [browser]

@@ -164,12 +164,12 @@ def tab_overview(filters: dl.Filters) -> None:
             mode="lines+markers", line=dict(color=WARM_PALETTE["accent"], width=2, dash="dot"),
             marker=dict(size=6), yaxis="y2",
         ))
-        fig.update_layout(
-            **plotly_layout("📈 每日活跃趋势", height=380),
-            yaxis=dict(title="消息数", gridcolor=WARM_PALETTE["muted"]),
-            yaxis2=dict(title="会话数", overlaying="y", side="right", showgrid=False),
-            hovermode="x unified",
-        )
+        # 双轴 chart：拿到 layout 后再覆盖 yaxis，避免 update_layout 重复 kwarg 报错
+        layout = plotly_layout("📈 每日活跃趋势", height=380)
+        layout["yaxis"] = dict(title="消息数", gridcolor=WARM_PALETTE["muted"])
+        layout["yaxis2"] = dict(title="会话数", overlaying="y", side="right", showgrid=False)
+        layout["hovermode"] = "x unified"
+        fig.update_layout(**layout)
         st.plotly_chart(fig, use_container_width=True)
     else:
         empty_state("此范围无活跃数据", emoji="📭")
