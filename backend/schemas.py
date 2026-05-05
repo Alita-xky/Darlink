@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 
@@ -12,13 +13,13 @@ class ConfirmEmailReq(BaseModel):
 class StartChatReq(BaseModel):
     user_token: str
     persona_id: int
-    skill_name: str | None = None
+    skill_name: Optional[str] = None
 
 
 class ChatMessageReq(BaseModel):
     session_id: str
     text: str
-    skill_name: str | None = None
+    skill_name: Optional[str] = None
 
 
 class PersonaOut(BaseModel):

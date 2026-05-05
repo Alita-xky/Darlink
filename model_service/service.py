@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pathlib import Path
 import sys
 import os
+from typing import Optional, Dict
 from pydantic import BaseModel
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
@@ -17,6 +18,42 @@ if Path(BASE_DIR / '.env').exists():
 from persona_registry import PERSONA_BY_ID
 
 app = FastAPI()
+
+# ---- SKILL.md 加载 ----
+PERSONA_ID_TO_DIR = {
+    1: "munger", 2: "musk", 3: "feynman", 4: "jobs", 5: "buffett",
+    6: "naval", 7: "pg", 8: "bezos", 9: "dalio", 10: "jensen",
+    11: "drucker", 12: "gates", 13: "andreessen",
+}
+
+MAX_SKILL_CHARS = 12000  # 留足对话空间，截断过长的 SKILL.md
+
+SKILL_CACHE: Dict[int, str] = {}  # persona_id -> skill content
+
+
+def _load_skills():
+    """启动时加载所有 SKILL.md 到内存"""
+    skills_base = BASE_DIR / ".claude" / "skills"
+    for pid, dirname in PERSONA_ID_TO_DIR.items():
+        skill_path = skills_base / f"{dirname}-perspective" / "SKILL.md"
+        if skill_path.exists():
+            content = skill_path.read_text(encoding="utf-8")
+            # 去掉 YAML frontmatter
+            if content.startswith("---"):
+                end = content.find("---", 3)
+                if end != -1:
+                    content = content[end + 3:].strip()
+            # 截断过长内容
+            if len(content) > MAX_SKILL_CHARS:
+                content = content[:MAX_SKILL_CHARS] + "\n\n[...内容已截断...]"
+            SKILL_CACHE[pid] = content
+            print(f"  ✓ Loaded SKILL for {dirname} ({len(content)} chars)")
+        else:
+            print(f"  ⚠ SKILL.md not found: {skill_path}")
+    print(f"✓ SKILL.md loaded: {len(SKILL_CACHE)}/{len(PERSONA_ID_TO_DIR)} personas")
+
+
+_load_skills()
 
 # 从环境变量读取 OpenAI 配置
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '').strip()
@@ -40,12 +77,19 @@ else:
 
 class Req(BaseModel):
     text: str
-    persona_id: int | None = None
-    context: str | None = None
+    persona_id: Optional[int] = None
+    context: Optional[str] = None
 
 
 def build_system_prompt(persona: dict) -> str:
-    """根据人物信息构建系统提示词"""
+    """根据人物信息构建系统提示词，优先使用 SKILL.md"""
+    pid = persona["id"]
+    skill_content = SKILL_CACHE.get(pid)
+
+    if skill_content:
+        return skill_content
+
+    # 降级：没有 SKILL.md 时用简短 prompt
     return f"""你是{persona['name']}。你的说话风格和思维方式如下：
 {persona['voice']}
 
