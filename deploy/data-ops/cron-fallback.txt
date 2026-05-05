@@ -1,0 +1,15 @@
+# 无 systemd 环境（容器内、老 Linux）的 cron 备选方案
+# 编辑 darlink 用户的 crontab：
+#   sudo -u darlink crontab -e
+# 粘贴下面三行，注意 PATH 和绝对路径
+
+# 每天 03:00 备份
+0 3 * * *  cd /opt/darlink && /opt/darlink/.venv/bin/python scripts/backup_db.py --keep 14 >> /opt/darlink/scripts/logs/backup.log 2>&1
+
+# 每天 06:00 统计 + 质量分析
+0 6 * * *  cd /opt/darlink && /opt/darlink/.venv/bin/python scripts/generate_stats_report.py --md >> /opt/darlink/scripts/logs/stats.log 2>&1
+5 6 * * *  cd /opt/darlink && /opt/darlink/.venv/bin/python scripts/analyze_conversation_quality.py --charts >> /opt/darlink/scripts/logs/stats.log 2>&1
+
+# Streamlit 看板：cron 不适合托管常驻服务，请用 nohup + tmux 或 supervisor：
+#   nohup /opt/darlink/.venv/bin/streamlit run scripts/dashboard.py --server.port 8501 \
+#         > /opt/darlink/scripts/logs/dashboard.log 2>&1 &

@@ -1,0 +1,10 @@
+[Unit]
+Description=Darlink — schedule daily stats at 06:00
+Requires=darlink-stats.service
+
+[Timer]
+OnCalendar=*-*-* 06:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
