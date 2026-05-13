@@ -28,6 +28,7 @@ uvicorn app:app --reload --host 127.0.0.1 --port 8000
 ```powershell
 cd frontend
 npm install
+npm run dev
 ```
 
 ## 终端D：Convex（前端数据存储与函数，云端）
