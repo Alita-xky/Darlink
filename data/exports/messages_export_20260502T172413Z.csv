@@ -1,0 +1,5 @@
+id,session_id,user_id,role,text,meta,created_at
+1,8cbc3c90-3a7d-4c9c-a682-b1b4a6b563e2,1,user,"Hello, how are you?",null,2026-05-02 17:20:36.546500
+2,8cbc3c90-3a7d-4c9c-a682-b1b4a6b563e2,,bot,模型服务不可用,null,2026-05-02 17:20:36.644052
+3,408b0ba2-6107-4574-a13b-5a4249ca3b20,2,user,你好,null,2026-05-02 17:22:24.109782
+4,408b0ba2-6107-4574-a13b-5a4249ca3b20,,bot,模型服务不可用,null,2026-05-02 17:22:24.271474

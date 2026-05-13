@@ -6,6 +6,8 @@ import * as Haptics from 'expo-haptics';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { api } from '../../convex/_generated/api';
+import { getOrCreateSessionId } from '@/src/lib/backend-api';
+import { Alert } from 'react-native';
 import { useAuth } from '@/src/lib/auth-context';
 import { SharedBackground, type BackgroundAnswer } from './_shared';
 import { StickerChip, HandwrittenTitle } from '@/src/components/sticker';
@@ -133,7 +135,9 @@ export default function RomanceScreen() {
         matching,
         raw: { background, needs, matching },
       });
-      router.replace('/(tabs)');
+      Alert.alert('提示', '聊天超过5句才能生成数字人');
+      // 跳转到 persona 列表，用户可以从 13 个数字人中选择想要聊天的对象
+      router.replace('/match' as any);
       distill({ userId: auth.userId, mode: 'romance' }).catch((e) =>
         console.error('distill:', e)
       );

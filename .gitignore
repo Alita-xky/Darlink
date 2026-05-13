@@ -11,3 +11,8 @@ __pycache__/
 .vscode/
 *.swp
 
+# Local environment files
+.env
+.env.local
+.env.*
+

@@ -1,7 +1,7 @@
 import { useQuery } from 'convex/react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,6 +10,7 @@ import { useAuth } from '@/src/lib/auth-context';
 import { Colors, Radii, Shadows, Spacing } from '@/constants/theme';
 import { PressableScale } from '@/src/components/PressableScale';
 import * as Haptics from 'expo-haptics';
+import { listPersonas, type BackendPersona } from '@/src/lib/backend-api';
 
 type Scene = 'study' | 'food' | 'romance';
 
@@ -25,8 +26,38 @@ export default function MatchScreen() {
   const userId = auth.status === 'authenticated' ? auth.userId : undefined;
   const [scene, setScene] = useState<Scene>('study');
 
+  const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+  const backendEnabled = Boolean(backendUrl);
+  const [personas, setPersonas] = useState<BackendPersona[] | null>(null);
+  const [personasError, setPersonasError] = useState<string>('');
+
   const matches = useQuery(api.matches.listForUser, userId ? { userId, scene } : 'skip');
   const currentScene = SCENES.find(s => s.key === scene)!;
+
+  const shouldShowBackendPersonas = useMemo(() => {
+    if (!backendEnabled) return false;
+    if (matches === undefined) return false;
+    return (matches?.length ?? 0) === 0;
+  }, [backendEnabled, matches]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function run() {
+      if (!shouldShowBackendPersonas) return;
+      if (personas !== null) return;
+      try {
+        const ps = await listPersonas();
+        if (!cancelled) setPersonas(ps);
+      } catch (e: unknown) {
+        if (!cancelled) setPersonasError(e instanceof Error ? e.message : '后端 persona 拉取失败');
+        if (!cancelled) setPersonas([]);
+      }
+    }
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, [personas, shouldShowBackendPersonas]);
 
   if (!userId) return null;
 
@@ -72,6 +103,50 @@ export default function MatchScreen() {
             <Text style={styles.emptyEmoji}>🔍</Text>
             <Text style={styles.emptyTitle}>暂无匹配结果</Text>
             <Text style={styles.emptyDesc}>完善画像后，AI 会帮你找到合适的同学</Text>
+          </View>
+        )}
+
+        {shouldShowBackendPersonas && (
+          <View style={{ gap: Spacing.md }}>
+            <View style={{ gap: 6, marginTop: Spacing.md }}>
+              <Text style={styles.emptyTitle}>也可以先和 13 个数字人聊聊</Text>
+              <Text style={styles.emptyDesc}>
+                由本地 FastAPI 后端提供（需要启动 backend + model_service）
+              </Text>
+              {personasError ? <Text style={[styles.emptyDesc, { color: Colors.danger }]}>{personasError}</Text> : null}
+            </View>
+
+            {(personas ?? []).map((p) => (
+              <PressableScale
+                key={p.id}
+                style={styles.card}
+                onPress={() => {
+                  Haptics.selectionAsync();
+                  router.push(`/digitalhuman/${p.id}?source=backend` as never);
+                }}
+                haptic="light"
+                scaleDown={0.97}
+              >
+                <View style={styles.cardTop}>
+                  <View style={[styles.avatar, { backgroundColor: currentScene.bg }]}>
+                    <Text style={[styles.avatarText, { color: currentScene.color }]}>
+                      {p.name?.[0] ?? '?'}
+                    </Text>
+                  </View>
+                  <View style={styles.cardInfo}>
+                    <Text style={styles.cardName}>{p.name}</Text>
+                    <Text style={styles.cardSchool}>{p.desc}</Text>
+                  </View>
+                  <View style={[styles.scoreChip, { backgroundColor: currentScene.bg, borderColor: currentScene.border }]}>
+                    <Text style={[styles.scoreNum, { color: currentScene.color }]}>{p.id}</Text>
+                    <Text style={[styles.scoreSuffix, { color: currentScene.color }]}>号</Text>
+                  </View>
+                </View>
+                <View style={styles.cardFooter}>
+                  <Text style={styles.statusText}>去聊天 →</Text>
+                </View>
+              </PressableScale>
+            ))}
           </View>
         )}
 

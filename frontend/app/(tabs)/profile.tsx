@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Platform,
   ScrollView,
   StyleSheet,
   Switch,
@@ -19,6 +20,7 @@ import { api } from '../../convex/_generated/api';
 import { useAuth } from '@/src/lib/auth-context';
 import { Colors, Radii, Shadows, Spacing } from '@/constants/theme';
 import { PressableScale } from '@/src/components/PressableScale';
+import UserDistillCard from '@/src/components/UserDistillCard';
 
 // ─── Static InfoRow (read-only) ───────────────────────────────────────────────
 
@@ -49,6 +51,7 @@ function EditableRow({
   if (!editable) {
     return <InfoRow label={label} value={value || undefined} />;
   }
+
   return (
     <View style={styles.editableRow}>
       <Text style={styles.infoLabel}>{label}</Text>
@@ -71,12 +74,14 @@ const energyMap: Record<string, string> = {
   ambivert: '随机应变',
   extrovert: '主动型',
 };
+
 const styleMap: Record<string, string> = {
   concise: '简洁直接',
   warm: '温和有回应',
   playful: '轻松幽默',
   thoughtful: '深思熟虑',
 };
+
 const paceMap: Record<string, string> = {
   slow: '慢慢来',
   medium: '正常节奏',
@@ -114,9 +119,16 @@ export default function ProfileScreen() {
 
   async function handleSave() {
     if (!userId) return;
+
     setSaving(true);
+
     try {
-      await updateBasic({ userId, major: major.trim() || undefined, grade: grade.trim() || undefined });
+      await updateBasic({
+        userId,
+        major: major.trim() || undefined,
+        grade: grade.trim() || undefined,
+      });
+
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       setEditMode(false);
     } catch (e) {
@@ -126,17 +138,35 @@ export default function ProfileScreen() {
     }
   }
 
+  async function doSignOut() {
+    await signOut();
+    router.replace('/auth/step-1-email');
+  }
+
   function handleSignOut() {
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm('确定要退出登录吗？');
+      if (confirmed) {
+        void doSignOut();
+      }
+      return;
+    }
+
     Alert.alert('退出登录', '确定要退出吗？', [
       { text: '取消', style: 'cancel' },
-      { text: '退出', style: 'destructive', onPress: () => signOut() },
+      {
+        text: '退出',
+        style: 'destructive',
+        onPress: () => {
+          void doSignOut();
+        },
+      },
     ]);
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-
         {/* Avatar Header */}
         <View style={styles.avatarSection}>
           <LinearGradient
@@ -145,13 +175,31 @@ export default function ProfileScreen() {
           >
             <Text style={styles.avatarText}>{user?.nickname?.[0] ?? '?'}</Text>
           </LinearGradient>
+
           <Text style={styles.nameText}>{user?.nickname}</Text>
           <Text style={styles.schoolText}>{user?.school}</Text>
-          <View style={[
-            styles.badge,
-            { backgroundColor: user?.verifiedStatus === 'verified' ? Colors.successBg : Colors.warningBg },
-          ]}>
-            <Text style={{ fontSize: 12, color: user?.verifiedStatus === 'verified' ? Colors.success : Colors.warning, fontWeight: '700' }}>
+
+          <View
+            style={[
+              styles.badge,
+              {
+                backgroundColor:
+                  user?.verifiedStatus === 'verified'
+                    ? Colors.successBg
+                    : Colors.warningBg,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                color:
+                  user?.verifiedStatus === 'verified'
+                    ? Colors.success
+                    : Colors.warning,
+                fontWeight: '700',
+              }}
+            >
               {user?.verifiedStatus === 'verified' ? '✓ 学生认证' : '⏳ 待认证'}
             </Text>
           </View>
@@ -162,10 +210,16 @@ export default function ProfileScreen() {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>我的画像</Text>
-              <PressableScale onPress={() => router.push('/(tabs)')} style={styles.editBtn} haptic="light">
+
+              <PressableScale
+                onPress={() => router.push('/(tabs)')}
+                style={styles.editBtn}
+                haptic="light"
+              >
                 <Text style={styles.editBtnText}>重新填写</Text>
               </PressableScale>
             </View>
+
             <InfoRow label="社交能量" value={energyMap[profile.socialEnergy]} />
             <InfoRow label="聊天风格" value={styleMap[profile.communicationStyle]} />
             <InfoRow label="关系节奏" value={paceMap[profile.relationshipPace]} />
@@ -173,26 +227,46 @@ export default function ProfileScreen() {
             <InfoRow label="目标" value={profile.socialGoal.join(' · ')} />
           </View>
         ) : (
-          <PressableScale onPress={() => router.push('/(tabs)')} style={styles.ctaCard} haptic="medium">
+          <PressableScale
+            onPress={() => router.push('/(tabs)')}
+            style={styles.ctaCard}
+            haptic="medium"
+          >
             <Text style={styles.ctaEmoji}>📝</Text>
             <Text style={styles.ctaText}>填写画像问卷，开始匹配</Text>
           </PressableScale>
         )}
 
+        {/* LLM 蒸馏用户画像 */}
+        <UserDistillCard email={user?.email} />
+
         {/* Account info card */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>账户信息</Text>
+
             {!editMode ? (
               <PressableScale onPress={enterEditMode} style={styles.editBtn} haptic="light">
                 <Text style={styles.editBtnText}>✏️ 编辑</Text>
               </PressableScale>
             ) : (
               <View style={styles.editActions}>
-                <PressableScale onPress={cancelEdit} style={styles.cancelBtn} haptic="light" disabled={saving}>
+                <PressableScale
+                  onPress={cancelEdit}
+                  style={styles.cancelBtn}
+                  haptic="light"
+                  disabled={saving}
+                >
                   <Text style={styles.cancelBtnText}>取消</Text>
                 </PressableScale>
-                <PressableScale onPress={handleSave} style={styles.saveBtn} haptic="medium" disabled={saving} scaleDown={0.97}>
+
+                <PressableScale
+                  onPress={handleSave}
+                  style={styles.saveBtn}
+                  haptic="medium"
+                  disabled={saving}
+                  scaleDown={0.97}
+                >
                   {saving ? (
                     <ActivityIndicator size="small" color="#fff" />
                   ) : (
@@ -209,7 +283,7 @@ export default function ProfileScreen() {
           {/* Major — editable */}
           <EditableRow
             label="专业"
-            value={editMode ? major : (user?.major ?? '')}
+            value={editMode ? major : user?.major ?? ''}
             onChange={setMajor}
             placeholder="请输入专业"
             editable={editMode}
@@ -218,7 +292,7 @@ export default function ProfileScreen() {
           {/* Grade — editable */}
           <EditableRow
             label="年级"
-            value={editMode ? grade : (user?.grade ?? '')}
+            value={editMode ? grade : user?.grade ?? ''}
             onChange={setGrade}
             placeholder="例如：大三"
             editable={editMode}
@@ -230,6 +304,7 @@ export default function ProfileScreen() {
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>AI 分身设置</Text>
           </View>
+
           <View style={styles.toggleRow}>
             <View style={{ flex: 1 }}>
               <Text style={styles.toggleLabel}>暂停 AI 分身</Text>
@@ -237,12 +312,18 @@ export default function ProfileScreen() {
                 开启后，其他用户无法和你的 AI 分身预聊天（你仍可正常匹配 + 真人聊天）
               </Text>
             </View>
+
             <Switch
               value={user?.aiTwinDisabled === true}
               onValueChange={async (v) => {
                 if (auth.status !== 'authenticated') return;
+
                 Haptics.selectionAsync();
-                await updateBasic({ userId: auth.userId, aiTwinDisabled: v });
+
+                await updateBasic({
+                  userId: auth.userId,
+                  aiTwinDisabled: v,
+                });
               }}
               trackColor={{ true: '#FF6B9E' }}
             />
@@ -261,14 +342,49 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.bg },
-  content: { padding: Spacing.lg, gap: Spacing.lg, paddingBottom: Spacing.xxl },
 
-  avatarSection: { alignItems: 'center', gap: 8, paddingVertical: Spacing.lg },
-  avatarCircle: { width: 80, height: 80, borderRadius: 40, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontSize: 32, fontWeight: '800', color: '#fff' },
-  nameText: { fontSize: 24, fontWeight: '800', color: Colors.text },
-  schoolText: { fontSize: 14, color: Colors.textSecondary },
-  badge: { borderRadius: Radii.full, paddingHorizontal: 12, paddingVertical: 5 },
+  content: {
+    padding: Spacing.lg,
+    gap: Spacing.lg,
+    paddingBottom: Spacing.xxl,
+  },
+
+  avatarSection: {
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: Spacing.lg,
+  },
+
+  avatarCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  avatarText: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#fff',
+  },
+
+  nameText: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: Colors.text,
+  },
+
+  schoolText: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+  },
+
+  badge: {
+    borderRadius: Radii.full,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
 
   card: {
     backgroundColor: Colors.bgWhite,
@@ -279,21 +395,39 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     ...Shadows.sm,
   },
+
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: Spacing.sm,
   },
-  cardTitle: { fontSize: 16, fontWeight: '800', color: Colors.text },
+
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: Colors.text,
+  },
+
   toggleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: Spacing.sm,
     gap: Spacing.md,
   },
-  toggleLabel: { fontSize: 14, fontWeight: '700', color: Colors.text, marginBottom: 2 },
-  toggleHint: { fontSize: 12, color: Colors.textSecondary, lineHeight: 16 },
+
+  toggleLabel: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: Colors.text,
+    marginBottom: 2,
+  },
+
+  toggleHint: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    lineHeight: 16,
+  },
 
   editBtn: {
     borderWidth: 1.5,
@@ -302,9 +436,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
-  editBtnText: { fontSize: 13, color: Colors.textSecondary, fontWeight: '600' },
 
-  editActions: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  editBtnText: {
+    fontSize: 13,
+    color: Colors.textSecondary,
+    fontWeight: '600',
+  },
+
+  editActions: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+
   cancelBtn: {
     borderWidth: 1.5,
     borderColor: Colors.border,
@@ -312,7 +456,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
-  cancelBtnText: { fontSize: 13, color: Colors.textSecondary, fontWeight: '600' },
+
+  cancelBtnText: {
+    fontSize: 13,
+    color: Colors.textSecondary,
+    fontWeight: '600',
+  },
+
   saveBtn: {
     backgroundColor: Colors.pinkDeep,
     borderRadius: Radii.full,
@@ -321,7 +471,12 @@ const styles = StyleSheet.create({
     minWidth: 52,
     alignItems: 'center',
   },
-  saveBtnText: { fontSize: 13, color: '#fff', fontWeight: '700' },
+
+  saveBtnText: {
+    fontSize: 13,
+    color: '#fff',
+    fontWeight: '700',
+  },
 
   infoRow: {
     flexDirection: 'row',
@@ -330,8 +485,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.borderLight,
   },
-  infoLabel: { fontSize: 14, color: Colors.textSecondary },
-  infoValue: { fontSize: 14, color: Colors.text, fontWeight: '500', maxWidth: '60%', textAlign: 'right' },
+
+  infoLabel: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+  },
+
+  infoValue: {
+    fontSize: 14,
+    color: Colors.text,
+    fontWeight: '500',
+    maxWidth: '60%',
+    textAlign: 'right',
+  },
 
   editableRow: {
     flexDirection: 'row',
@@ -342,6 +508,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.borderLight,
     gap: Spacing.sm,
   },
+
   input: {
     flex: 1,
     backgroundColor: Colors.bg,
@@ -365,8 +532,16 @@ const styles = StyleSheet.create({
     borderColor: Colors.pink,
     borderStyle: 'dashed',
   },
-  ctaEmoji: { fontSize: 32 },
-  ctaText: { fontSize: 15, color: Colors.pinkDeep, fontWeight: '700' },
+
+  ctaEmoji: {
+    fontSize: 32,
+  },
+
+  ctaText: {
+    fontSize: 15,
+    color: Colors.pinkDeep,
+    fontWeight: '700',
+  },
 
   signOutBtn: {
     borderRadius: Radii.lg,
@@ -375,5 +550,10 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: Colors.error + '40',
   },
-  signOutText: { color: Colors.error, fontSize: 15, fontWeight: '600' },
+
+  signOutText: {
+    color: Colors.error,
+    fontSize: 15,
+    fontWeight: '600',
+  },
 });
