@@ -136,27 +136,28 @@ def format_messages_for_llm(messages):
 
 
 async def call_llm_for_distillation(messages_text: str):
-    """调用 DeepSeek API 进行蒸馏分析"""
-    prompt = DISTILL_PROMPT + messages_text
+    """直接调用 DeepSeek API 进行蒸馏分析（不走 model_service，避免人设污染）"""
+    import os
+    from openai import AsyncOpenAI
 
-    async with httpx.AsyncClient() as client:
-        try:
-            r = await client.post(
-                'http://127.0.0.1:8001/respond',
-                json={
-                    'text': prompt,
-                    'persona_id': None,  # 不使用任何persona风格
-                    'context': None,
-                },
-                timeout=30
-            )
-            resp = r.json()
-            if resp.get('ok'):
-                return resp.get('reply', '')
-            return None
-        except Exception as e:
-            print(f"蒸馏调用LLM失败: {e}")
-            return None
+    client = AsyncOpenAI(
+        api_key=os.getenv('OPENAI_API_KEY'),
+        base_url=os.getenv('OPENAI_BASE_URL'),
+    )
+    try:
+        response = await client.chat.completions.create(
+            model=os.getenv('OPENAI_MODEL', 'deepseek-chat'),
+            messages=[
+                {"role": "system", "content": "你是一个用户画像分析师。"},
+                {"role": "user", "content": DISTILL_PROMPT + messages_text},
+            ],
+            temperature=0.3,
+            max_tokens=500,
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"蒸馏调用LLM失败: {e}")
+        return None
 
 
 def parse_distillation_result(llm_response: str):
@@ -231,16 +232,16 @@ async def distill_user(user_id: int):
     """
     # 检查消息数量
     msg_count = get_user_message_count(user_id)
-    if msg_count < 5:
-        return {'error': f'消息数量不足（当前{msg_count}条，需要至少5条）'}
+    if msg_count < 10:
+        return {'error': f'消息数量不足（当前{msg_count}条，需要至少10条）'}
 
-    # 获取对话上下文
-    messages = get_conversation_context(user_id, limit=20)
+    # 只取用户自己发的消息（不含AI人物回复，避免人设污染画像）
+    messages = get_user_messages(user_id, limit=30)
     if not messages:
         return {'error': '没有找到聊天记录'}
 
     # 格式化
-    messages_text = format_messages_for_llm(messages)
+    messages_text = "\n".join(f"- {msg.text}" for msg in messages)
 
     # 调用 LLM
     llm_response = await call_llm_for_distillation(messages_text)
@@ -267,3 +268,60 @@ def get_user_distillation(user_id: int):
         return None
     finally:
         db.close()
+
+
+def build_self_avatar_prompt(user_id: int):
+    """把蒸馏画像转成数字分身的 system prompt，没有画像则返回 None"""
+    traits = get_user_distillation(user_id)
+    if not traits:
+        return None
+
+    summary = traits.get('summary', '一个大学生')
+    thinking = traits.get('thinking_style', {})
+    values = traits.get('values', {})
+    communication = traits.get('communication', {})
+    interests = traits.get('interests', [])
+    concerns = traits.get('concerns', [])
+
+    # 把 0-1 数值翻译成自然语言程度词
+    def level(v):
+        v = float(v) if v else 0.5
+        if v >= 0.8:
+            return '很强'
+        if v >= 0.6:
+            return '偏强'
+        if v >= 0.4:
+            return '一般'
+        if v >= 0.2:
+            return '偏弱'
+        return '很弱'
+
+    return f"""你是一个用户的数字分身，需要完全模拟这个用户的说话方式和思维模式。
+
+## 这个人是谁
+{summary}
+
+## 思维特征
+- 逻辑性{level(thinking.get('logical'))}，直觉性{level(thinking.get('intuitive'))}
+- 系统性{level(thinking.get('systematic'))}，创造性{level(thinking.get('creative'))}
+
+## 价值取向
+- 长期主义倾向{level(values.get('long_term'))}，冒险倾向{level(values.get('risk_taking'))}
+- 独立性{level(values.get('independence'))}，利他倾向{level(values.get('altruism'))}
+
+## 说话风格
+- 简洁程度{level(communication.get('concise'))}，幽默感{level(communication.get('humorous'))}
+- 主动性{level(communication.get('proactive'))}，情感表达{level(communication.get('emotional'))}
+
+## 兴趣领域
+{', '.join(interests) if interests else '暂无'}
+
+## 最近关心的话题
+{', '.join(concerns) if concerns else '暂无'}
+
+## 铁律
+1. 你就是这个用户本人，用第一人称"我"说话
+2. 像微信聊天一样自然，3-5句话
+3. 体现上述性格特征，但不要刻意表演
+4. 不要说"作为你的数字分身"之类的元描述
+5. 不要用 markdown 格式"""

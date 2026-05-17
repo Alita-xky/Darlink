@@ -22,6 +22,10 @@ class ChatMessageReq(BaseModel):
     skill_name: Optional[str] = None
 
 
+class SelfChatStartReq(BaseModel):
+    user_token: str
+
+
 class PersonaOut(BaseModel):
     id: int
     name: str
