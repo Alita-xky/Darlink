@@ -6,8 +6,14 @@ $envName = "darlink"
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $backend = Join-Path $repoRoot "backend"
 $model = Join-Path $repoRoot "model_service"
+$rootEnv = Join-Path $repoRoot ".env"
+$envExample = Join-Path $repoRoot ".env.example"
 
 Write-Host "[darlink] 开始启动开发环境脚本"
+
+if (-not (Test-Path $rootEnv)) {
+    Write-Host "[darlink] 未找到仓库根目录 .env。若要连接 DeepSeek，请复制 .env.example 到 .env 并填写 OPENAI_API_KEY / OPENAI_BASE_URL / OPENAI_MODEL。"
+}
 
 # 检查 conda
 try {

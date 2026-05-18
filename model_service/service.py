@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pathlib import Path
 import sys
 import os
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from pydantic import BaseModel
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
@@ -11,9 +11,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
-# 加载 .env 文件（优先加载项目根目录的 .env）
-if Path(BASE_DIR / '.env').exists():
-    load_dotenv(BASE_DIR / '.env')
+def _load_env_files() -> List[str]:
+    """Load environment files from the most common project locations."""
+    loaded: List[str] = []
+    for env_path in [BASE_DIR / '.env', BASE_DIR / 'model_service' / '.env', BASE_DIR / 'backend' / '.env']:
+        if env_path.exists():
+            load_dotenv(env_path, override=False)
+            loaded.append(str(env_path))
+    return loaded
+
+
+LOADED_ENV_FILES = _load_env_files()
 
 from persona_registry import PERSONA_BY_ID
 
@@ -72,13 +80,18 @@ if OPENAI_API_KEY:
     except Exception as e:
         print(f"✗ OpenAI API init failed: {e}")
 else:
-    print("⚠ OPENAI_API_KEY not configured, running in Stub mode")
+    if LOADED_ENV_FILES:
+        print(f"⚠ OPENAI_API_KEY not configured, loaded env from: {', '.join(LOADED_ENV_FILES)}")
+    else:
+        print("⚠ OPENAI_API_KEY not configured and no .env file found, running in Stub mode")
 
 
 class Req(BaseModel):
     text: str
     persona_id: Optional[int] = None
     context: Optional[str] = None
+    distilled_traits: Optional[dict] = None
+    use_distilled_persona: Optional[bool] = False
 
 
 def build_system_prompt(persona: dict) -> str:
@@ -115,41 +128,106 @@ def build_system_prompt(persona: dict) -> str:
 @app.post('/respond')
 async def respond(r: Req):
     """调用大模型或降级到 stub 实现"""
-    persona = PERSONA_BY_ID.get(r.persona_id or 1, PERSONA_BY_ID[1])
     context_blob = (r.context or '').strip()
 
-    # 如果配置了 OpenAI API，使用真实模型
+    # 如果配置了 OpenAI / DeepSeek API，使用真实模型
     if client is not None:
         try:
-            system_prompt = build_system_prompt(persona)
+            # 1. 结构化蒸馏模式：persona_id=None 时，不使用任何人物人格
+            if r.persona_id is None:
+                response = await client.chat.completions.create(
+                    model=OPENAI_MODEL,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": (
+                                "你是一个严格的 JSON 生成器。"
+                                "你只能输出一个合法 JSON 对象。"
+                                "不要输出解释。"
+                                "不要输出 markdown。"
+                                "不要输出 ```json 代码块。"
+                                "不要在 JSON 前后添加任何文字。"
+                                "所有字符串必须使用双引号。"
+                                "不能有尾随逗号。"
+                            ),
+                        },
+                        {
+                            "role": "user",
+                            "content": r.text,
+                        },
+                    ],
+                    temperature=0.1,
+                    max_tokens=1200,
+                    timeout=30.0,
+                )
+
+                reply = response.choices[0].message.content or ""
+                return {"ok": True, "reply": reply}
+
+            # 2. 普通聊天模式：使用人物 persona
+            persona = PERSONA_BY_ID.get(r.persona_id or 1, PERSONA_BY_ID[1])
+
             user_message = r.text
-            
+
             # 如果有用户 profile 上下文，加入到提示词中
             if context_blob:
                 user_message += f"\n\n[用户背景信息参考]：{context_blob[:500]}"
+
+            # 默认使用人物系统提示词
+            system_prompt = build_system_prompt(persona)
+
+            # 如果传入了 distilled_traits 并且要求用作 system persona
+            if getattr(r, "distilled_traits", None) and getattr(r, "use_distilled_persona", False):
+                try:
+                    system_prompt = build_system_prompt_from_traits(r.distilled_traits)
+                except Exception:
+                    system_prompt = build_system_prompt(persona)
+
+            # 如果传入了 distilled_traits 但不作为 system，只把摘要塞进上下文
+            if getattr(r, "distilled_traits", None) and not getattr(r, "use_distilled_persona", False):
+                try:
+                    summary = (
+                        r.distilled_traits.get("summary")
+                        if isinstance(r.distilled_traits, dict)
+                        else None
+                    )
+                    if summary:
+                        user_message += f"\n\n[用户蒸馏摘要]：{summary[:300]}"
+                except Exception:
+                    pass
 
             response = await client.chat.completions.create(
                 model=OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_message}
+                    {"role": "user", "content": user_message},
                 ],
                 temperature=0.8,
                 max_tokens=350,
-                timeout=15.0
+                timeout=15.0,
             )
-            reply = response.choices[0].message.content
-            return {'ok': True, 'reply': reply}
+
+            reply = response.choices[0].message.content or ""
+            return {"ok": True, "reply": reply}
+
         except Exception as e:
-            # 调用 API 失败时降级到 stub 实现
             error_msg = str(e)
             print(f"OpenAI API error: {error_msg}")
-            # 降级逻辑见下方 stub
-    
-    # stub 实现（API 未配置或调用失败时）
-    context_part = f" 结合上下文：{context_blob[:120]}。" if context_blob else ''
+
+    # 3. stub 降级逻辑
+    # 蒸馏模式下不能用 stub 假装成功，否则后端会解析失败
+    if r.persona_id is None:
+        return {
+            "ok": False,
+            "reply": "",
+            "error": "LLM API 未配置或调用失败，无法执行结构化蒸馏",
+        }
+
+    persona = PERSONA_BY_ID.get(r.persona_id or 1, PERSONA_BY_ID[1])
+    context_part = f" 结合上下文：{context_blob[:120]}。" if context_blob else ""
     reply = f"[{persona['name']}] {persona['voice']} 你刚才说的是：{r.text}。{context_part}"
-    return {'ok': True, 'reply': reply}
+
+    return {"ok": True, "reply": reply}
 
 
 @app.get('/')
