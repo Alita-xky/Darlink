@@ -78,6 +78,22 @@ def create_session_with_skill(user_token: str, persona_id: int, skill_name=None)
         db.close()
 
 
+def create_self_session(user_token: str):
+    """创建自聊 session，persona_id=None，skill_name='self_avatar'"""
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter_by(user_token=user_token).first()
+        if not user:
+            return None
+        sid = str(uuid.uuid4())
+        s = SessionDB(id=sid, user_id=user.id, persona_id=None, skill_name='self_avatar')
+        db.add(s)
+        db.commit()
+        return sid
+    finally:
+        db.close()
+
+
 def add_message(session_id: str, user_id: int, role: str, text: str, metadata: dict = None):
     db = SessionLocal()
     try:

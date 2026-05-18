@@ -4,6 +4,7 @@ import os
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
+from dotenv import load_dotenv
 import sys
 import urllib.request
 import socket
@@ -11,6 +12,7 @@ import socket
 import db as _db
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 FRONTEND_DIR = BASE_DIR / "frontend"
