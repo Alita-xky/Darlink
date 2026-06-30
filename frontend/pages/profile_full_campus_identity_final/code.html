@@ -1,0 +1,362 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Darlink | Personal Profile</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#006686",
+                    "inverse-on-surface": "#ecf1ff",
+                    "primary-container": "#d8b4fe",
+                    "inverse-surface": "#263143",
+                    "surface-bright": "#f9f9ff",
+                    "on-tertiary-fixed-variant": "#6f3157",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#e7eeff",
+                    "primary-fixed-dim": "#dbb8ff",
+                    "surface-container-high": "#dee8ff",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#c0e8ff",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#6f5092",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#004d66",
+                    "on-background": "#111c2d",
+                    "secondary-fixed-dim": "#7bd1fa",
+                    "inverse-primary": "#dbb8ff",
+                    "error": "#ba1a1a",
+                    "on-primary-container": "#604283",
+                    "surface": "#f9f9ff",
+                    "tertiary-fixed": "#ffd8ea",
+                    "tertiary-container": "#fcaad6",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#cdc3d0",
+                    "tertiary-fixed-dim": "#ffaeda",
+                    "surface-container-highest": "#d8e3fb",
+                    "outline": "#7c7480",
+                    "surface-variant": "#d8e3fb",
+                    "on-surface": "#111c2d",
+                    "surface-dim": "#cfdaf2",
+                    "primary-fixed": "#efdbff",
+                    "on-surface-variant": "#4a454f",
+                    "on-error": "#ffffff",
+                    "tertiary": "#8a486f",
+                    "on-primary-fixed": "#29074a",
+                    "on-error-container": "#93000a",
+                    "secondary-container": "#7ed4fd",
+                    "on-secondary-container": "#005b78",
+                    "on-tertiary-container": "#793a60",
+                    "on-primary-fixed-variant": "#573878",
+                    "surface-container-low": "#f0f3ff",
+                    "background": "#f9f9ff",
+                    "on-secondary-fixed": "#001e2b",
+                    "on-tertiary-fixed": "#3a0329",
+                    "primary": "#6f5092"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "container-padding-desktop": "40px",
+                    "element-gap": "12px",
+                    "base": "8px",
+                    "container-padding-mobile": "20px"
+            },
+            "fontFamily": {
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f9f9ff;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(216, 180, 254, 0.1);
+        }
+        .glass-card-high {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(111, 80, 146, 0.08);
+        }
+        .iridescent-border {
+            border: 1px solid transparent;
+            background-image: linear-gradient(white, white), linear-gradient(to right, #d8b4fe, #7ed4fd, #fcaad6);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .avatar-glow {
+            position: relative;
+        }
+        .avatar-glow::after {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            background: radial-gradient(circle, rgba(216, 180, 254, 0.4) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(15px);
+            animation: pulse-glow 4s infinite alternate;
+        }
+        @keyframes pulse-glow {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(111, 80, 146, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface selection:bg-primary/20">
+<!-- Background Animation Shader -->
+<div class="fixed inset-0 z-[-1] pointer-events-none">
+</div>
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar (Predicted Component) -->
+<aside class="hidden md:flex h-full w-72 fixed left-0 top-0 bg-white/60 dark:bg-inverse-surface/60 backdrop-blur-3xl border-r border-white/20 shadow-2xl shadow-primary/10 flex-col p-6 space-y-4 z-50">
+<div class="flex items-center space-x-3 mb-10">
+<span class="material-symbols-outlined text-primary font-headline-md text-headline-md">favorite</span>
+<span class="font-headline-md text-headline-md text-primary tracking-tight">Darlink</span>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Aura -->
+<a class="flex items-center space-x-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">auto_awesome</span>
+<span class="font-label-lg text-label-lg">Aura</span>
+</a>
+<!-- Twin -->
+<a class="flex items-center space-x-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">face_6</span>
+<span class="font-label-lg text-label-lg">Twin</span>
+</a>
+<!-- Analytics -->
+<a class="flex items-center space-x-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">analytics</span>
+<span class="font-label-lg text-label-lg">Analytics</span>
+</a>
+<!-- Match -->
+<a class="flex items-center space-x-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">favorite</span>
+<span class="font-label-lg text-label-lg">Match</span>
+</a>
+<!-- Profile (ACTIVE) -->
+<a class="flex items-center space-x-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-all duration-300 group" href="#"><span class="material-symbols-outlined group-hover:scale-110 transition-transform">workspace_premium</span><span class="font-label-lg text-label-lg">名人堂</span></a><a class="flex items-center space-x-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-lg text-label-lg">Profile</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/20">
+<div class="flex items-center space-x-3 mb-6 p-2 rounded-xl bg-white/40">
+<img class="w-10 h-10 rounded-full border border-primary/20" data-alt="A highly detailed 3D digital human avatar with porcelain skin, glowing lavender eyes, and iridescent holographic hair. The avatar is wearing a sleek, futuristic collar and exists within a soft, luminous environment with pink and blue atmospheric lighting." src="https://lh3.googleusercontent.com/aida/AP1WRLu8B122tROSoCFlwfdmRbUVKgRzbc3XGgxCgAmeknRI6skiMm40VPJKcrA-nRZR-HHvL8JLIyYuKjm8uvmHat1erD41NUK8awpgYysrSHY1Xym-QZQZNmZccxWepI6epBaauLElUdAYghlQVvOjI9ZrvRH7sy6zWBWWFgoHeWGqd1eGxKRKeSafqvNR7jx-cR-7EFD_EYOYujNCBCPIrJ-XXf6s3yWdsUkvzcqyLkZdTgLc0xCSSRttfCBt">
+<div>
+<p class="text-on-surface font-label-lg text-label-lg leading-tight">Xiaoda</p>
+<p class="text-on-surface-variant text-[10px] uppercase tracking-widest font-bold">AI Twin Active</p>
+</div>
+</div>
+<button class="w-full py-3 px-4 bg-gradient-to-r from-primary to-secondary text-white font-label-lg text-label-lg rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                    Upgrade to Premium
+                </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-72 flex flex-col h-full overflow-y-auto custom-scrollbar">
+<!-- TopAppBar (Predicted Component) -->
+<header class="sticky top-0 w-full z-40 bg-white/40 dark:bg-inverse-surface/40 backdrop-blur-xl border-b border-white/20 flex justify-between items-center px-10 py-4 shadow-[0_0_20px_rgba(216,180,254,0.1)]">
+<div class="flex items-center space-x-4">
+<h1 class="font-headline-md text-headline-md text-primary">My Profile</h1>
+</div>
+<div class="flex items-center space-x-4">
+<div class="flex space-x-1 items-center bg-white/60 px-3 py-1.5 rounded-full border border-white/30">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Twin Online</span>
+</div>
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95">share</button>
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95">settings</button>
+</div>
+</header>
+<!-- Page Content -->
+<div class="max-w-6xl mx-auto w-full px-10 py-12 space-y-12">
+<!-- Profile Header -->
+<section class="relative group">
+<div class="glass-card-high rounded-xl p-10 flex flex-col md:flex-row items-center md:items-end space-y-8 md:space-y-0 md:space-x-12 relative overflow-hidden">
+<!-- Background Glow Effect -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-secondary/10 rounded-full blur-3xl"></div>
+<!-- Avatar -->
+<div class="relative">
+<div class="w-48 h-48 md:w-56 md:h-56 rounded-xl border-2 border-white/40 overflow-hidden avatar-glow shadow-2xl">
+<img alt="A high-quality 3D cute cartoon anime-style AI digital human boy, full body character design, soft porcelain skin, expressive eyes, wearing a stylish futuristic academic-tech outfit with iridescent lilac and blue accents, studio lighting, isolated on white background" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXpAGEEOcOeIq31NDyQM_CQjolxJZpbzvtwCuh_2ZaDKpEA7fANmu68FcH1nXaemh9q8ZuA5RrjNJmtE6__xhXVN0noSOV7w-d_u41Y2YVMrdXPGzs5R-0vFXIJQbt9kFwDEwCJUQoh3mOexoKUkE0yksT6QJsHGwJlImKhzVpuXxi2diV33CD1fHDjW4tU5KJNavk1vXfttdz1d3PRRL4FVzWGxnYafUrvETR89l-fzkfheWT30RfokGIvHvXrl47U7HlynJcO4fN">
+</div>
+<div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white px-4 py-1.5 rounded-full shadow-lg border border-primary/10 flex items-center space-x-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">AI Twin Verified</span>
+</div>
+</div>
+<!-- Info -->
+<div class="flex-1 text-center md:text-left">
+<div class="mb-4">
+<h2 class="font-display-lg text-display-lg text-on-surface tracking-tight mb-2">Astra Chen</h2>
+<p class="font-headline-md text-headline-md text-primary/80">Fudan University</p>
+</div>
+<div class="flex flex-wrap justify-center md:justify-start gap-3">
+<span class="px-4 py-1.5 glass-card rounded-full font-label-lg text-label-lg text-primary">Applied Mathematics</span>
+<span class="px-4 py-1.5 glass-card rounded-full font-label-lg text-label-lg text-secondary">Class of 2026</span>
+</div>
+</div>
+<div class="flex flex-col space-y-3">
+<button class="px-8 py-3 bg-white/80 hover:bg-white text-primary font-label-lg text-label-lg rounded-xl border border-primary/20 transition-all shadow-sm active:scale-95">Edit Persona</button>
+<button class="px-8 py-3 bg-primary text-white font-label-lg text-label-lg rounded-xl shadow-lg shadow-primary/20 hover:opacity-90 transition-all active:scale-95">Sync Twin</button>
+</div>
+</div>
+</section>
+<!-- Bento Grid Content -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Card 1: Digital Aura -->
+<div class="md:col-span-8 glass-card rounded-xl p-8 relative overflow-hidden group hover:shadow-xl transition-all duration-500">
+<div class="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-40 transition-opacity">
+<span class="material-symbols-outlined text-7xl text-primary">auto_awesome</span>
+</div>
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-8">Digital Aura</h3>
+<div class="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12">
+<!-- Visualization Mock -->
+<div class="w-48 h-48 relative flex items-center justify-center">
+<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/30 via-tertiary/20 to-secondary/30 animate-[spin_10s_linear_infinite] blur-xl"></div>
+<div class="w-32 h-32 rounded-full glass-card flex items-center justify-center border-white/50 bg-gradient-to-tr from-primary/20 to-secondary/20 shadow-[0_0_30px_rgba(111,80,146,0.2)]">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+</div>
+<div class="flex-1 grid grid-cols-2 gap-4">
+<div class="p-4 rounded-xl bg-primary/5 border border-primary/10">
+<p class="font-label-sm text-label-sm text-primary uppercase mb-1">Dominant</p>
+<p class="font-headline-md text-headline-md text-on-surface">幽默</p>
+</div>
+<div class="p-4 rounded-xl bg-secondary/5 border border-secondary/10">
+<p class="font-label-sm text-label-sm text-secondary uppercase mb-1">Core</p>
+<p class="font-headline-md text-headline-md text-on-surface">理性</p>
+</div>
+<div class="p-4 rounded-xl bg-tertiary/5 border border-tertiary/10">
+<p class="font-label-sm text-label-sm text-tertiary uppercase mb-1">Soul</p>
+<p class="font-headline-md text-headline-md text-on-surface">自由</p>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-highest border border-outline-variant">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase mb-1">Growth</p>
+<p class="font-headline-md text-headline-md text-on-surface">探索</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Resonance Stats -->
+<div class="md:col-span-4 glass-card rounded-xl p-8 flex flex-col justify-between hover:shadow-xl transition-all duration-500">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Resonance Stats</h3>
+<div class="space-y-6">
+<div class="flex justify-between items-end border-b border-white/20 pb-4">
+<div>
+<p class="font-label-lg text-label-lg text-on-surface-variant">Compatibility</p>
+<p class="font-display-lg text-[40px] text-primary font-bold">98.4<span class="text-xl">%</span></p>
+</div>
+<span class="material-symbols-outlined text-primary mb-2">trending_up</span>
+</div>
+<div class="flex justify-between items-end border-b border-white/20 pb-4">
+<div>
+<p class="font-label-lg text-label-lg text-on-surface-variant">Network Reach</p>
+<p class="font-display-lg text-[40px] text-secondary font-bold">1.2k</p>
+</div>
+<span class="material-symbols-outlined text-secondary mb-2">hub</span>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-lg text-label-lg text-on-surface-variant">Chat Depth</p>
+<p class="font-display-lg text-[40px] text-tertiary font-bold">A+</p>
+</div>
+<span class="material-symbols-outlined text-tertiary mb-2">auto_graph</span>
+</div>
+</div>
+</div>
+<!-- Card 3: AI Twin Settings -->
+<div class="md:col-span-6 glass-card rounded-xl p-8 hover:shadow-xl transition-all duration-500"><div class="flex items-center space-x-3 mb-8"><span class="material-symbols-outlined text-primary">settings_suggest</span><h3 class="font-headline-md text-headline-md text-on-surface">AI Twin Settings</h3></div><div class="space-y-6"><div class="flex items-center justify-between p-4 rounded-xl bg-white/20 border border-white/40"><div><p class="font-label-lg text-label-lg text-on-surface">Sync Frequency</p><p class="font-label-sm text-label-sm text-on-surface-variant">Real-time cloud synchronization</p></div><button class="w-11 h-6 bg-primary rounded-full p-0.5 transition-colors duration-300" onclick="this.classList.toggle('bg-primary'); this.querySelector('div').classList.toggle('translate-x-5')"><div class="w-5 h-5 bg-white rounded-full translate-x-5 transition-transform duration-300"></div></button></div><div class="flex items-center justify-between p-4 rounded-xl bg-white/20 border border-white/40"><div><p class="font-label-lg text-label-lg text-on-surface">Privacy Mode</p><p class="font-label-sm text-label-sm text-on-surface-variant">End-to-end encrypted interactions</p></div><button class="w-11 h-6 bg-surface-container-highest rounded-full p-0.5 transition-colors duration-300" onclick="this.classList.toggle('bg-primary'); this.querySelector('div').classList.toggle('translate-x-5')"><div class="w-5 h-5 bg-white rounded-full transition-transform duration-300"></div></button></div><button class="w-full flex items-center justify-between p-4 rounded-xl bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors group"><div><p class="font-label-lg text-label-lg text-primary">Data Training History</p><p class="font-label-sm text-label-sm text-primary/60">View model optimization logs</p></div><span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">chevron_right</span></button></div></div>
+<!-- Card 4: Campus Identity -->
+<div class="md:col-span-6 glass-card rounded-xl p-8 relative overflow-hidden group hover:shadow-xl transition-all duration-500"><div class="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-110 transition-transform duration-700"><span class="material-symbols-outlined text-[200px] text-secondary">school</span></div><div class="relative z-10"><div class="flex items-center space-x-3 mb-8"><span class="material-symbols-outlined text-secondary">verified_user</span><h3 class="font-headline-md text-headline-md text-on-surface">Campus Identity</h3></div><div class="space-y-6"><div class="flex items-center space-x-4"><div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary">alternate_email</span></div><div><p class="font-label-sm text-label-sm text-on-surface-variant">Verified University Email</p><p class="font-body-md text-body-md text-on-surface font-medium">astra.c@fudan.edu.cn</p></div></div><div class="flex items-center space-x-4"><div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary">school</span></div><div><p class="font-label-sm text-label-sm text-on-surface-variant">Major</p><p class="font-body-md text-body-md text-on-surface font-medium">Applied Mathematics</p></div></div><div class="flex items-center space-x-4"><div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary">badge</span></div><div><p class="font-label-sm text-label-sm text-on-surface-variant">Student ID Status</p><p class="font-body-md text-body-md text-on-surface font-medium text-emerald-500">Active</p></div></div><div class="pt-4 flex items-center space-x-2 text-secondary"><span class="material-symbols-outlined text-sm">lock</span><span class="font-label-sm text-label-sm italic opacity-80">This information is only visible to verified students.</span></div></div></div></div>
+</section>
+</div>
+<!-- Footer Spacing for Content -->
+<footer class="mt-auto py-12 px-10 text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">Darlink © 2024 • Powered by Luminous AI Systems</p>
+</footer>
+</main>
+</div>
+<!-- Mobile Navigation (BottomNavBar Fallback) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white/60 backdrop-blur-2xl border-t border-white/20 flex justify-around items-center py-4 px-6 z-50">
+<button class="flex flex-col items-center space-y-1 text-on-surface-variant">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-[10px] font-bold">Aura</span>
+</button>
+<button class="flex flex-col items-center space-y-1 text-on-surface-variant">
+<span class="material-symbols-outlined">face_6</span>
+<span class="text-[10px] font-bold">Twin</span>
+</button>
+<button class="flex flex-col items-center space-y-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-[10px] font-bold">Profile</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions for glass cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>

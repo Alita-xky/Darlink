@@ -1,0 +1,381 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Darlink - Scene Discovery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#7bd1fa",
+                      "on-secondary-fixed-variant": "#004d66",
+                      "background": "#f9f9ff",
+                      "on-tertiary-fixed": "#3a0329",
+                      "primary-fixed-dim": "#dbb8ff",
+                      "on-tertiary-fixed-variant": "#6f3157",
+                      "surface-container-high": "#dee8ff",
+                      "tertiary-fixed": "#ffd8ea",
+                      "secondary": "#006686",
+                      "outline-variant": "#cdc3d0",
+                      "on-surface": "#111c2d",
+                      "on-error": "#ffffff",
+                      "inverse-on-surface": "#ecf1ff",
+                      "surface-container": "#e7eeff",
+                      "inverse-surface": "#263143",
+                      "surface-tint": "#6f5092",
+                      "on-primary": "#ffffff",
+                      "surface-variant": "#d8e3fb",
+                      "on-secondary-fixed": "#001e2b",
+                      "on-primary-fixed-variant": "#573878",
+                      "on-primary-container": "#604283",
+                      "surface-container-highest": "#d8e3fb",
+                      "primary-container": "#d8b4fe",
+                      "tertiary": "#8a486f",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#005b78",
+                      "secondary-container": "#7ed4fd",
+                      "on-primary-fixed": "#29074a",
+                      "tertiary-container": "#fcaad6",
+                      "surface-dim": "#cfdaf2",
+                      "primary": "#6f5092",
+                      "outline": "#7c7480",
+                      "primary-fixed": "#efdbff",
+                      "on-background": "#111c2d",
+                      "on-tertiary-container": "#793a60",
+                      "tertiary-fixed-dim": "#ffaeda",
+                      "on-surface-variant": "#4a454f",
+                      "inverse-primary": "#dbb8ff",
+                      "surface-bright": "#f9f9ff",
+                      "surface": "#f9f9ff",
+                      "on-tertiary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#c0e8ff",
+                      "surface-container-low": "#f0f3ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "element-gap": "12px",
+                      "gutter": "16px",
+                      "base": "8px",
+                      "container-padding-desktop": "40px",
+                      "container-padding-mobile": "20px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "display-lg": ["Plus Jakarta Sans"],
+                      "label-lg": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #f9f9ff;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(216, 180, 254, 0.4), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(126, 212, 253, 0.4), transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(252, 170, 214, 0.3), transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass-layer-1 {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-layer-2 {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(216, 180, 254, 0.5);
+            box-shadow: 0 0 40px rgba(216, 180, 254, 0.1);
+        }
+
+        .iridescent-frosted {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        .iridescent-frosted::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            margin: -2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #d8b4fe, #7ed4fd, #fcaad6);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask-composite: destination-out;
+        }
+
+        .glowing-sphere-3d {
+            background: radial-gradient(circle at 30% 30%, #ffffff, #dbb8ff 40%, #6f5092 100%);
+            box-shadow: 
+                inset -5px -5px 15px rgba(0,0,0,0.3),
+                0 0 30px rgba(219, 184, 255, 0.8),
+                0 0 60px rgba(126, 212, 253, 0.4);
+            animation: floating-sphere 4s infinite ease-in-out;
+        }
+
+        @keyframes floating-sphere {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-10px); }
+        }
+
+        .liquid-progress {
+            background: linear-gradient(90deg, #d8b4fe, #7ed4fd, #fcaad6);
+            background-size: 200% 100%;
+            animation: moveGradient 4s linear infinite;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.5), 0 0 15px rgba(216,180,254,0.5);
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 100% 0%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        .network-line {
+            stroke-dasharray: 8;
+            animation: dashMove 30s linear infinite;
+        }
+
+        @keyframes dashMove {
+            from { stroke-dashoffset: 400; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* 3D Particle animations */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: particle-float linear infinite;
+        }
+
+        @keyframes particle-float {
+            0% { transform: translateY(100vh) translateX(0) scale(0.5); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-20vh) translateX(50px) scale(1.2); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="text-on-background font-body-md antialiased pb-24 md:pb-0">
+<svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<!-- TopNavBar -->
+<nav class="hidden md:flex sticky top-0 z-50 justify-between items-center px-8 py-3 w-full bg-white/40 dark:bg-white/10 backdrop-blur-3xl rounded-full mt-4 mx-auto max-w-[90%] md:max-w-7xl border border-white/20 shadow-[0_0_20px_rgba(219,184,255,0.3)]">
+<div class="font-display-lg text-headline-md font-bold bg-gradient-to-r from-primary via-tertiary to-secondary bg-clip-text text-transparent">Darlink</div>
+<div class="flex gap-8">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all" href="#"><span class="font-label-lg text-label-lg">Discover</span></a>
+<a class="text-primary font-bold border-b-2 border-primary-container pb-1 transition-all" href="#"><span class="font-label-lg text-label-lg">Matches</span></a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all" href="#"><span class="font-label-lg text-label-lg">Events</span></a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all" href="#"><span class="font-label-lg text-label-lg">Community</span></a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all" href="#"><span class="font-label-lg text-label-lg"></span></a><a class="font-label-lg text-label-lg text-on-surface-variant/70 dark:text-surface-variant/70 hover:text-primary transition-colors duration-300 px-4 py-2" href="https://app-companion-430619.appspot.com/projects/12171411170104867894?pli=1&amp;usegapi=1&amp;jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.ch0Jz-JlMrQ.O%2Fd%3D1%2Frs%3DAHpOoo_YD4KoV8fTh_kLhktsiThAm3yJ5A%2Fm%3D__features__#" style="--tw-border-spacing-y: 0; --tw-translate-x: 0; --tw-translate-y: 0; --tw-rotate: 0; --tw-skew-x: 0; --tw-skew-y: 0; --tw-scale-x: 1; --tw-scale-y: 1; --tw-pan-x: ; --tw-pan-y: ; --tw-pinch-zoom: ; --tw-scroll-snap-strictness: proximity; --tw-gradient-from-position: ; --tw-gradient-via-position: ; --tw-gradient-to-position: ; --tw-ordinal: ; --tw-slashed-zero: ; --tw-numeric-figure: ; --tw-numeric-spacing: ; --tw-numeric-fraction: ; --tw-ring-inset: ; --tw-ring-offset-width: 0px; --tw-ring-offset-color: #fff; --tw-ring-color: rgb(59 130 246 / 0.5); --tw-ring-offset-shadow: 0 0 #0000; --tw-ring-shadow: 0 0 #0000; --tw-shadow: 0 0 #0000; --tw-shadow-colored: 0 0 #0000; --tw-blur: ; --tw-brightness: ; --tw-contrast: ; --tw-grayscale: ; --tw-hue-rotate: ; --tw-invert: ; --tw-saturate: ; --tw-sepia: ; --tw-drop-shadow: ; --tw-backdrop-blur: ; --tw-backdrop-brightness: ; --tw-backdrop-contrast: ; --tw-backdrop-grayscale: ; --tw-backdrop-hue-rotate: ; --tw-backdrop-invert: ; --tw-backdrop-opacity: ; --tw-backdrop-saturate: ; --tw-backdrop-sepia: ; --tw-contain-size: ; --tw-contain-layout: ; --tw-contain-paint: ; --tw-contain-style: ; color: rgb(111, 80, 146); padding: 0.5rem 1rem; transition-duration: 300ms; --tw-text-opacity: 1; outline: none !important; box-shadow: none !important;">Hall of Fame</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary dark:text-primary-fixed-dim hover:scale-[1.05] transition-all">
+<div class="w-10 h-10 rounded-full border-2 border-primary-container/60 overflow-hidden shadow-sm hover:shadow-md transition-all relative group">
+    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuALwc6pVoHrBa0viK8oKEMcTDrj4QfP5EgTboUeWkJEHRm7hw0LoHBFJ6BtBbnnrv38u9g40-Aa6MEA83GUhOVrqGt-qn4zCUynEFqW1bwRGHGIOnHnfq793fuGpRPEY3snUd65izccIEQVAVkdTXEgb9GVq2RC7hQXwQJ-hhBAcNB86BOB9KTQWEM4j6mnQj42T0hBHoJmm57z-kBsZ0-KirM-YDzU8ouOahxHw_yTr__M8kzgckhoNWAQ7hhZauiMTfr4UADJaEQn2ZY" alt="Astra Chen" class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+        <span class="material-symbols-outlined text-white text-[18px]">upload</span>
+    </div>
+</div>
+</button>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-container-padding-mobile md:px-container-padding-desktop mt-8 md:mt-12">
+<header class="mb-10 text-center md:text-left">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Scene Discovery</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Exploring local resonance networks. Potential matches highlight when aesthetic and intellectual alignment peak.</p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-start">
+<!-- Luminous Network Map -->
+<section class="md:col-span-8 h-[500px] md:h-[650px] iridescent-frosted rounded-xl relative overflow-hidden flex items-center justify-center p-4 bg-[#f0f4ff]">
+<!-- Particle System Container -->
+<div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+<!-- Hearts and Nodes Particles -->
+<div class="particle text-tertiary/20" style="left: 10%; animation-duration: 15s; animation-delay: 0s;"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1; font-size: 24px;">favorite</span></div>
+<div class="particle text-primary/30" style="left: 25%; animation-duration: 22s; animation-delay: -5s;"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1; font-size: 16px;">circle</span></div>
+<div class="particle text-secondary/20" style="left: 45%; animation-duration: 18s; animation-delay: -2s;"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1; font-size: 20px;">favorite</span></div>
+<div class="particle text-primary/20" style="left: 65%; animation-duration: 25s; animation-delay: -8s;"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1; font-size: 14px;">circle</span></div>
+<div class="particle text-tertiary/30" style="left: 85%; animation-duration: 20s; animation-delay: -3s;"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1; font-size: 28px;">favorite</span></div>
+<div class="particle text-secondary/30" style="left: 35%; animation-duration: 28s; animation-delay: -12s;"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1; font-size: 18px;">circle</span></div>
+<div class="particle text-primary/25" style="left: 55%; animation-duration: 16s; animation-delay: -6s;"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1; font-size: 22px;">favorite</span></div>
+<div class="particle text-tertiary/20" style="left: 75%; animation-duration: 24s; animation-delay: -1s;"><span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1; font-size: 12px;">circle</span></div>
+</div>
+<!-- Cloud Disk Background -->
+<div class="absolute inset-0 w-full h-full opacity-60 mix-blend-overlay bg-cover bg-center" style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBvbMV1-NvNG4EZJLWPg4jtHcA7xpvr4hQItG1kySiHF20bqJoFf3iFvKnqrU9DpRtqkqkFZBpgxSohpntpTD6nlOaOBQzSTIJODoVP1dfueO6hquiEifYhh51J3u7jJcEIBo51nX_DyzteIcnKnDt1RpT80HbdKbzNQQW6mYTCSsVecWpc_JaiAEUAmcorXiLOnO1v1G9R_XX-MwTDKuUxx31u6ujEmJKLY8u25tohLMImWM3rnrZTuC-DwL3lcN_UzQoJS_RSu-U3&quot;);"></div>
+<!-- Network SVG Lines -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-1" xmlns="http://www.w3.org/2000/svg"><line class="network-line" opacity="0.4" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="32%" y1="50%" y2="28%"></line><line class="network-line" opacity="0.6" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="25%" y1="50%" y2="68%"></line><line class="network-line" opacity="0.5" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="78%" y1="50%" y2="72%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="55%" y1="50%" y2="15%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="15%" y1="50%" y2="50%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="45%" y1="50%" y2="85%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="88%" y1="50%" y2="40%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="82%" y1="50%" y2="20%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="40%" y1="50%" y2="60%"></line><line class="network-line" opacity="0.2" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="10%" y1="50%" y2="10%"></line><defs><linearGradient id="lineGrad1" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#d8b4fe"></stop><stop offset="50%" stop-color="#fcaad6"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient><linearGradient id="lineGrad2" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#7ed4fd"></stop><stop offset="50%" stop-color="#d8b4fe"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient></defs></svg>
+<!-- 10 User Digital Human Avatars -->
+<!-- 1. Maya (Active Selected) -->
+<button aria-label="Open Elena J. match profile" data-darlink-match-id="elena" class="absolute top-[28%] left-[32%] transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full glass-layer-2 z-20 transition-all hover:scale-110 group border-2 border-primary-container/60 overflow-hidden shadow-[0_0_15px_rgba(219,184,255,0.4)]">
+<div class="absolute inset-0 bg-primary/10 flex items-center justify-center font-bold text-primary text-body-lg">EJ</div>
+</button>
+<!-- 2. EJ -->
+<button aria-label="Open Aria Liu match profile" data-darlink-match-id="aria" class="absolute top-[68%] left-[25%] transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass-layer-2 z-20 transition-all hover:scale-110 group border-2 border-secondary-container/40 overflow-hidden shadow-[0_0_15px_rgba(126,212,253,0.4)]">
+<div class="absolute inset-0 bg-secondary/10 flex items-center justify-center font-bold text-secondary text-body-md">AL</div>
+</button>
+<!-- 3. AL -->
+<button aria-label="Open Sarah Jin match profile" data-darlink-match-id="sarah" class="absolute top-[72%] left-[78%] transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full glass-layer-2 z-20 transition-all hover:scale-110 group border-2 border-tertiary-container/60 overflow-hidden shadow-[0_0_15px_rgba(252,170,214,0.4)]">
+<div class="absolute inset-0 bg-tertiary/10 flex items-center justify-center font-bold text-tertiary text-body-lg">SJ</div>
+</button>
+<!-- 4. SJ -->
+<button aria-label="Open Maya K. match profile" data-darlink-match-id="maya" class="absolute top-[15%] left-[55%] transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full glass-layer-2 z-20 border border-primary-container/40 opacity-80 hover:opacity-100 transition-all hover:scale-110 shadow-md">
+<div class="absolute inset-0 bg-white/40 flex items-center justify-center text-label-sm font-bold text-on-surface">MK</div>
+</button>
+<!-- 5-10: More miniature avatars for network density -->
+<button aria-label="Open Rui Deng match profile" data-darlink-match-id="rui" class="absolute top-[50%] left-[15%] transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full glass-layer-2 z-20 border border-primary-container/40 opacity-80 hover:opacity-100 transition-all hover:scale-110 shadow-md">
+<div class="absolute inset-0 bg-white/40 flex items-center justify-center text-label-sm font-bold text-on-surface">RD</div>
+</button>
+<button aria-label="Open Lina Xu match profile" data-darlink-match-id="lina" class="absolute top-[85%] left-[45%] transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full glass-layer-2 z-20 border border-primary-container/40 opacity-80 hover:opacity-100 transition-all hover:scale-110 shadow-md">
+<div class="absolute inset-0 bg-white/40 flex items-center justify-center text-label-sm font-bold text-on-surface">LX</div>
+</button>
+<button aria-label="Open Zoe Han match profile" data-darlink-match-id="zoe" class="absolute top-[40%] left-[88%] transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full glass-layer-2 z-20 border border-primary-container/40 opacity-80 hover:opacity-100 transition-all hover:scale-110 shadow-md">
+<div class="absolute inset-0 bg-white/40 flex items-center justify-center text-label-sm font-bold text-on-surface">ZH</div>
+</button>
+<button aria-label="Open Priya Tan match profile" data-darlink-match-id="priya" class="absolute top-[20%] left-[82%] transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full glass-layer-2 z-20 border border-primary-container/40 opacity-80 hover:opacity-100 transition-all hover:scale-110 shadow-md">
+<div class="absolute inset-0 bg-white/40 flex items-center justify-center text-label-sm font-bold text-on-surface">PT</div>
+</button>
+<button aria-label="Open Yuki Ito match profile" data-darlink-match-id="yuki" class="absolute top-[60%] left-[40%] transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full glass-layer-2 z-20 border border-primary-container/40 opacity-80 hover:opacity-100 transition-all hover:scale-110 shadow-md">
+<div class="absolute inset-0 bg-white/40 flex items-center justify-center text-label-sm font-bold text-on-surface">YI</div>
+</button>
+<button aria-label="Open Yuki Ito match profile" data-darlink-match-id="yuki" class="absolute top-[60%] left-[40%] transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full glass-layer-1 z-20 border border-white/30 opacity-60 hover:opacity-100 transition-opacity">
+<div class="absolute inset-0 bg-white/20 flex items-center justify-center text-[10px] font-bold">YI</div>
+</button>
+<!-- Central 'You' Node - 3D Glowing Sphere -->
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full glowing-sphere-3d flex items-center justify-center z-30 shadow-2xl">
+<span class="font-headline-md text-headline-md text-white font-bold drop-shadow-md">You</span>
+</div>
+<!-- Atmosphere Sparkles -->
+<div class="absolute top-10 left-10 text-primary-container/40 animate-pulse">
+<span class="material-symbols-outlined" style="font-size: 32px; font-variation-settings: &quot;FILL&quot; 1;">favorite</span>
+</div>
+<div class="absolute bottom-16 right-24 text-secondary-container/40 animate-bounce">
+<span class="material-symbols-outlined" style="font-size: 28px; font-variation-settings: &quot;FILL&quot; 1;">auto_awesome</span>
+</div>
+</section>
+<!-- Insights Sidebar -->
+<aside class="md:col-span-4 flex flex-col gap-element-gap h-full">
+<!-- Selected Match Card -->
+<div class="iridescent-frosted rounded-xl p-8 flex flex-col items-center relative overflow-hidden shadow-xl">
+<div class="w-28 h-28 rounded-full overflow-hidden border-4 border-white/60 shadow-2xl mb-4 relative z-10">
+<img class="w-full h-full object-cover" data-alt="Portrait of Maya K." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaPHxdnY3xHblq4kFnkxGueJRzvh9Pq4jLSlnqhukeiOSpkEjVPoQkZDP8pDASKBimBRm5ntyihJgfpA3_XKa8Btf6cClVnUciZDpCOnJLSOCYePapV-odYCr9EiosZGo2FAs5SjZKxXyyRI4IB_otcOne5BzhQCVESx4nVykpJcW6cKEZq841m-dvCz-LBVzDn0ZvIfrEGYM2F7qYBiEk42-f2wDZUCeoDlvY5rjwO1R-zDFrOKE_8mSrAS7fnpJzahwDnYWtuGjG">
+</div>
+<h2 class="font-headline-md text-headline-lg text-on-surface z-10 mb-1">Maya K.</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant z-10 mb-8 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+<span class="">San Francisco</span> • 2 miles away
+                </p>
+<!-- Resonance Meter -->
+<div class="w-full mb-8 z-10">
+<div class="flex justify-between items-end mb-3">
+<span class="font-label-lg text-label-lg text-primary font-bold">Resonance Level</span>
+<span class="font-headline-md text-headline-md text-secondary font-bold">92%</span>
+</div>
+<div class="h-4 w-full bg-white/40 rounded-full overflow-hidden shadow-inner">
+<div class="h-full rounded-full liquid-progress" style="width: 92%;"></div>
+</div>
+</div>
+<!-- AI Insights -->
+<div class="w-full z-10 flex flex-col gap-4 mb-8">
+<h3 class="font-label-lg text-label-lg text-on-surface font-bold mb-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-tertiary">psychology</span>
+                        AI Insights
+                    </h3>
+<div class="bg-white/40 backdrop-blur-md border border-white/30 rounded-xl p-4 flex items-start gap-4 hover:bg-white/60 transition-colors">
+<div class="bg-primary-container/40 p-2 rounded-full flex-shrink-0 text-primary shadow-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">palette</span>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Aesthetic Alignment</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Both profiles exhibit high affinity for minimalist digital art and brutalist architecture.</p>
+</div>
+</div>
+<div class="bg-white/40 backdrop-blur-md border border-white/30 rounded-xl p-4 flex items-start gap-4 hover:bg-white/60 transition-colors">
+<div class="bg-secondary-container/40 p-2 rounded-full flex-shrink-0 text-secondary shadow-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">menu_book</span>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">Literature Overlap</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Strong mutual interest in speculative sci-fi and historical non-fiction.</p>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="w-full flex gap-3 z-10">
+<button class="flex-1 bg-gradient-to-r from-primary via-secondary to-tertiary text-on-primary font-label-lg text-label-lg py-4 rounded-full shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                        Initiate Connect
+                    </button>
+<button class="w-14 h-14 glass-layer-2 hover:bg-white/80 rounded-full flex items-center justify-center text-primary transition-all hover:scale-110 shadow-lg border border-white/50">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">refresh</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-surface-container-low/80 backdrop-blur-3xl rounded-t-2xl border-t border-white/20 shadow-2xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 p-2 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl p-3 scale-110 shadow-xl" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: &quot;FILL&quot; 1;">favorite</span>
+<span class="font-label-sm text-label-sm">Matches</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 p-2 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-1">auto_awesome</span>
+<span class="font-label-sm text-label-sm">Signal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 p-2 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-1">chat_bubble</span>
+<span class="font-label-sm text-label-sm">Inbox</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 p-2 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+
+
+
+
+</body></html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Darlink - Digital Human Plaza</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#6f5092",
+            secondary: "#006686",
+            tertiary: "#8a486f",
+            surface: "#fdfbff",
+            "on-surface": "#111c2d",
+            "on-surface-variant": "#4a454f"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      color: #111c2d;
+      background:
+        radial-gradient(circle at 16% 8%, rgba(216,180,254,.36), transparent 28rem),
+        radial-gradient(circle at 92% 18%, rgba(126,212,253,.28), transparent 30rem),
+        linear-gradient(135deg, #fcfbff 0%, #f7f0ff 44%, #edf8ff 100%);
+      overflow-x: hidden;
+    }
+    .glass {
+      background: rgba(255,255,255,.58);
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow: 0 24px 70px rgba(31,42,68,.09);
+      backdrop-filter: blur(24px);
+    }
+    .plaza-card {
+      transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s ease;
+    }
+    .plaza-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 30px 80px rgba(111,80,146,.16);
+    }
+    .avatar-orb {
+      background: linear-gradient(135deg, var(--from), var(--to));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 16px 40px rgba(111,80,146,.2);
+    }
+    .signal-line {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(111,80,146,.3), rgba(0,102,134,.42), transparent);
+      animation: flow 3.4s linear infinite;
+      background-size: 200% 100%;
+    }
+    @keyframes flow {
+      from { background-position: 200% 0; }
+      to { background-position: 0 0; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sticky top-0 z-40 mx-auto mt-5 flex max-w-6xl items-center justify-between rounded-full glass px-5 py-3">
+    <a class="text-3xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent" href="#">Darlink</a>
+    <div class="hidden md:flex items-center gap-7 text-sm font-bold text-on-surface-variant">
+      <a href="#">Discover</a>
+      <a href="#">Matches</a>
+      <a href="#">Events</a>
+      <a href="#">Community</a>
+      <a href="#">Hall of Fame</a>
+    </div>
+    <div class="h-10 w-10 rounded-full avatar-orb" style="--from:#d8b4fe;--to:#7ed4fd"></div>
+  </nav>
+
+  <main class="mx-auto max-w-7xl px-6 py-10 md:py-14">
+    <section class="grid gap-8 md:grid-cols-[1fr_420px] md:items-end">
+      <div>
+        <p class="mb-4 inline-flex rounded-full bg-white/60 px-4 py-2 text-xs font-extrabold uppercase tracking-[.18em] text-tertiary">Digital Human Plaza</p>
+        <h1 class="max-w-4xl text-5xl font-extrabold leading-[1.02] tracking-tight md:text-7xl">
+          Every student has a living social twin.
+        </h1>
+        <p class="mt-6 max-w-2xl text-lg leading-8 text-on-surface-variant">
+          A plaza of user-owned digital humans distilled by Xiaoda from onboarding chats, campus intent, boundaries, humor, and preferred communication rhythm.
+        </p>
+      </div>
+      <div class="glass rounded-[32px] p-6">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-extrabold uppercase tracking-[.14em] text-primary">Twin resonance</span>
+          <strong class="text-4xl text-secondary">86%</strong>
+        </div>
+        <div class="my-5 h-3 overflow-hidden rounded-full bg-white/60">
+          <div class="h-full w-[86%] rounded-full bg-gradient-to-r from-primary via-tertiary to-secondary"></div>
+        </div>
+        <p class="text-sm leading-6 text-on-surface-variant">Your digital human is most responsive to quiet study energy, direct empathy, and curiosity-led introductions today.</p>
+      </div>
+    </section>
+
+    <div class="my-10 signal-line rounded-full"></div>
+
+    <section class="grid gap-5 md:grid-cols-3">
+      <article class="plaza-card glass rounded-[28px] p-6">
+        <div class="mb-5 flex items-center gap-4">
+          <div class="grid h-16 w-16 place-items-center rounded-3xl avatar-orb text-xl font-black text-white" style="--from:#6f5092;--to:#fcaad6">AL</div>
+          <div>
+            <h3 class="text-2xl font-extrabold">Aria Liu Twin</h3>
+            <p class="text-sm font-bold text-primary">Study sync · calm precision</p>
+          </div>
+        </div>
+        <p class="text-sm leading-7 text-on-surface-variant">Asks clean questions, keeps commitments visible, and turns scattered exam pressure into a gentle study rhythm.</p>
+      </article>
+      <article class="plaza-card glass rounded-[28px] p-6">
+        <div class="mb-5 flex items-center gap-4">
+          <div class="grid h-16 w-16 place-items-center rounded-3xl avatar-orb text-xl font-black text-white" style="--from:#006686;--to:#7ed4fd">MK</div>
+          <div>
+            <h3 class="text-2xl font-extrabold">Maya K. Twin</h3>
+            <p class="text-sm font-bold text-secondary">Design chat · visual warmth</p>
+          </div>
+        </div>
+        <p class="text-sm leading-7 text-on-surface-variant">Responds through examples, references, and quick sketches, ideal for creative projects and reflective conversation.</p>
+      </article>
+      <article class="plaza-card glass rounded-[28px] p-6">
+        <div class="mb-5 flex items-center gap-4">
+          <div class="grid h-16 w-16 place-items-center rounded-3xl avatar-orb text-xl font-black text-white" style="--from:#8a486f;--to:#d8b4fe">SJ</div>
+          <div>
+            <h3 class="text-2xl font-extrabold">Sarah J. Twin</h3>
+            <p class="text-sm font-bold text-tertiary">Romance pace · soft boundaries</p>
+          </div>
+        </div>
+        <p class="text-sm leading-7 text-on-surface-variant">Keeps tone emotionally safe, notices hesitation, and makes first messages feel less performative.</p>
+      </article>
+    </section>
+
+    <section class="mt-8 grid gap-5 md:grid-cols-[1.2fr_.8fr]">
+      <div class="glass rounded-[32px] p-7">
+        <h2 class="mb-5 text-3xl font-extrabold">Live plaza signals</h2>
+        <div class="grid gap-4 md:grid-cols-3">
+          <div class="rounded-2xl bg-white/55 p-5">
+            <strong class="text-3xl text-primary">128</strong>
+            <p class="mt-2 text-sm text-on-surface-variant">active digital humans nearby</p>
+          </div>
+          <div class="rounded-2xl bg-white/55 p-5">
+            <strong class="text-3xl text-secondary">42</strong>
+            <p class="mt-2 text-sm text-on-surface-variant">study-compatible twins</p>
+          </div>
+          <div class="rounded-2xl bg-white/55 p-5">
+            <strong class="text-3xl text-tertiary">19</strong>
+            <p class="mt-2 text-sm text-on-surface-variant">deep-chat openings</p>
+          </div>
+        </div>
+      </div>
+      <div class="glass rounded-[32px] p-7">
+        <h2 class="text-3xl font-extrabold">Xiaoda distilled yours</h2>
+        <p class="mt-4 text-sm leading-7 text-on-surface-variant">Your twin currently emphasizes intellectual steadiness, emotionally aware disagreement, and low-pressure invitations.</p>
+        <button class="mt-6 rounded-full bg-gradient-to-r from-primary to-secondary px-6 py-3 text-sm font-extrabold text-white shadow-lg">Explore Potential</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

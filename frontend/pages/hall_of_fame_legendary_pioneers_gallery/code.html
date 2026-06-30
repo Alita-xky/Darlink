@@ -1,0 +1,369 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Darlink - Hall of Fame</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#d8e3fb",
+                        "tertiary": "#8a486f",
+                        "on-tertiary-fixed-variant": "#6f3157",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#573878",
+                        "secondary-fixed-dim": "#7bd1fa",
+                        "inverse-on-surface": "#ecf1ff",
+                        "outline-variant": "#cdc3d0",
+                        "secondary-fixed": "#c0e8ff",
+                        "surface-dim": "#cfdaf2",
+                        "on-surface": "#111c2d",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#005b78",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#e7eeff",
+                        "on-primary-container": "#604283",
+                        "surface-bright": "#f9f9ff",
+                        "primary-fixed": "#efdbff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#7ed4fd",
+                        "on-tertiary-fixed": "#3a0329",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#d8e3fb",
+                        "outline": "#7c7480",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#263143",
+                        "on-background": "#111c2d",
+                        "tertiary-fixed": "#ffd8ea",
+                        "surface": "#f9f9ff",
+                        "on-secondary-fixed": "#001e2b",
+                        "surface-container-low": "#f0f3ff",
+                        "secondary": "#006686",
+                        "on-surface-variant": "#4a454f",
+                        "background": "#f9f9ff",
+                        "tertiary-container": "#fcaad6",
+                        "surface-tint": "#6f5092",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "primary": "#6f5092",
+                        "on-tertiary-container": "#793a60",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "tertiary-fixed-dim": "#ffaeda",
+                        "primary-container": "#d8b4fe",
+                        "surface-container-high": "#dee8ff",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#dbb8ff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#29074a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "container-padding-desktop": "40px",
+                        "container-padding-mobile": "20px",
+                        "element-gap": "12px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400" }]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .glass-floating {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        .glass-floating::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            margin: -1px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #d8b4fe, #7ed4fd);
+        }
+        .glow-shadow {
+            box-shadow: 0 0 20px rgba(216, 180, 254, 0.1);
+        }
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(216,180,254,0.8) 0%, rgba(216,180,254,0) 70%);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+        
+        .carousel-container {
+            perspective: 1000px;
+        }
+        .carousel-item {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        /* Dark navy background as requested, overriding light theme body default */
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b, #0f172a);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        /* Override generic text colors to force contrast on dark background */
+        .text-on-surface, .text-on-surface-variant {
+            color: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+<body class="font-body-md overflow-x-hidden relative">
+<!-- Floating Particles Background -->
+<div class="floating-particles" id="particles-container"><div class="particle" style="width: 11.9422px; height: 11.9422px; left: 64.9776vw; animation-delay: 7.19944s; animation-duration: 11.3341s;"></div><div class="particle" style="width: 18.1086px; height: 18.1086px; left: 75.4926vw; animation-delay: 11.4064s; animation-duration: 17.3744s;"></div><div class="particle" style="width: 7.00265px; height: 7.00265px; left: 94.7955vw; animation-delay: 14.286s; animation-duration: 16.3541s;"></div><div class="particle" style="width: 16.6846px; height: 16.6846px; left: 92.5297vw; animation-delay: 4.99469s; animation-duration: 19.3996s;"></div><div class="particle" style="width: 22.6458px; height: 22.6458px; left: 71.8603vw; animation-delay: 9.20748s; animation-duration: 10.0241s;"></div><div class="particle" style="width: 14.5936px; height: 14.5936px; left: 34.5002vw; animation-delay: 9.74323s; animation-duration: 12.3374s;"></div><div class="particle" style="width: 17.035px; height: 17.035px; left: 63.6351vw; animation-delay: 10.5491s; animation-duration: 18.6349s;"></div><div class="particle" style="width: 12.9049px; height: 12.9049px; left: 0.655862vw; animation-delay: 11.298s; animation-duration: 13.7244s;"></div><div class="particle" style="width: 23.4226px; height: 23.4226px; left: 89.9719vw; animation-delay: 0.470331s; animation-duration: 13.5465s;"></div><div class="particle" style="width: 15.0888px; height: 15.0888px; left: 62.7182vw; animation-delay: 13.9908s; animation-duration: 14.7308s;"></div><div class="particle" style="width: 10.9132px; height: 10.9132px; left: 39.386vw; animation-delay: 6.62945s; animation-duration: 15.4994s;"></div><div class="particle" style="width: 24.846px; height: 24.846px; left: 36.2218vw; animation-delay: 10.0704s; animation-duration: 19.8355s;"></div><div class="particle" style="width: 5.5529px; height: 5.5529px; left: 1.21244vw; animation-delay: 6.32079s; animation-duration: 18.0345s;"></div><div class="particle" style="width: 21.99px; height: 21.99px; left: 6.07048vw; animation-delay: 0.726976s; animation-duration: 17.5573s;"></div><div class="particle" style="width: 22.7317px; height: 22.7317px; left: 18.4039vw; animation-delay: 8.43678s; animation-duration: 10.4043s;"></div><div class="particle" style="width: 9.60677px; height: 9.60677px; left: 42.4646vw; animation-delay: 5.46642s; animation-duration: 11.8009s;"></div><div class="particle" style="width: 22.8301px; height: 22.8301px; left: 5.68683vw; animation-delay: 1.2363s; animation-duration: 19.1173s;"></div><div class="particle" style="width: 13.1369px; height: 13.1369px; left: 51.8929vw; animation-delay: 8.67898s; animation-duration: 18.0927s;"></div><div class="particle" style="width: 18.166px; height: 18.166px; left: 84.1819vw; animation-delay: 11.7363s; animation-duration: 12.6014s;"></div><div class="particle" style="width: 14.2154px; height: 14.2154px; left: 75.9792vw; animation-delay: 9.59032s; animation-duration: 14.6531s;"></div></div>
+<!-- TopNavBar -->
+<nav class="hidden md:flex justify-between items-center px-container-padding-desktop py-4 w-full max-w-full mx-auto z-50 bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-[0_0_20px_rgba(216,180,254,0.1)] fixed top-0 w-full transition-all duration-300">
+<div class="font-display-lg text-display-lg bg-gradient-to-r from-primary-fixed-dim via-tertiary-fixed-dim to-secondary-fixed-dim bg-clip-text text-transparent">
+            Darlink
+        </div>
+<div class="flex items-center gap-8">
+<a class="font-label-lg text-label-lg text-white/70 hover:text-primary-fixed-dim transition-colors duration-300" href="#">Discover</a>
+<a class="font-label-lg text-label-lg text-white/70 hover:text-primary-fixed-dim transition-colors duration-300" href="#">Matches</a>
+<a class="font-label-lg text-label-lg text-white/70 hover:text-primary-fixed-dim transition-colors duration-300" href="#">Events</a>
+<a class="font-label-lg text-label-lg text-white/70 hover:text-primary-fixed-dim transition-colors duration-300" href="#">Community</a>
+<!-- Active State -->
+<a class="font-label-lg text-label-lg text-primary-fixed border-b-2 border-primary-fixed pb-1" href="#">Hall of Fame</a>
+</div>
+<div class="flex items-center gap-element-gap">
+<button class="text-white/80 hover:text-primary-fixed-dim transition-colors duration-300 p-2 rounded-full hover:bg-white/10">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 0;">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary-container to-secondary-container p-[2px]">
+<img class="w-full h-full rounded-full object-cover border-2 border-transparent" data-alt="A small circular avatar showing a user profile with a glowing holographic edge, smooth modern aesthetic, soft lilac and cyan tones, set against a dark premium UI background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQOfxZq8jPjAeTsa-wgp6W5hpNt0JjYo_77GsXf5d-RqRFZXc-fhlQ1I-6Jx3rJzhWLPOe1OmK-v6IwpqlxOqJe3yqNGh7zV1A6C4--iCNIepwopsLGtNLym9Q06V8teEkXdhLYmI0CpYJLczl5Fo-8c144J2wQBNqRnetSg2gYXLUEVz-HX_8M3Zgv-aoL0zvA5GxFhUsidpF2YNYuS86aPSl5sYDTC9y4pzsDOqiOuu-GBmRT5IInkWQ-WT0WsKwZcIDEvFb42PD">
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-[100px] pb-24 md:pb-12 px-container-padding-mobile md:px-container-padding-desktop min-h-screen grid grid-cols-1 md:grid-cols-12 gap-6 max-w-screen-2xl mx-auto">
+<!-- Header Section -->
+<header class="col-span-1 md:col-span-12 mb-8 text-center mt-8">
+<h1 class="font-display-lg text-display-lg bg-gradient-to-r from-white via-primary-fixed to-secondary-fixed bg-clip-text text-transparent mb-4">Hall of Fame</h1>
+<p class="font-body-lg text-body-lg text-white/80 max-w-2xl mx-auto">Discover our most prestigious digital companions, celebrated for their unique personalities and extraordinary connections.</p>
+</header>
+<!-- Cinematic Carousel Area (Col 1-8 on desktop) -->
+<section class="col-span-1 md:col-span-8 relative h-[600px] carousel-container flex items-center justify-center">
+<!-- Background glow for active card -->
+<div class="absolute inset-0 bg-primary-container/10 blur-[100px] rounded-full z-0 pointer-events-none"></div>
+<!-- Carousel Card 1 (Active) -->
+<div class="carousel-item glass-floating rounded-xl p-4 flex flex-col md:flex-row gap-6 w-full max-w-4xl h-full z-10 relative overflow-hidden group">
+<!-- Inner glow -->
+<div class="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-50 z-0 pointer-events-none rounded-xl"></div>
+<div class="w-full md:w-1/2 h-[300px] md:h-full relative rounded-lg overflow-hidden shrink-0 z-10">
+<img class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A highly detailed 3D digital human portrait of Steve Jobs, styled with glowing holographic elements, soft pink/blue/lilac glows, and subtle heart particles, set in a luminous romance-tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLgiZpAseNeh5RSB7la4Y06zYuCDcIsjdJ_enqz_Ayj-YMStLbDYBgdiN5Nneb9vBYD5WhEPWSLKeVHTVJjhP6R6xZPClmatTxZZ1hRayBxsANwlQzZxBK6w6_Gb45_M0sL-i0ucxYYPqD904rskcH7TAKBprIS4P4kx53a86P3EeCHXUVzqveXpkaa6gNAaw53MrNefUX3i1fBoH1owUCeDIruerqXqrDjr-iTsnoiWT2lzQAEFBoMSgMfH9bJrGDkvIfDB-2GcPszio">
+<div class="absolute top-4 left-4 bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-3 py-1 font-label-sm text-label-sm text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+                        Top Trending
+                    </div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col justify-center z-10 py-6 pr-6">
+<div class="mb-4">
+<h2 class="font-headline-lg text-headline-lg text-white mb-2">Steve Jobs</h2>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-primary-container/20 border border-primary-fixed/30 rounded-full px-3 py-1 font-label-sm text-label-sm text-primary-fixed">Visionary</span>
+<span class="bg-secondary-container/20 border border-secondary-fixed/30 rounded-full px-3 py-1 font-label-sm text-label-sm text-secondary-fixed">Tech Pioneer</span>
+</div>
+<p class="font-body-md text-body-md text-white/80 line-clamp-4">
+                            A legendary tech visionary whose intuitive design and brilliant marketing revolutionized personal computing and digital life. His legacy of innovation and passion for seamless, beautiful technology continues to inspire millions, offering unparalleled wisdom and creative foresight.
+                        </p>
+</div>
+<div class="mt-auto pt-6 flex gap-4">
+<button class="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary-container hover:to-secondary-container text-white font-label-lg text-label-lg py-3 px-6 rounded-full transition-all shadow-[0_4px_20px_rgba(111,80,146,0.4)] flex items-center justify-center gap-2 hover:scale-105">
+<span class="material-symbols-outlined">chat_bubble</span>
+                            Chat with Me
+                        </button>
+<button class="w-12 h-12 glass-panel rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Carousel Controls -->
+<button class="absolute left-[-20px] top-1/2 -translate-y-1/2 w-12 h-12 glass-panel rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all z-20">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="absolute right-[-20px] top-1/2 -translate-y-1/2 w-12 h-12 glass-panel rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-all z-20">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</section>
+<!-- Side Panel: Global Trending Twins (Col 9-12 on desktop) -->
+<aside class="col-span-1 md:col-span-4 flex flex-col gap-6">
+<div class="glass-panel rounded-xl p-6 h-full flex flex-col">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" style="font-variation-settings: &quot;FILL&quot; 1;">local_fire_department</span>
+<h3 class="font-headline-md text-headline-md text-white">Global Trending</h3>
+</div>
+<div class="flex flex-col gap-4 overflow-y-auto pr-2 pb-4 flex-1">
+<!-- Trending Item 1 -->
+<div class="group flex gap-4 items-center p-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/10">
+<div class="w-16 h-16 rounded-full overflow-hidden shrink-0 border-2 border-primary-fixed/50 relative">
+<img class="w-full h-full object-cover" data-alt="3D digital portrait of Elon Musk in a futuristic romance-tech style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0yKoYuLO-bNMvJc9VVloNuEP41nYHr-ds9dKDL9cXQoP4YonxMQM8qh0Rda0dV9lFwRVH8KfexhWSX0BNvzyuz3JO7kyMoJkWsCs7ASRwPXfbjHYz5oJUt_c9UN3FXrwwxVsgFcZBKbwnyZMKFEvpfwwM7rtXOYj6khGI4Ih7u8WzpOGShTMiJjIqzLebP1THzdUAgbMkANQ2G0b1tdwhoGgvoOnPb2MCcCdPwYVe4pjKFC4JoR0wYHYmIRHr7TIOXDrdQX_NxzNZwdI">
+<div class="absolute bottom-0 right-0 w-4 h-4 bg-green-400 rounded-full border-2 border-[#0f172a]"></div>
+</div>
+<div class="flex-1">
+<h4 class="font-label-lg text-label-lg text-white group-hover:text-primary-fixed transition-colors">Elon Musk</h4>
+<p class="font-label-sm text-label-sm text-white/60">Rank #1 • Tesla/SpaceX</p>
+</div>
+<span class="text-white/30 group-hover:text-white/80 transition-colors font-bold leading-none" aria-hidden="true">→</span>
+</div>
+<!-- Trending Item 2 -->
+<div class="group flex gap-4 items-center p-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/10">
+<div class="w-16 h-16 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
+<img class="w-full h-full object-cover" data-alt="3D digital portrait of Jensen Huang in a futuristic romance-tech style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3edZNtZu9Cb6sB7USmzMqj7RyL_Fxt-krTphD3xYGACy1sSKia6oOilXHZqXA40vG8ibxlI73bX0FrX6a64kVwqRdYSGljjLscxGGMFkPOuXVGjvY5Bqly4a8cgJcryZFcVNATANxlU70t5G3ohsdyZACqmem5dLAtpPmADQ7ys2qutU1pWNFfLHn0h8Fr8I0TUC3RVx5M2qaipMss-cE7czLkqLseuAGZM2J5nTyuCcNCvD_klA2FsbFTuH1RVYCXlfDxBoSYMBZO18">
+</div>
+<div class="flex-1">
+<h4 class="font-label-lg text-label-lg text-white group-hover:text-primary-fixed transition-colors">Jensen Huang</h4>
+<p class="font-label-sm text-label-sm text-white/60">Rank #2 • NVIDIA</p>
+</div>
+<span class="text-white/30 group-hover:text-white/80 transition-colors font-bold leading-none" aria-hidden="true">→</span>
+</div>
+<!-- Trending Item 3 -->
+
+<!-- Trending Item 4 -->
+<div class="group flex gap-4 items-center p-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/10">
+<div class="w-16 h-16 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
+<img class="w-full h-full object-cover" data-alt="3D digital portrait of Jack Ma in a futuristic romance-tech style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArMkA3kU5m7tz_AxM3AdTWbdZqCsmRo5h3YV6_9uENmXSsey09DYD8kwZdaYsT2sh33CAZTmrZGASXaV5qxURpWlkyABbz71Q6xjEDIuD_iDsJtWYQyEoOFs-8DIZdHMxNgXR_9K3WOcfFtVqwXKImm1IgqYIY05utYjY7mFHcK9eamAg2JewmQVMg9xmtiiP_pm3E5L2XvlUIbqOV2CpIRt4YQ5mvXUANiH_09glSkjBUAupDgddYycJQ3jib-O9jhLMpMYuoGFsyEMs">
+</div>
+<div class="flex-1">
+<h4 class="font-label-lg text-label-lg text-white group-hover:text-primary-fixed transition-colors">Jack Ma</h4>
+<p class="font-label-sm text-label-sm text-white/60">Rank #4 • Alibaba</p>
+</div>
+<span class="text-white/30 group-hover:text-white/80 transition-colors font-bold leading-none" aria-hidden="true">→</span>
+</div>
+<!-- Trending Item 5 -->
+<div class="group flex gap-4 items-center p-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/10">
+<div class="w-16 h-16 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
+<img class="w-full h-full object-cover" data-alt="3D digital portrait of Warren Buffett in a futuristic romance-tech style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB880In-VCkcot0-KkwdU5iKPTs0kLKIzq8lLGcuVjGQyDp8qBV3Nub0GRisxA0eYArgZosb_qfdDja2j4TOObvA84zTudUexWDSorpI9jpc4wjJOeh3WCPn7e3JB6qeLd5iyvVcQdriHXWsNWwWniL4B-SY8jbTiregSPFZOc2-yEmLfWMPDJHnXIrvNa6bchSjx-OFWR15G4VAzXAR_c_XDQ_Y0r3aQeuZIO_JxbmUCLFa2Qb0per5w5Sis_r1sRsX5EHqJ350fHcWIg">
+</div>
+<div class="flex-1">
+<h4 class="font-label-lg text-label-lg text-white group-hover:text-primary-fixed transition-colors">Warren Buffett</h4>
+<p class="font-label-sm text-label-sm text-white/60">Rank #5 • Berkshire Hathaway</p>
+</div>
+<span class="text-white/30 group-hover:text-white/80 transition-colors font-bold leading-none" aria-hidden="true">→</span>
+</div>
+<!-- Trending Item 6 -->
+<div class="group flex gap-4 items-center p-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/10">
+<div class="w-16 h-16 rounded-full overflow-hidden shrink-0 border-2 border-white/20">
+<img class="w-full h-full object-cover" data-alt="3D digital portrait of Tim Cook in a futuristic romance-tech style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkLH-yejb7T3UVsi7TH0n4C20uINQN5YWQZGVDNNZAemAm71lHrWImuNxh0Ox2RBCGDNuF5_YV5rjqsJxv5WUK-FMBWgkmimq2BoyNYK4xdPzbDtodVcQlSnmfqJFKyNV8Ro1PHQbWfsnJVWe95QTpcfoxxMKsYFQhJJIh6QncxL1bWCIYkZroZm-GfQddSE6k23u8ipFdGP4RQ9ExES8qo-isUTJWkccpNek--DyhO3D4aU8C_8kjfdzEL-2KUV8lj9eO0dnEQyPo1zA">
+</div>
+<div class="flex-1">
+<h4 class="font-label-lg text-label-lg text-white group-hover:text-primary-fixed transition-colors">Tim Cook</h4>
+<p class="font-label-sm text-label-sm text-white/60">Rank #6 • Apple</p>
+</div>
+<span class="text-white/30 group-hover:text-white/80 transition-colors font-bold leading-none" aria-hidden="true">→</span>
+</div>
+</div>
+<button class="w-full mt-4 glass-panel py-3 rounded-lg font-label-lg text-label-lg text-white/80 hover:text-white hover:bg-white/20 transition-all border border-white/10">
+                    View Complete Ranking
+                </button>
+</div>
+</aside>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden bg-white/10 backdrop-blur-3xl rounded-t-lg border-t border-white/20 shadow-[0_-8px_32px_rgba(216,180,254,0.15)]">
+<div class="flex flex-col items-center justify-center text-white/70 p-2 hover:bg-white/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-sm text-[10px]">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-white/70 p-2 hover:bg-white/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined mb-1">favorite</span>
+<span class="font-label-sm text-[10px]">Matches</span>
+</div>
+<!-- Active Tab Approximation for Mobile Bottom Nav -->
+<div class="flex flex-col items-center justify-center bg-primary-container/40 text-primary-fixed rounded-full px-5 py-2 scale-110 transition-all duration-500 ease-out border border-primary-container/50">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: &quot;FILL&quot; 1;">star</span>
+<span class="font-label-sm text-[10px]">Hall</span>
+</div>
+<div class="flex flex-col items-center justify-center text-white/70 p-2 hover:bg-white/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined mb-1">forum</span>
+<span class="font-label-sm text-[10px]">Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-white/70 p-2 hover:bg-white/10 rounded-lg transition-colors">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-sm text-[10px]">Profile</span>
+</div>
+</nav>
+<!-- Simple JS for particle generation -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('particles-container');
+            const particleCount = 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 20 + 5; // 5px to 25px
+                const left = Math.random() * 100; // 0% to 100% vw
+                const delay = Math.random() * 15; // 0s to 15s delay
+                const duration = Math.random() * 10 + 10; // 10s to 20s
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}vw`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(particle);
+            }
+        });
+    </script>
+
+
+</body></html>

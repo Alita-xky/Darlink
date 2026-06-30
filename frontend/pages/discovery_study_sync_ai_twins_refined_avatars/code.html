@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Darlink - Study Sync Discovery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#d8b4fe",
+                        "inverse-surface": "#263143",
+                        "secondary-container": "#7ed4fd",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9ff",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffaeda",
+                        "on-tertiary-container": "#793a60",
+                        "tertiary": "#8a486f",
+                        "on-primary-container": "#604283",
+                        "surface-tint": "#6f5092",
+                        "surface": "#f9f9ff",
+                        "on-primary-fixed": "#29074a",
+                        "inverse-primary": "#dbb8ff",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#006686",
+                        "on-primary-fixed-variant": "#573878",
+                        "surface-container": "#e7eeff",
+                        "secondary-fixed-dim": "#7bd1fa",
+                        "primary": "#6f5092",
+                        "on-error": "#ffffff",
+                        "outline": "#7c7480",
+                        "on-tertiary-fixed-variant": "#6f3157",
+                        "on-secondary-fixed": "#001e2b",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#efdbff",
+                        "tertiary-container": "#fcaad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#005b78",
+                        "tertiary-fixed": "#ffd8ea",
+                        "surface-dim": "#cfdaf2",
+                        "background": "#f9f9ff",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container-high": "#dee8ff",
+                        "secondary-fixed": "#c0e8ff",
+                        "on-surface": "#111c2d",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "outline-variant": "#cdc3d0",
+                        "on-background": "#111c2d",
+                        "inverse-on-surface": "#ecf1ff",
+                        "surface-variant": "#d8e3fb",
+                        "on-tertiary-fixed": "#3a0329",
+                        "on-surface-variant": "#4a454f",
+                        "surface-container-highest": "#d8e3fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "base": "8px",
+                        "container-padding-desktop": "40px",
+                        "element-gap": "12px",
+                        "container-padding-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background: linear-gradient(135deg, rgba(216,180,254,0.1) 0%, rgba(126,212,253,0.1) 100%), #f9f9ff;
+            background-attachment: fixed;
+        }
+        
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        .float-animation-delayed {
+            animation: float 8s ease-in-out infinite 2s;
+        }
+        
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.6), 0 8px 32px 0 rgba(216,180,254,0.1);
+        }
+        
+        /* Ambient Glow for Active/Hover */
+        .glass-card-hover:hover {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(40px);
+            border: 1px solid transparent;
+            background-image: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), linear-gradient(to right, #d8b4fe, #7ed4fd);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            box-shadow: 0 0 40px rgba(216,180,254,0.15);
+            transform: translateY(-4px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Iridescent text gradient */
+        .text-iridescent {
+            background: linear-gradient(to right, #6f5092, #8a486f, #006686);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Magical Button */
+        .btn-magical {
+            background: linear-gradient(135deg, #d8b4fe 0%, #7ed4fd 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-magical::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s ease;
+        }
+        .btn-magical:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background min-h-screen relative overflow-x-hidden">
+<!-- Ambient Background Blobs -->
+<div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+<div class="absolute top-[-10%] left-[-10%] w-1/2 h-1/2 rounded-full bg-primary-container/20 blur-[100px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-2/3 h-2/3 rounded-full bg-secondary-container/20 blur-[120px]"></div>
+<div class="absolute top-[40%] left-[60%] w-1/3 h-1/3 rounded-full bg-tertiary-container/15 blur-[80px]"></div>
+</div>
+<!-- Top Navigation Anchor (Shared Component JSON injected) -->
+<nav class="bg-white/40 dark:bg-white/10 backdrop-blur-3xl w-full top-0 sticky border-b border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(216,180,254,0.1)] flex justify-between items-center px-container-padding-desktop max-w-full h-20 z-50 transition-all duration-300">
+<div class="flex items-center gap-x-8">
+<!-- Brand -->
+<a class="font-headline-md text-headline-md font-bold bg-gradient-to-r from-primary via-tertiary to-secondary bg-clip-text text-transparent tracking-tight" href="#">
+                Darlink
+            </a>
+<!-- Navigation Links (Web) -->
+<div class="hidden md:flex gap-x-6">
+<!-- Active Item matching Intent (Discover) -->
+<a class="font-body-md text-body-md tracking-wider text-primary font-bold border-b-2 border-primary pb-1 transition-all duration-300 active:scale-95" href="#">Discover</a>
+<a class="font-body-md text-body-md tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-white/5 duration-300 rounded px-2 py-1 active:scale-95" href="#">Matches</a>
+<a class="font-body-md text-body-md tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-white/5 duration-300 rounded px-2 py-1 active:scale-95" href="#">Events</a>
+<a class="font-body-md text-body-md tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-white/5 duration-300 rounded px-2 py-1 active:scale-95" href="#">Community</a>
+<a class="font-body-md text-body-md tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-white/5 duration-300 rounded px-2 py-1 active:scale-95" href="#">Hall of Fame</a>
+</div>
+</div>
+<div class="flex items-center gap-x-element-gap">
+<!-- Search Bar (on_left configuration via JSON) -->
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-white/20 border border-white/30 rounded-full py-1.5 pl-9 pr-4 text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:bg-white/40 transition-all backdrop-blur-md placeholder:text-on-surface-variant/70 w-48" placeholder="Search..." type="text"/>
+</div>
+<!-- Profile -->
+<button class="w-10 h-10 rounded-full overflow-hidden border border-white/50 hover:shadow-lg transition-all active:scale-95">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A highly detailed close-up portrait of a sophisticated young professional user avatar in a luminous, ethereal setting. The lighting is soft and flattering, emphasizing a modern romance-tech aesthetic with subtle lilac and pale blue rim lights reflecting off their features. The mood is calm and intelligent." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClGHt-XB3r77rnlI5FAATNxfCi81veRDJ8za3xV6bSrozZU9ibQH53yA3YSQiCNcXBa4K2aNiy38bXT37lDUKZaWuSd8dQ44V1bjqIAvkP6jlbOK2L6Jwpa7si9oPMrELgya1VlZlOf-SBNRugARuUq7dn6NdIylfo8W0VjeQ_eWaIp8ZqKgDkC_yZr-ilXFbtPbpFeJvLLhTQzywHJ7TaV-6oDMAjF5Yh6P7FlEoVdCDm5RxRhOJ_dHL-N8aWhfJuEmzYLIqCQBxVGlA"/>
+</button>
+</div>
+</nav>
+<!-- Main Layout Grid -->
+<div class="max-w-[1440px] mx-auto px-container-padding-mobile md:px-container-padding-desktop py-12 grid grid-cols-1 md:grid-cols-12 gap-x-[24px] gap-y-12">
+<!-- Header Section (Spans full width) -->
+<header class="col-span-1 md:col-span-12 relative flex flex-col items-center text-center pb-8 z-10">
+<!-- Floating Decorative Element -->
+<div class="absolute -top-10 left-10 md:left-32 opacity-80 float-animation w-16 h-16 glass-card rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-secondary-container" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+</div>
+<div class="absolute top-10 right-10 md:right-32 opacity-70 float-animation-delayed w-12 h-12 glass-card rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl text-primary-container" style="font-variation-settings: 'FILL' 1;">edit</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-iridescent mb-4 mt-8 relative inline-block">
+                Study Sync
+                <span class="block font-headline-md text-headline-md text-on-surface-variant mt-2 font-medium tracking-normal text-center">Intellectual Resonance</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface/80 max-w-2xl mx-auto mt-4 leading-relaxed">
+                Connect with highly-attuned AI study partners. Find your perfect intellectual match for deep focus, shared research, and elevated academic growth in our luminous learning environment.
+            </p>
+</header>
+<!-- Gallery Section -->
+<main class="col-span-1 md:col-span-12">
+<!-- Filter/Tag Chips -->
+<div class="flex flex-wrap justify-center gap-3 mb-10">
+<button class="bg-primary-container/30 text-on-primary-container font-label-sm text-label-sm px-4 py-2 rounded-full border border-primary-container/50 hover:bg-primary-container/50 transition-colors backdrop-blur-md">All Disciplines</button>
+<button class="bg-white/40 text-on-surface-variant font-label-sm text-label-sm px-4 py-2 rounded-full border border-white/50 hover:bg-white/60 transition-colors backdrop-blur-md">Computer Science</button>
+<button class="bg-white/40 text-on-surface-variant font-label-sm text-label-sm px-4 py-2 rounded-full border border-white/50 hover:bg-white/60 transition-colors backdrop-blur-md">Literature</button>
+<button class="bg-white/40 text-on-surface-variant font-label-sm text-label-sm px-4 py-2 rounded-full border border-white/50 hover:bg-white/60 transition-colors backdrop-blur-md">Physics</button>
+</div>
+<!-- Bento Grid of AI Twins -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+<!-- Card 1 -->
+<div class="glass-card glass-card-hover rounded-xl p-4 flex flex-col h-full relative overflow-hidden group">
+<div class="w-full h-64 rounded-lg overflow-hidden mb-4 relative bg-surface-container-low">
+<img alt="Astra Chen Avatar" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A high-quality 3D cute cartoon anime-style AI digital human girl, Study Sync theme, wearing a smart academic outfit with glasses, holding a holographic tablet showing data visualizations, soft porcelain skin, big expressive eyes, cool intellectual blue and soft violet lighting, 8k resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7G3aOSBAQm0drTCJl5ncW7IVZ5MaUVz6qawkGUXsamUCz11Og22DEGlk3cU7L15EU1WvrVWNwoFPT-1rKNI3UMaBXLbzY7lVnuHlXw0IZ0_B_52G0cC2kS0PxYEiddCMsZmtCE5q2E9UcBJFWOvSWvHoijfKrKYjeBqc8MTA4r0nINasFgF5E6CKKdzFGhZ7e6oRb21sCCwzPQLneIKyptCdUkMZEjCh4ppmKaQ00t_88gsuk96JPWqgHv6f3vL4DBII1H_Up_G3o" style="object-position: center top;"/>
+<div class="absolute top-3 right-3 bg-white/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/50 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">98% Match</span>
+</div>
+</div>
+<div class="flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-on-surface">Astra Chen</h3>
+<span class="w-2 h-2 rounded-full bg-secondary-container mt-2 animate-pulse" title="Online"></span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Fudan University • Quantum Physics</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-variant/50 text-on-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full border border-outline-variant/30">Deep Focus</span>
+<span class="bg-surface-variant/50 text-on-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full border border-outline-variant/30">Night Owl</span>
+</div>
+<div class="mt-auto">
+<button class="w-full btn-magical text-on-primary font-label-lg text-label-lg py-3 rounded-lg shadow-md flex items-center justify-center gap-2 hover:shadow-lg">
+<span class="material-symbols-outlined text-lg">chat_bubble</span>
+                                Chat with Twin
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card glass-card-hover rounded-xl p-4 flex flex-col h-full relative overflow-hidden group">
+<div class="w-full h-64 rounded-lg overflow-hidden mb-4 relative bg-surface-container-low">
+<img alt="Elara Vance Avatar" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A hyper-detailed 3D digital human avatar of a thoughtful female researcher. Her design incorporates ethereal glassmorphism elements, with her clothing appearing slightly translucent and shifting in soft lilac and azure tones. The background is a blurred, luminous laboratory setting that feels magical rather than sterile. Romance-tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMZ0mne18qHSyPEaE4J-cy6wOB2elWiIK3FNzwl1k6ygHYDyb7Sz7XEaOg3fSTybatifCCPhrLBfec29YfhXirFOU3R4MYKRnbJHyl-4g5CPLEWmHSBcfRnO08VKdC7l84QaSY8Yv1DntEuX-omPPi4BWvmxln9bHfHwjMqCsjky4ic1vRWI61YOAb0zRgVkehVhd3QIDTADDfGUo7_mzHfTNNRHEWXk9Aue8ghoxifKZcJxcnzVAzVl1l1B1U-l_qsBKhBfHmU89jQ3w" style="object-position: center top;"/>
+<div class="absolute top-3 right-3 bg-white/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/50 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">94% Match</span>
+</div>
+</div>
+<div class="flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-on-surface">Elara Vance</h3>
+<span class="w-2 h-2 rounded-full bg-secondary-container mt-2 animate-pulse" title="Online"></span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">HKU • Cognitive Science</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-variant/50 text-on-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full border border-outline-variant/30">Debate</span>
+<span class="bg-surface-variant/50 text-on-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full border border-outline-variant/30">Pomodoro</span>
+</div>
+<div class="mt-auto">
+<button class="w-full btn-magical text-on-primary font-label-lg text-label-lg py-3 rounded-lg shadow-md flex items-center justify-center gap-2 hover:shadow-lg">
+<span class="material-symbols-outlined text-lg">chat_bubble</span>
+                                Chat with Twin
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card glass-card-hover rounded-xl p-4 flex flex-col h-full relative overflow-hidden group">
+<div class="w-full h-64 rounded-lg overflow-hidden mb-4 relative bg-surface-container-low">
+<img alt="Julian Reed Avatar" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A premium 3D digital avatar of a young male creative writer. The visual style is Luminous Romance-Tech, featuring soft, glowing matcha green and warm amber backlighting that catches on the highly reflective, glass-like textures of his jacket. Floating holographic text fragments surround him in a dreamy, soft-focus composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyVI1HTqmyYNiukY7fMT28KSY9POowLvH1tivCxxenMoNGSUMfTRYrBfZ257d3kNFJNBtPBsF2vwOyoPEp2Br3S-xyKwImL2qjWiG6LVSKKwbFQ-vdnfs4ju5mizp8YXnAZVjpkfDn22c2gCDWEnvn8V-IIiMoYuFfMfw7uPiR9H00GSAWf3OOYfvFUFOEgSVlAhHmK91WRzBC-L0p8ndtW-1fFSjVust3o_0YYMF1RIvQ0GNQFDxfdG_Gm06UpGq0yAIktACn80_KsUY" style="object-position: center top;"/>
+<div class="absolute top-3 right-3 bg-white/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/50 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold">88% Match</span>
+</div>
+</div>
+<div class="flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-on-surface">Julian Reed</h3>
+<span class="w-2 h-2 rounded-full bg-outline/50 mt-2" title="Offline"></span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Tsinghua • Comparative Literature</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-variant/50 text-on-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full border border-outline-variant/30">Creative</span>
+<span class="bg-surface-variant/50 text-on-surface-variant font-label-sm text-label-sm px-2.5 py-1 rounded-full border border-outline-variant/30">Ambient Noise</span>
+</div>
+<div class="mt-auto">
+<button class="w-full bg-white/50 text-primary font-label-lg text-label-lg py-3 rounded-lg border border-primary/20 shadow-sm flex items-center justify-center gap-2 hover:bg-white/70 hover:shadow-md transition-all">
+<span class="material-symbols-outlined text-lg">chat_bubble</span>
+                                Chat with Twin
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

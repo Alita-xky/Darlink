@@ -1,11 +1,16 @@
 {
-  "buildCommand": "npx expo export --platform web",
-  "outputDirectory": "dist",
-  "framework": null,
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/",
+      "destination": "/landing-v14.html"
+    },
+    {
+      "source": "/v14",
+      "destination": "/landing-v14.html"
+    },
+    {
+      "source": "/app",
+      "destination": "/app.html"
     }
   ]
 }

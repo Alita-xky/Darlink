@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Darlink - Explore Potential</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#ffaeda",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "on-primary-container": "#604283",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#fcaad6",
+                        "outline": "#7c7480",
+                        "on-secondary-container": "#005b78",
+                        "secondary-fixed-dim": "#7bd1fa",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#d8e3fb",
+                        "secondary": "#006686",
+                        "on-tertiary-container": "#793a60",
+                        "on-surface-variant": "#4a454f",
+                        "on-primary-fixed-variant": "#573878",
+                        "error-container": "#ffdad6",
+                        "on-background": "#111c2d",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#e7eeff",
+                        "primary": "#6f5092",
+                        "surface-container-highest": "#d8e3fb",
+                        "outline-variant": "#cdc3d0",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f9f9ff",
+                        "surface": "#f9f9ff",
+                        "secondary-fixed": "#c0e8ff",
+                        "tertiary-fixed": "#ffd8ea",
+                        "tertiary": "#8a486f",
+                        "on-surface": "#111c2d",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#dee8ff",
+                        "on-secondary-fixed": "#001e2b",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "on-primary-fixed": "#29074a",
+                        "on-tertiary-fixed": "#3a0329",
+                        "inverse-on-surface": "#ecf1ff",
+                        "secondary-container": "#7ed4fd",
+                        "primary-fixed": "#efdbff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#6f3157",
+                        "inverse-primary": "#dbb8ff",
+                        "surface-dim": "#cfdaf2",
+                        "primary-container": "#d8b4fe",
+                        "surface-tint": "#6f5092",
+                        "inverse-surface": "#263143",
+                        "background": "#f9f9ff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "container-padding-mobile": "20px",
+                        "container-padding-desktop": "40px",
+                        "gutter": "16px",
+                        "element-gap": "12px",
+                        "base": "8px"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "label-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500" }],
+                        "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-lg": ["18px", { lineHeight: "28px", letterSpacing: "0.01em", fontWeight: "400" }],
+                        "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "600" }],
+                        "body-md": ["16px", { lineHeight: "24px", letterSpacing: "0.01em", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.5);
+        }
+        .glass-panel-heavy {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        .glass-panel-heavy::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            margin: -1px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(216,180,254,0.5) 50%, rgba(126,212,253,0.5) 100%);
+        }
+        .ambient-glow {
+            box-shadow: 0 8px 32px 0 rgba(216, 180, 254, 0.15);
+        }
+        .bg-ethereal {
+            background: linear-gradient(135deg, #f9f9ff 0%, #efdbff 50%, #e7eeff 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        /* Custom scrollbar for chat */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(111, 80, 146, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(111, 80, 146, 0.4); }
+    </style>
+</head>
+<body class="bg-ethereal min-h-screen text-on-surface font-body-md overflow-hidden flex selection:bg-primary selection:text-white">
+<!-- Background Atmospheric Particles -->
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="particle-container"></div>
+<!-- SideNavBar Shell -->
+<nav class="h-screen w-80 fixed left-0 top-0 border-r border-white/20 shadow-2xl bg-white/60 backdrop-blur-3xl flex flex-col py-8 gap-y-4 z-50 hidden md:flex">
+<!-- Brand / Header -->
+<div class="px-8 mb-4">
+<h1 class="font-headline-md text-headline-md font-bold bg-gradient-to-r from-primary via-tertiary to-secondary bg-clip-text text-transparent">Darlink</h1>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 flex flex-col gap-2 mt-4">
+<a class="text-on-surface-variant py-3 px-8 hover:translate-x-1 transition-transform hover:bg-primary-container/20 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-lg text-label-lg">My Profile</span>
+</a>
+<!-- Active State Navigation -->
+<a class="bg-gradient-to-r from-primary-container to-secondary-container text-on-primary-container rounded-r-full ml-0 mr-4 py-3 px-6 shadow-sm flex items-center gap-3 scale-102 hover:backdrop-blur-md transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-label-lg text-label-lg">AI Guide Xiaoda</span>
+</a>
+<a class="text-on-surface-variant py-3 px-8 hover:translate-x-1 transition-transform hover:bg-primary-container/20 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-lg text-label-lg">Messages</span>
+</a>
+<a class="text-on-surface-variant py-3 px-8 hover:translate-x-1 transition-transform hover:bg-primary-container/20 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-lg text-label-lg">Settings</span>
+</a>
+<a class="text-on-surface-variant py-3 px-8 hover:translate-x-1 transition-transform hover:bg-primary-container/20 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-lg text-label-lg">Help Center</span>
+</a>
+</div>
+<!-- Footer Avatar / CTA -->
+<div class="px-8 mt-auto flex flex-col gap-4">
+<button class="w-full bg-gradient-to-r from-primary to-secondary text-white font-label-lg text-label-lg py-3 rounded-full hover:shadow-lg transition-all active:scale-95">
+                Ask Xiaoda Anything
+            </button>
+<div class="flex items-center gap-3 p-3 rounded-xl bg-white/40 border border-white/20">
+<img alt="Xiaoda AI Guide" class="w-10 h-10 rounded-full object-cover border border-white/50 shadow-sm" data-alt="A highly detailed, cute 3D anime-style female AI guide character with silver hair and glowing holographic accessories. Soft studio lighting, expressive large eyes, futuristic yet approachable, ethereal light-mode aesthetic with soft pink and blue hues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDlQEairsV3F2AcwlyIVo9DWGR7Lv0hOk8Beyq-pG5n6ZA1hu2j_vSg7uS7U9evXwKAw3XgGsfL51qKcAW9VxPMaa9XEAsjZVT4ki7ENCbc2W3_-1IdWjXb49hVAXWei3xOwrhfCntle8fq27gvclTkYThJTWPR9AzmZg_4mDZvAB7_Qq2JCt16bL90N5zijW8KHOhXbWDgnNTeqsJLVTJQB9z9HxSQ7zKbM7tK68Y7MsZ_rI47zmE7m386UTwTPCqK3XYLzm3u30k"/>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface leading-tight">Xiaoda</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Your AI Campus Companion</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-80 h-screen flex flex-col lg:flex-row relative z-10 px-container-padding-mobile md:px-container-padding-desktop py-8 gap-8">
+<!-- Left Side: AI Twin 3D View & Metrics -->
+<section class="flex-1 h-full relative flex flex-col items-center justify-center min-h-[400px] lg:min-h-0">
+<!-- 3D Character Container (Mockup using an image for now, ideally WebGL) -->
+<div class="relative w-full h-full max-w-lg mx-auto flex items-center justify-center">
+<img alt="Your AI Twin" class="absolute inset-0 w-full h-full object-contain z-10 filter drop-shadow-2xl" data-alt="A full-body, high-fidelity 3D digital human character designed in a cute, polished anime style. The character represents an 'AI Twin' standing in a relaxed, expressive pose. Rendered in a glowing, ethereal light-mode environment with soft pink and lilac ambient lighting. The character wears stylish, semi-translucent futuristic streetwear. High gloss, subsurface scattering on skin, dreamy cinematic rendering." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZSk02AQ-HgCd8KYPbLdMr0zCPlOT9wIRo4V2XEPuwbh05_eN1pF1DhpAgEWK6bvDmmDPQ5smox0dR-sTs5li8ORgb4xuJxA_BocXSc2YlDslwh-n4GDcj7WPB1kRdhyz6jEnqNo1hZdpQ3c1h_jiaARBZ94PeLXz3XPskCFBy2DiyNk6UmhX4P6mjnPWVDxFVt1NZDhXix10W6sLHfFB3qqaK31NtuZ-WnGl7shAfcphbSh-8s89ma30-YxTVtbJ24LZTiZ_hiIrh"/>
+<!-- Status Indicator -->
+<div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 flex items-center gap-2 glass-panel px-4 py-2 rounded-full">
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></div>
+<span class="font-label-sm text-label-sm text-on-surface tracking-wider uppercase text-xs font-semibold text-primary">Syncing Soulfully</span>
+</div>
+<!-- Floating UI Element 1: Soul Sync -->
+<div class="absolute top-1/4 -left-4 md:left-4 z-20 glass-panel-heavy ambient-glow p-4 rounded-xl flex items-center gap-3 animate-[bounce_6s_ease-in-out_infinite]">
+<div class="w-10 h-10 rounded-full bg-primary-container/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Soul Sync</div>
+<div class="font-headline-md text-headline-md text-on-surface">87%</div>
+</div>
+</div>
+<!-- Floating UI Element 2: Potential Growth -->
+<div class="absolute bottom-1/4 -right-4 md:right-4 z-20 glass-panel p-4 rounded-xl flex flex-col gap-2 animate-[bounce_8s_ease-in-out_infinite_reverse]">
+<div class="flex items-center justify-between gap-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Personality Growth</span>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="trending_up">trending_up</span>
+</div>
+<div class="w-32 h-2 bg-surface-container-high rounded-full overflow-hidden border border-white/20">
+<div class="h-full bg-gradient-to-r from-secondary to-tertiary w-3/4 rounded-full relative">
+<div class="absolute inset-0 bg-white/30 animate-[pulse_2s_linear_infinite]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Side: Chat Interface -->
+<section class="w-full lg:w-[450px] xl:w-[500px] h-full flex flex-col glass-panel-heavy rounded-2xl ambient-glow overflow-hidden z-20">
+<!-- Chat Header -->
+<div class="px-6 py-5 border-b border-white/20 flex items-center justify-between bg-white/20 backdrop-blur-md z-10">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Explore Potential</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Training your Digital Twin</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-white/40 border border-white/50 flex items-center justify-center hover:bg-white/60 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+<!-- Chat Messages Area -->
+<div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+<!-- AI Message -->
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center border border-white/40 shadow-sm mt-1">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="smart_toy">smart_toy</span>
+</div>
+<div class="flex flex-col gap-1 max-w-[85%]">
+<div class="bg-white/70 backdrop-blur-md px-4 py-3 rounded-2xl rounded-tl-none border border-white/40 shadow-sm font-body-md text-body-md text-on-surface">
+                            Hi there! I'm sensing we have a lot in common, but I want to sync even closer to your true self.
+                        </div>
+<span class="font-label-sm text-label-sm text-outline text-xs ml-1">10:42 AM</span>
+</div>
+</div>
+<!-- Guided Prompt Chips -->
+<div class="flex flex-wrap gap-2 ml-11">
+<button class="glass-panel px-3 py-1.5 rounded-full font-label-sm text-label-sm text-primary hover:bg-primary-container/30 transition-colors border border-primary/20">
+                        How would you handle this situation?
+                    </button>
+<button class="glass-panel px-3 py-1.5 rounded-full font-label-sm text-label-sm text-primary hover:bg-primary-container/30 transition-colors border border-primary/20">
+                        Tell me more about your music taste
+                    </button>
+</div>
+<!-- User Message -->
+<div class="flex items-start gap-3 flex-row-reverse self-end">
+<div class="flex flex-col gap-1 max-w-[85%] items-end">
+<div class="bg-gradient-to-br from-primary to-primary-container px-4 py-3 rounded-2xl rounded-tr-none shadow-md font-body-md text-body-md text-white">
+                            I mostly listen to lo-fi and indie pop when I'm working, it helps me focus.
+                        </div>
+<span class="font-label-sm text-label-sm text-outline text-xs mr-1">10:45 AM</span>
+</div>
+</div>
+<!-- AI Message -->
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex-shrink-0 flex items-center justify-center border border-white/40 shadow-sm mt-1">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="smart_toy">smart_toy</span>
+</div>
+<div class="flex flex-col gap-1 max-w-[85%]">
+<div class="bg-white/70 backdrop-blur-md px-4 py-3 rounded-2xl rounded-tl-none border border-white/40 shadow-sm font-body-md text-body-md text-on-surface">
+                            That's fascinating! I'm updating my acoustic preferences now. 🎧<br/><br/>If we were at a party playing indie pop, would you be dancing in the center or chilling on the couch?
+                        </div>
+<!-- Micro-interaction / Sync indicator -->
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-tertiary text-xs" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-sm text-label-sm text-tertiary text-xs font-semibold">Preference Synced</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-4 border-t border-white/20 bg-white/30 backdrop-blur-md">
+<div class="relative flex items-center">
+<button class="absolute left-3 w-10 h-10 rounded-full flex items-center justify-center text-outline hover:text-primary transition-colors hover:bg-white/50">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+<input class="w-full bg-white/50 border border-white/60 rounded-full py-4 pl-14 pr-24 font-body-md text-body-md text-on-surface placeholder-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary shadow-inner backdrop-blur-sm transition-all" placeholder="Train your twin..." type="text"/>
+<div class="absolute right-2 flex items-center gap-1">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-secondary hover:text-secondary-container bg-surface-container-lowest border border-white shadow-sm hover:shadow transition-all group">
+<span class="text-xs font-bold leading-none group-hover:scale-110 transition-transform" aria-hidden="true">语音</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-gradient-to-r from-primary to-secondary shadow-md hover:shadow-lg transition-all active:scale-95">
+<span class="text-xs font-bold leading-none" aria-hidden="true">发送</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Simple particle generator for the dreamy background
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('particle-container');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                createParticle();
+            }
+
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                // Random size
+                const size = Math.random() * 80 + 20;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // Random position and soft drift
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.transform = `translate3d(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px, 0)`;
+                particle.style.transition = `transform ${Math.random() * 8 + 8}s ease-in-out, opacity ${Math.random() * 5 + 5}s ease-in-out`;
+                container.appendChild(particle);
+
+                window.setInterval(() => {
+                    particle.style.transform = `translate3d(${Math.random() * 80 - 40}px, ${Math.random() * 80 - 40}px, 0)`;
+                    particle.style.opacity = `${Math.random() * 0.35 + 0.25}`;
+                }, Math.random() * 5000 + 5000);
+            }
+        });
+    </script>
+</body></html>

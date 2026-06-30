@@ -1,0 +1,334 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Darlink - Chat with Elena</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#d8e3fb",
+                        "tertiary": "#8a486f",
+                        "on-tertiary-fixed-variant": "#6f3157",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#573878",
+                        "secondary-fixed-dim": "#7bd1fa",
+                        "inverse-on-surface": "#ecf1ff",
+                        "outline-variant": "#cdc3d0",
+                        "secondary-fixed": "#c0e8ff",
+                        "surface-dim": "#cfdaf2",
+                        "on-surface": "#111c2d",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#005b78",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#e7eeff",
+                        "on-primary-container": "#604283",
+                        "surface-bright": "#f9f9ff",
+                        "primary-fixed": "#efdbff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#7ed4fd",
+                        "on-tertiary-fixed": "#3a0329",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#d8e3fb",
+                        "outline": "#7c7480",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#263143",
+                        "on-background": "#111c2d",
+                        "tertiary-fixed": "#ffd8ea",
+                        "surface": "#f9f9ff",
+                        "on-secondary-fixed": "#001e2b",
+                        "surface-container-low": "#f0f3ff",
+                        "secondary": "#006686",
+                        "on-surface-variant": "#4a454f",
+                        "background": "#f9f9ff",
+                        "tertiary-container": "#fcaad6",
+                        "surface-tint": "#6f5092",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "primary": "#6f5092",
+                        "on-tertiary-container": "#793a60",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "tertiary-fixed-dim": "#ffaeda",
+                        "primary-container": "#d8b4fe",
+                        "surface-container-high": "#dee8ff",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#dbb8ff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#29074a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "container-padding-desktop": "40px",
+                        "container-padding-mobile": "20px",
+                        "element-gap": "12px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f9f9ff;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(216, 180, 254, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(126, 212, 253, 0.15), transparent 25%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-bubble-ai {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 24px rgba(216, 180, 254, 0.05);
+        }
+
+        .glass-bubble-user {
+            background: linear-gradient(135deg, rgba(216, 180, 254, 0.9), rgba(111, 80, 146, 0.8));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-input:focus-within {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(216, 180, 254, 0.8);
+            box-shadow: 0 0 20px rgba(216, 180, 254, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #6f5092, #8a486f, #006686);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .darlink-suggestion-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(32px);
+            border: 1px solid rgba(216, 180, 254, 0.5);
+            box-shadow: 0 8px 32px rgba(216, 180, 254, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .darlink-suggestion-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+        }
+
+        /* Ambient glowing orb animation */
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+            100% { transform: translateY(0px) scale(1); }
+        }
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 10s infinite ease-in-out;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body class="text-on-surface antialiased flex flex-col pt-[88px] pb-[80px] md:pb-0">
+<!-- Ambient Background Orbs -->
+<div class="ambient-orb bg-primary-container w-[40vw] h-[40vw] top-[-10%] left-[-10%]"></div>
+<div class="ambient-orb bg-secondary-container w-[30vw] h-[30vw] bottom-[20%] right-[-5%] animation-delay-2000"></div>
+<!-- TopNavBar (Shared Component JSON) -->
+<header class="fixed top-0 w-full bg-white/40 dark:bg-surface-container/40 backdrop-blur-xl border-b border-white/20 dark:border-surface-variant/20 shadow-[0_0_20px_rgba(216,180,254,0.1)] z-50 transition-all duration-300">
+<div class="flex justify-between items-center px-container-padding-desktop py-4 w-full max-w-full mx-auto z-50 h-[88px]">
+<!-- Brand -->
+<a class="font-display-lg text-display-lg bg-gradient-to-r from-primary via-tertiary to-secondary bg-clip-text text-transparent tracking-tighter" href="#">
+                Darlink
+            </a>
+<!-- Desktop Nav -->
+<nav class="hidden md:flex items-center gap-element-gap">
+<a class="font-label-lg text-label-lg text-on-surface-variant/70 dark:text-surface-variant/70 hover:text-primary transition-colors duration-300 px-4 py-2" href="#">Discover</a>
+<a class="font-label-lg text-label-lg text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 px-4 py-2 opacity-80 scale-95 transition-transform" href="#">Matches</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant/70 dark:text-surface-variant/70 hover:text-primary transition-colors duration-300 px-4 py-2" href="#">Events</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant/70 dark:text-surface-variant/70 hover:text-primary transition-colors duration-300 px-4 py-2" href="#">Community</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant/70 dark:text-surface-variant/70 hover:text-primary transition-colors duration-300 px-4 py-2" href="#">Hall of Fame</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<button class="text-primary hover:bg-white/20 p-2 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" data-icon="notifications">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-variant border border-white/40 overflow-hidden shadow-sm relative group cursor-pointer">
+<img alt="User profile with holographic glow" class="w-full h-full object-cover" data-alt="A small circular avatar placeholder image showing a softly lit user profile with a holographic rim light, light mode aesthetic, romance-tech style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWHKNAbLMaCI2L31Dpdiw0LgeTFoZFAW9NrsCcixq-o-QYTMxEOix-abqBnyIKTsvXvMaqO8DcK6-53-WDgn-5NAgTMaPdWy6aLET9biiXz_cLLKY9HR2tZJDGEAKmPg77nyx5jtfgfec5G55xZ69J9ueaxqShAgV46vrFjPIGKGvxyC8sgoJLGNswezUpxMOUexYXJp4qHgZJBCG3s5IXv0TNpznbYEcZQeXBKXUMbWXAKygJoug6F5xA8y7y768p44XGy2B3xvjyrI0">
+<div class="absolute inset-0 bg-primary-container/20 group-hover:bg-primary-container/40 transition-colors"></div>
+</div>
+</div>
+</div>
+</header>
+<!-- Chat Container -->
+<main class="flex-grow flex flex-col max-w-4xl mx-auto w-full px-container-padding-mobile md:px-container-padding-desktop h-[calc(100vh-88px-80px)] md:h-[calc(100vh-88px)]">
+<!-- Chat Header (Elena Info) -->
+<div class="flex items-center gap-4 py-6 border-b border-white/20 shrink-0">
+<div class="relative w-16 h-16 rounded-full overflow-hidden border-2 border-primary-container shadow-[0_0_15px_rgba(216,180,254,0.3)]">
+<img alt="Elena Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdTy-Zy7WBu8GNIZqNfjcIsFp8FKpU9H6D_TKgBzO6bN9gbLz31Kr1Y9OZZX8agoJUVl42yQHIE5EypXBfhfsJMv5SjHrAJYHYw6MRg4nMe4XOMfNf0-BkLyTpeQ1yoljhPHaplBXXX3eHEUVdz8F-YBltg2We5bgfBVaYASNR-oILju_DjuWOaKD8Pfl-Pc3pz5w5zCcLCryZZLyyaZAI34xoTUDMPq_iIaZdVUEWJ1gTwY486nz6qEFXCDazPMDRMnvlFijjpGa3BBk">
+<div class="absolute bottom-1 right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+                    Elena
+                    <span class="material-symbols-outlined text-primary text-xl" data-icon="verified">verified</span>
+</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+                    AI Match • 98% Compatibility
+                </p>
+</div>
+<div class="ml-auto flex gap-2">
+<button class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-primary hover:bg-white/50 transition-colors">
+<span class="material-symbols-outlined" data-icon="videocam">videocam</span>
+</button>
+<button class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-primary hover:bg-white/50 transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Messages Area -->
+<div class="flex-grow overflow-y-auto py-6 flex flex-col gap-6 scrollbar-hide" id="chat-messages">
+<!-- System/Time Date -->
+<div class="text-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant/60 bg-white/30 px-3 py-1 rounded-full backdrop-blur-sm">Today, 2:45 PM</span>
+</div>
+<!-- Elena Message 1 -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<div class="w-8 h-8 rounded-full overflow-hidden shrink-0 shadow-sm border border-white/40">
+<img alt="Elena Avatar Small" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLu8B122tROSoCFlwfdmRbUVKgRzbc3XGgxCgAmeknRI6skiMm40VPJKcrA-nRZR-HHvL8JLIyYuKjm8uvmHat1erD41NUK8awpgYysrSHY1Xym-QZQZNmZccxWepI6epBaauLElUdAYghlQVvOjI9ZrvRH7sy6zWBWWFgoHeWGqd1eGxKRKeSafqvNR7jx-cR-7EFD_EYOYujNCBCPIrJ-XXf6s3yWdsUkvzcqyLkZdTgLc0xCSSRttfCBt">
+</div>
+<div class="glass-bubble-ai rounded-2xl rounded-bl-sm p-4 text-on-surface font-body-md text-body-md">
+<p>Hi there! 👋 I saw you're interested in retro synth-wave music and late-night coding sessions. I think we have a lot in common!</p>
+</div>
+</div>
+<!-- User Message 1 -->
+<div class="flex items-end gap-3 max-w-[80%] ml-auto justify-end">
+<div class="glass-bubble-user rounded-2xl rounded-br-sm p-4 font-body-md text-body-md shadow-md">
+<p>Hey Elena! Yeah, nothing beats coding to some good synth-wave. What's your favorite track right now?</p>
+</div>
+</div>
+<!-- Elena Message 2 -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<div class="w-8 h-8 rounded-full overflow-hidden shrink-0 shadow-sm border border-white/40">
+<img alt="Elena Avatar Small" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLu8B122tROSoCFlwfdmRbUVKgRzbc3XGgxCgAmeknRI6skiMm40VPJKcrA-nRZR-HHvL8JLIyYuKjm8uvmHat1erD41NUK8awpgYysrSHY1Xym-QZQZNmZccxWepI6epBaauLElUdAYghlQVvOjI9ZrvRH7sy6zWBWWFgoHeWGqd1eGxKRKeSafqvNR7jx-cR-7EFD_EYOYujNCBCPIrJ-XXf6s3yWdsUkvzcqyLkZdTgLc0xCSSRttfCBt">
+</div>
+<div class="glass-bubble-ai rounded-2xl rounded-bl-sm p-4 text-on-surface font-body-md text-body-md">
+<p>I've been looping "Nightcall" non-stop. It sets the perfect mood. 🌃 Speaking of moods, are you more of a coffee shop worker or a dark room hacker?</p>
+</div>
+</div>
+<!-- AI Suggestion Card (Darlink Magic) -->
+<div class="my-4 mx-auto max-w-md w-full darlink-suggestion-card rounded-2xl p-5 text-center flex flex-col items-center gap-3">
+<div class="flex items-center gap-2 text-primary font-label-lg text-label-lg uppercase tracking-widest">
+<span class="material-symbols-outlined text-lg" data-icon="auto_awesome">auto_awesome</span>
+                    Darlink Suggestion
+                </div>
+<p class="font-body-md text-body-md text-on-surface-variant italic">
+                    "Definitely a dark room hacker! Coffee shops are too loud. But I do need a good espresso machine nearby. ☕️ How about you?"
+                </p>
+<button class="mt-2 bg-gradient-to-r from-primary to-secondary text-white font-label-lg text-label-lg px-6 py-2.5 rounded-full hover:shadow-lg hover:shadow-primary-container/50 transition-all active:scale-95 flex items-center gap-2">
+<span class="text-xs font-bold leading-none" aria-hidden="true">发送</span>
+                    Use Suggestion
+                </button>
+</div>
+</div>
+<!-- Input Area -->
+<div class="py-4 shrink-0 bg-gradient-to-t from-[#f9f9ff] via-[#f9f9ff]/90 to-transparent">
+<div class="glass-input rounded-full p-2 flex items-center gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-white/50 transition-colors shrink-0">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-primary-container/30 transition-colors shrink-0">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</button>
+<input class="flex-grow bg-transparent border-none focus:ring-0 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50 px-2 outline-none" placeholder="Type a message..." type="text">
+<button class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-tertiary transition-colors shrink-0 shadow-md">
+<span class="text-xs font-bold leading-none" aria-hidden="true">发送</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component JSON - Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden bg-white/60 dark:bg-surface-container-highest/60 backdrop-blur-3xl border-t border-white/30 dark:border-surface-variant/30 shadow-[0_-8px_32px_rgba(216,180,254,0.15)] rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant p-2 hover:bg-white/20 dark:hover:bg-black/20 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-5 py-2 scale-110 transition-all duration-500 ease-out shadow-sm" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="favorite" data-weight="fill" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-sm text-label-sm font-bold">Matches</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant p-2 hover:bg-white/20 dark:hover:bg-black/20 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="calendar_month">calendar_month</span>
+<span class="font-label-sm text-label-sm">Events</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant p-2 hover:bg-white/20 dark:hover:bg-black/20 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="forum">forum</span>
+<span class="font-label-sm text-label-sm">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant p-2 hover:bg-white/20 dark:hover:bg-black/20 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Auto-scroll chat to bottom
+        const chatMessages = document.getElementById('chat-messages');
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body></html>
