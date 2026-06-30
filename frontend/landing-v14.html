@@ -106,9 +106,9 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
-      opacity: .74;
-      filter: saturate(1.06) contrast(.96) brightness(1.08);
-      transform: scale(1.012);
+      opacity: .96;
+      filter: saturate(1.08) contrast(1.04) brightness(1.02);
+      transform: scale(1.003);
     }
 
     .intro-frost {
@@ -117,10 +117,10 @@
       z-index: 1;
       pointer-events: none;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.1) 42%, rgba(255,255,255,.3)),
-        radial-gradient(circle at 50% 42%, rgba(255,255,255,.08), rgba(255,255,255,.34) 76%);
-      backdrop-filter: blur(12px) saturate(1.18);
-      -webkit-backdrop-filter: blur(12px) saturate(1.18);
+        linear-gradient(180deg, rgba(10,18,34,.2), rgba(255,255,255,.025) 22%, rgba(255,255,255,.02) 62%, rgba(8,14,28,.22)),
+        linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,0) 28%, rgba(255,255,255,0) 72%, rgba(255,255,255,.07));
+      backdrop-filter: saturate(1.04);
+      -webkit-backdrop-filter: saturate(1.04);
     }
 
     .intro-vignette {
@@ -129,9 +129,9 @@
       z-index: 2;
       pointer-events: none;
       background:
-        radial-gradient(circle at 50% 44%, rgba(255,255,255,0) 0 44%, rgba(255,255,255,.2) 70%, rgba(31,48,78,.24) 100%),
-        linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,0) 35%, rgba(31,48,78,.18));
-      mix-blend-mode: soft-light;
+        radial-gradient(circle at 50% 44%, rgba(255,255,255,0) 0 52%, rgba(23,34,58,.08) 76%, rgba(10,16,31,.32) 100%),
+        linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,0) 18%, rgba(0,0,0,0) 78%, rgba(0,0,0,.24));
+      mix-blend-mode: multiply;
     }
 
     .intro-cloud {
