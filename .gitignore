@@ -5,6 +5,8 @@ __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
+.venv/
+**/.venv/
 
 # IDE
 .idea/
@@ -15,4 +17,3 @@ __pycache__/
 .env
 .env.local
 .env.*
-
