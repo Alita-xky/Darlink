@@ -35,7 +35,13 @@ app.add_middleware(
         "http://localhost:8082",
         "http://127.0.0.1:8082",
         "http://10.7.94.211:8082",
+
+        "http://localhost:54113",
+        "http://127.0.0.1:54113",
+        "http://localhost:54114",
+        "http://127.0.0.1:54114",
     ],
+    allow_origin_regex=r"^http://(localhost|127\.0\.0\.1):\d+$",
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -89,13 +95,14 @@ async def index():
     return HTMLResponse("<h1>Darlink</h1><p>Front-end not found</p>")
 
 
-from routes import auth, persona, chat, profile, distill
+from routes import auth, persona, chat, profile, distill, ai
 
 app.include_router(auth.router)
 app.include_router(persona.router)
 app.include_router(chat.router)
 app.include_router(profile.router)
 app.include_router(distill.router)
+app.include_router(ai.router)
 
 
 @app.get('/health')

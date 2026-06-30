@@ -13,9 +13,9 @@ This folder is the current deployable static frontend for Darlink.
 Open locally from this folder with any static file server:
 
 ```bash
-python3 -m http.server 54088
+python3 -m http.server 54114
 ```
 
 Then open:
 
-`http://127.0.0.1:54088/landing-v14.html`
+`http://127.0.0.1:54114/landing-v14.html`

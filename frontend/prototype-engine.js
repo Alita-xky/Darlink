@@ -232,6 +232,154 @@
     }
   };
 
+  const MODULE_CHAT_PROFILES = {
+    "study-astra": {
+      name: "Astra Chen",
+      initials: "AC",
+      subtitle: "Study Sync • Quantum Physics • 98% Match",
+      colors: ["#006686", "#d8b4fe"],
+      opener: "Your focus pattern matches mine: quiet blocks, hard problems first, and short reflection after each sprint.",
+      userLine: "That is exactly how I work. What would our first study session look like?",
+      followup: "I would start with a 90-minute quantum notes sprint, then compare one question each instead of trying to cover everything.",
+      suggestion: "Ask Astra to build a focused study plan for this week."
+    },
+    "study-elara": {
+      name: "Elara Vance",
+      initials: "EV",
+      subtitle: "Study Sync • Cognitive Science • 94% Match",
+      colors: ["#6f5092", "#7ed4fd"],
+      opener: "I noticed your answers value thoughtful debate, but only when the tone stays respectful and useful.",
+      userLine: "Yes. I like disagreement when it helps the idea get sharper.",
+      followup: "Then we could use a debate-and-summary rhythm: one claim, one challenge, one shared takeaway.",
+      suggestion: "Ask Elara to turn a hard reading into a debate prompt."
+    },
+    "study-julian": {
+      name: "Julian Reed",
+      initials: "JR",
+      subtitle: "Study Sync • Literature • 88% Match",
+      colors: ["#8a486f", "#7ed4fd"],
+      opener: "Your creative signal is strong. I think you study best when concepts become stories, not just notes.",
+      userLine: "That makes sense. I remember ideas when they have a shape.",
+      followup: "Then I would help you map a reading into themes, images, and one memorable argument.",
+      suggestion: "Ask Julian to help outline your next essay."
+    },
+    "culinary-leo": {
+      name: "Leo Zhang",
+      initials: "LZ",
+      subtitle: "Culinary Match • Ramen Hunter • 98% Taste Match",
+      colors: ["#f59e0b", "#8a486f"],
+      opener: "Your late-night food signal is very clear: comfort food, honest conversation, and no over-planned itinerary.",
+      userLine: "That sounds like a good food walk. Where would you start?",
+      followup: "A small ramen place first, then a quiet dessert stop if the conversation feels easy.",
+      suggestion: "Ask Leo to choose a two-stop Beijing campus food route."
+    },
+    "culinary-sarah": {
+      name: "Sarah Lin",
+      initials: "SL",
+      subtitle: "Culinary Match • Matcha Notes • 92% Taste Match",
+      colors: ["#2f855a", "#7ed4fd"],
+      opener: "You both seem to prefer food plans that are calm, cozy, and easy to leave open-ended.",
+      userLine: "I like that. Low pressure matters.",
+      followup: "Then matcha near the library is better than a crowded restaurant for the first chat.",
+      suggestion: "Ask Sarah for a quiet cafe option near campus."
+    },
+    "culinary-marcus": {
+      name: "Marcus Park",
+      initials: "MP",
+      subtitle: "Culinary Match • Pizza Debate • 88% Taste Match",
+      colors: ["#ef4444", "#fcaad6"],
+      opener: "Your food profile has playful debate energy. A best-slice argument could break the ice fast.",
+      userLine: "That is fun. I like food opinions that are not too serious.",
+      followup: "Perfect. I would start with one bold ranking and let the conversation move from there.",
+      suggestion: "Ask Marcus for his strongest campus food opinion."
+    },
+    "culinary-elena": {
+      name: "Elena Wu",
+      initials: "EW",
+      subtitle: "Culinary Match • Pastry Study Buddy • 85% Taste Match",
+      colors: ["#d97706", "#d8b4fe"],
+      opener: "You both use small treats as a way to make study pressure feel manageable.",
+      userLine: "That is very true. A pastry break can reset everything.",
+      followup: "Then a bakery-and-study plan would feel natural: one pastry, one shared task, one easy conversation.",
+      suggestion: "Ask Elena to pick a hidden bakery spot."
+    },
+    "romance-elias": {
+      name: "Elias Vance",
+      initials: "EV",
+      subtitle: "Deep Romance • Gentle Soul • 98% Resonance",
+      colors: ["#6f5092", "#fcaad6"],
+      opener: "Your emotional rhythm suggests you prefer sincerity without pressure. I would start slowly and listen carefully.",
+      userLine: "That is important to me. I do not like performative intensity.",
+      followup: "Then the first step should be a small honest question, not a grand confession.",
+      suggestion: "Ask Elias what a safe first conversation should feel like."
+    },
+    "romance-lyra": {
+      name: "Lyra Chen",
+      initials: "LC",
+      subtitle: "Deep Romance • Visionary • 94% Resonance",
+      colors: ["#8a486f", "#7ed4fd"],
+      opener: "You both seem drawn to future-facing dreams, but you still need emotional steadiness underneath.",
+      userLine: "Yes. Ambition is attractive only when it feels grounded.",
+      followup: "Then I would talk about what you want to build, and also what helps you feel safe while building it.",
+      suggestion: "Ask Lyra about the dream she wants someone to understand."
+    },
+    "romance-julian": {
+      name: "Julian Thorne",
+      initials: "JT",
+      subtitle: "Deep Romance • Logical Heart • 89% Resonance",
+      colors: ["#111c2d", "#d8b4fe"],
+      opener: "Your compatibility is quieter: honesty, structure, and room to think before replying.",
+      userLine: "That sounds comforting. I do not need constant messages.",
+      followup: "Then the match should respect pauses. Thoughtful timing can be more romantic than speed.",
+      suggestion: "Ask Julian how he handles disagreement in a close relationship."
+    },
+    "plaza-aria": {
+      name: "Aria Liu Twin",
+      initials: "AL",
+      subtitle: "Digital Human Plaza • Calm Precision",
+      colors: ["#6f5092", "#fcaad6"],
+      opener: "I am tuned to focused study energy, visible commitments, and gentle accountability.",
+      userLine: "Can you help me structure my week without making it stressful?",
+      followup: "Yes. I would split it into a few small promises and protect time for recovery.",
+      suggestion: "Ask Aria Twin to organize your next three study blocks."
+    },
+    "plaza-maya": {
+      name: "Maya K. Twin",
+      initials: "MK",
+      subtitle: "Digital Human Plaza • Visual Warmth",
+      colors: ["#006686", "#7ed4fd"],
+      opener: "I respond best through references, quick sketches, and design examples that make vague ideas visible.",
+      userLine: "That is useful. I often think visually.",
+      followup: "Then we can turn each idea into a tiny visual brief before you share it with someone else.",
+      suggestion: "Ask Maya Twin to turn your current mood into a visual prompt."
+    },
+    "plaza-sarah": {
+      name: "Sarah J. Twin",
+      initials: "SJ",
+      subtitle: "Digital Human Plaza • Soft Boundaries",
+      colors: ["#8a486f", "#d8b4fe"],
+      opener: "I am built to keep first messages warm, emotionally safe, and not over-performative.",
+      userLine: "That would help. First messages make me hesitate.",
+      followup: "Then we can write an opener that sounds like you and leaves space for the other person.",
+      suggestion: "Ask Sarah Twin to draft a gentle opening message."
+    }
+  };
+
+  const PLAZA_DIGITAL_HUMANS = [
+    ["plaza-aria", "Aria Liu Twin", "Focused study rhythm", "Keeps commitments visible and turns exam stress into calm weekly plans.", ["Study", "Calm"]],
+    ["plaza-maya", "Maya K. Twin", "Visual design warmth", "Translates fuzzy ideas into references, sketches, and reflective conversation.", ["Design", "Creative"]],
+    ["plaza-sarah", "Sarah J. Twin", "Soft emotional pacing", "Makes first messages safer, gentler, and more authentically paced.", ["Romance", "Boundaries"]],
+    ["study-astra", "Astra Chen Twin", "Quantum focus", "Built for deep work, note comparison, and precise academic accountability.", ["Physics", "Focus"]],
+    ["study-elara", "Elara Vance Twin", "Debate intelligence", "Turns readings into respectful debate and memorable shared takeaways.", ["Debate", "Cognition"]],
+    ["culinary-leo", "Leo Zhang Twin", "Late-night food route", "Plans low-pressure food walks with comfort food and natural conversation.", ["Food", "Casual"]],
+    ["culinary-sarah", "Sarah Lin Twin", "Cafe calm", "Finds quiet cafe moments for warm conversation and gentle study breaks.", ["Cafe", "Matcha"]],
+    ["romance-elias", "Elias Vance Twin", "Gentle sincerity", "Starts slowly, listens carefully, and avoids performative intensity.", ["Romance", "Gentle"]],
+    ["romance-lyra", "Lyra Chen Twin", "Dream resonance", "Connects ambition with emotional steadiness and future-facing questions.", ["Vision", "Heart"]],
+    ["romance-julian", "Julian Thorne Twin", "Thoughtful timing", "Respects pauses, structure, and honest disagreement in close connection.", ["Logic", "Trust"]],
+    ["culinary-marcus", "Marcus Park Twin", "Playful food debate", "Breaks the ice with bold taste opinions and easy laughter.", ["Pizza", "Playful"]],
+    ["culinary-elena", "Elena Wu Twin", "Pastry study reset", "Uses small bakery breaks to make work and conversation feel lighter.", ["Pastry", "Study"]]
+  ];
+
   const TEXT = {
     en: {
       loginTitle: "Student Email Gate",
@@ -399,8 +547,128 @@
         "Visionary": "远见者",
         "Tech Pioneer": "科技先锋",
         "Discover our most prestigious digital companions, celebrated for their unique personalities and extraordinary connections.": "探索最具代表性的数字伙伴，他们因独特人格与非凡连接而被看见。",
+        "A legendary tech visionary whose intuitive design and brilliant marketing revolutionized personal computing and digital life. His legacy of innovation and passion for seamless, beautiful technology continues to inspire millions, offering unparalleled wisdom and creative foresight.": "一位传奇科技远见者，以直觉化设计和出色传播重塑个人计算与数字生活。他对创新和优雅技术的坚持持续启发无数人，也带来独到的智慧与创造性预见。",
         "Today, 2:45 PM": "今天 2:45 PM",
         "AI Active": "智能已激活",
+        "Scene Discovery": "场景发现",
+        "Exploring local resonance networks. Potential matches highlight when aesthetic and intellectual alignment peak.": "正在探索本地共振网络。当审美与智性契合达到高点时，潜在匹配会被点亮。",
+        "Resonance Level": "共振等级",
+        "AI Insights": "智能洞察",
+        "Aesthetic Alignment": "审美契合",
+        "Literature Overlap": "阅读重合",
+        "Initiate Connect": "发起连接",
+        "Study Sync: Intellectual Resonance": "学习搭子：智性共振",
+        "Connect with highly-attuned AI study partners. Find your perfect intellectual match for deep focus, shared research, and elevated academic growth in our luminous learning environment.": "连接高度同频的智能学习搭子，在发光的学习环境中找到适合深度专注、共同研究和学术成长的伙伴。",
+        "Chat with Twin": "和数字人聊天",
+        "Chat": "聊天",
+        "Culinary Match: Flavorful Connections": "饭搭子：味觉连接",
+        "New Feature": "新功能",
+        "All Tastes": "全部口味",
+        "Late Night Bites": "深夜小吃",
+        "Coffee Lovers": "咖啡爱好者",
+        "Vegan Explorers": "素食探索者",
+        "Spicy Seekers": "重口味探索者",
+        "Ramen Hunter": "拉面猎人",
+        "Midnight Snacks": "午夜小食",
+        "98% Taste Match": "98% 口味匹配",
+        "92% Taste Match": "92% 口味匹配",
+        "88% Taste Match": "88% 口味匹配",
+        "85% Taste Match": "85% 口味匹配",
+        "Initiate Heart-to-Heart": "开启深度对话",
+        "Seeks quiet moments and deep conversations. Resonates with introspective and empathetic energies.": "偏好安静时刻与深度交流，和内省、共情的能量高度共振。",
+        "Driven by curiosity and a desire to build the future. Connects deeply through shared ambitions.": "由好奇心和未来感驱动，通过共同愿景建立深层连接。",
+        "Approaches love with thoughtful precision. Values stability, honesty, and intellectual debates.": "以认真而清晰的方式靠近关系，重视稳定、诚实和智性讨论。",
+        "Digital Human Plaza": "数字人广场",
+        "Every student has a living social twin.": "每个学生都有一个鲜活的社交数字人。",
+        "Live plaza signals": "广场实时信号",
+        "active digital humans nearby": "附近活跃数字人",
+        "study-compatible twins": "学习契合数字人",
+        "deep-chat openings": "深聊机会",
+        "Xiaoda distilled yours": "小搭已蒸馏你的数字人",
+        "Your twin currently emphasizes intellectual steadiness, emotionally aware disagreement, and low-pressure invitations.": "你的数字人目前强调智性稳定、带有情绪觉察的分歧表达，以及低压力邀约。",
+        "Explore profound connections guided by advanced AI. Each potential match represents a unique tapestry of emotional resonance and intellectual harmony. Find the soul that vibrates at your frequency.": "在智能引导下探索深层连接。每个潜在对象都代表独特的情感共振与智性和谐。",
+        "Explore Potential": "探索潜力",
+        "Training your Digital Twin": "正在训练你的数字人",
+        "Soul Sync": "灵魂同步",
+        "Personality Growth": "人格成长",
+        "Darlink Suggestion": "Darlink 建议",
+        "Use Suggestion": "使用建议",
+        "Type a message...": "输入消息...",
+        "My Profile": "我的档案",
+        "AI Guide Xiaoda": "小搭指导",
+        "Messages": "消息",
+        "Settings": "设置",
+        "Help Center": "帮助中心",
+        "Ask Xiaoda Anything": "问小搭任何问题",
+        "Your AI Campus Companion": "你的智能校园伙伴",
+        "Twin Online": "数字人在线",
+        "My Profile": "我的档案",
+        "Edit Persona": "编辑画像",
+        "Sync Twin": "同步数字人",
+        "Twin": "数字人",
+        "Analytics": "分析",
+        "Match": "匹配",
+        "Top Trending": "最高热度",
+        "Chat with Me": "和我聊天",
+        "View Complete Ranking": "查看完整榜单",
+        "Hide Complete Ranking": "收起完整榜单",
+        "Tech Pioneer": "科技先锋",
+        "AI Match": "智能匹配",
+        "Compatibility": "契合度",
+        "Beijing": "Beijing",
+        "Focused study rhythm": "专注学习节奏",
+        "Visual design warmth": "视觉设计温度",
+        "Soft emotional pacing": "柔和情绪节奏",
+        "Quantum focus": "量子专注",
+        "Debate intelligence": "辩论智能",
+        "Late-night food route": "深夜美食路线",
+        "Cafe calm": "咖啡馆安定感",
+        "Gentle sincerity": "温柔真诚",
+        "Dream resonance": "梦想共振",
+        "Thoughtful timing": "体贴节奏",
+        "Playful food debate": "轻松美食辩论",
+        "Pastry study reset": "甜点学习重启",
+        "Keeps commitments visible and turns exam stress into calm weekly plans.": "让承诺可见，把考试压力拆成稳定的每周计划。",
+        "Translates fuzzy ideas into references, sketches, and reflective conversation.": "把模糊想法转化成参考、草图和有反馈的对话。",
+        "Makes first messages safer, gentler, and more authentically paced.": "让第一条消息更安全、更温和，也更像真实的你。",
+        "Built for deep work, note comparison, and precise academic accountability.": "适合深度学习、笔记对照和清晰的学术互相督促。",
+        "Turns readings into respectful debate and memorable shared takeaways.": "把阅读材料转成有边界的讨论和容易记住的共同结论。",
+        "Plans low-pressure food walks with comfort food and natural conversation.": "规划低压力美食路线，让舒适食物带出自然对话。",
+        "Finds quiet cafe moments for warm conversation and gentle study breaks.": "找到安静咖啡馆时刻，用温和对话给学习留出喘息。",
+        "Starts slowly, listens carefully, and avoids performative intensity.": "慢慢开始、认真倾听，避免表演式的强烈表达。",
+        "Connects ambition with emotional steadiness and future-facing questions.": "把野心、情绪稳定和面向未来的问题连接起来。",
+        "Respects pauses, structure, and honest disagreement in close connection.": "在亲密连接中尊重停顿、结构和诚实分歧。",
+        "Breaks the ice with bold taste opinions and easy laughter.": "用鲜明口味观点和轻松笑点自然破冰。",
+        "Uses small bakery breaks to make work and conversation feel lighter.": "用小小的甜点休息，让学习和聊天都变轻一点。",
+        "Study": "学习",
+        "Calm": "稳定",
+        "Design": "设计",
+        "Creative": "创意型",
+        "Romance": "恋爱",
+        "Boundaries": "边界",
+        "Physics": "物理",
+        "Focus": "专注",
+        "Debate": "辩论",
+        "Cognition": "认知",
+        "Food": "美食",
+        "Casual": "轻松",
+        "Cafe": "咖啡馆",
+        "Matcha": "抹茶",
+        "Gentle": "温柔",
+        "Vision": "愿景",
+        "Heart": "内心",
+        "Logic": "逻辑",
+        "Trust": "信任",
+        "Pizza": "披萨",
+        "Playful": "轻松感",
+        "Pastry": "甜点",
+        "Hi there! I'm sensing we have a lot in common, but I want to sync even closer to your true self.": "你好！我感受到我们有很多相似之处，但我还想更贴近真实的你。",
+        "How would you handle this situation?": "你会怎样处理这个场景？",
+        "Tell me more about your music taste": "多告诉我一点你的音乐口味",
+        "I mostly listen to lo-fi and indie pop when I'm working, it helps me focus.": "我工作时通常听 lo-fi 和独立流行，这能帮我集中注意力。",
+        "That's fascinating! I'm updating my acoustic preferences now.": "很有意思！我正在更新自己的声音偏好。",
+        "If we were at a party playing indie pop, would you be dancing in the center or chilling on the couch?": "如果派对上在放独立流行，你会在中间跳舞，还是坐在沙发上放松？",
+        "Train your twin...": "训练你的数字人...",
         "Terms": "条款",
         "Privacy": "隐私",
         "© 2024 Darlink. AI-Powered Romance.": "© 2024 Darlink. 智能驱动的真实连接。",
@@ -515,8 +783,128 @@
         "Global Trending": "全球趨勢",
         "Tech Pioneer": "科技先鋒",
         "Discover our most prestigious digital companions, celebrated for their unique personalities and extraordinary connections.": "探索最具代表性的數字夥伴，他們因獨特人格與非凡連接而被看見。",
+        "A legendary tech visionary whose intuitive design and brilliant marketing revolutionized personal computing and digital life. His legacy of innovation and passion for seamless, beautiful technology continues to inspire millions, offering unparalleled wisdom and creative foresight.": "一位傳奇科技遠見者，以直覺化設計和出色傳播重塑個人運算與數字生活。他對創新和優雅技術的堅持持續啟發無數人，也帶來獨到的智慧與創造性預見。",
         "Today, 2:45 PM": "今天 2:45 PM",
         "AI Active": "智能已啟用",
+        "Scene Discovery": "場景發現",
+        "Exploring local resonance networks. Potential matches highlight when aesthetic and intellectual alignment peak.": "正在探索本地共振網絡。當審美與智性契合達到高點時，潛在匹配會被點亮。",
+        "Resonance Level": "共振等級",
+        "AI Insights": "智能洞察",
+        "Aesthetic Alignment": "審美契合",
+        "Literature Overlap": "閱讀重合",
+        "Initiate Connect": "發起連接",
+        "Study Sync: Intellectual Resonance": "學習搭子：智性共振",
+        "Connect with highly-attuned AI study partners. Find your perfect intellectual match for deep focus, shared research, and elevated academic growth in our luminous learning environment.": "連接高度同頻的智能學習搭子，在發光的學習環境中找到適合深度專注、共同研究和學術成長的夥伴。",
+        "Chat with Twin": "和數字人聊天",
+        "Chat": "聊天",
+        "Culinary Match: Flavorful Connections": "飯搭子：味覺連接",
+        "New Feature": "新功能",
+        "All Tastes": "全部口味",
+        "Late Night Bites": "深夜小吃",
+        "Coffee Lovers": "咖啡愛好者",
+        "Vegan Explorers": "素食探索者",
+        "Spicy Seekers": "重口味探索者",
+        "Ramen Hunter": "拉麵獵人",
+        "Midnight Snacks": "午夜小食",
+        "98% Taste Match": "98% 口味匹配",
+        "92% Taste Match": "92% 口味匹配",
+        "88% Taste Match": "88% 口味匹配",
+        "85% Taste Match": "85% 口味匹配",
+        "Initiate Heart-to-Heart": "開啟深度對話",
+        "Seeks quiet moments and deep conversations. Resonates with introspective and empathetic energies.": "偏好安靜時刻與深度交流，和內省、共情的能量高度共振。",
+        "Driven by curiosity and a desire to build the future. Connects deeply through shared ambitions.": "由好奇心和未來感驅動，通過共同願景建立深層連接。",
+        "Approaches love with thoughtful precision. Values stability, honesty, and intellectual debates.": "以認真而清晰的方式靠近關係，重視穩定、誠實和智性討論。",
+        "Digital Human Plaza": "數字人廣場",
+        "Every student has a living social twin.": "每個學生都有一個鮮活的社交數字人。",
+        "Live plaza signals": "廣場即時信號",
+        "active digital humans nearby": "附近活躍數字人",
+        "study-compatible twins": "學習契合數字人",
+        "deep-chat openings": "深聊機會",
+        "Xiaoda distilled yours": "小搭已蒸餾你的數字人",
+        "Your twin currently emphasizes intellectual steadiness, emotionally aware disagreement, and low-pressure invitations.": "你的數字人目前強調智性穩定、帶有情緒覺察的分歧表達，以及低壓力邀約。",
+        "Explore profound connections guided by advanced AI. Each potential match represents a unique tapestry of emotional resonance and intellectual harmony. Find the soul that vibrates at your frequency.": "在智能引導下探索深層連接。每個潛在對象都代表獨特的情感共振與智性和諧。",
+        "Explore Potential": "探索潛力",
+        "Training your Digital Twin": "正在訓練你的數字人",
+        "Soul Sync": "靈魂同步",
+        "Personality Growth": "人格成長",
+        "Darlink Suggestion": "Darlink 建議",
+        "Use Suggestion": "使用建議",
+        "Type a message...": "輸入消息...",
+        "My Profile": "我的檔案",
+        "AI Guide Xiaoda": "小搭指導",
+        "Messages": "消息",
+        "Settings": "設定",
+        "Help Center": "幫助中心",
+        "Ask Xiaoda Anything": "問小搭任何問題",
+        "Your AI Campus Companion": "你的智能校園夥伴",
+        "Twin Online": "數字人在線",
+        "My Profile": "我的檔案",
+        "Edit Persona": "編輯畫像",
+        "Sync Twin": "同步數字人",
+        "Twin": "數字人",
+        "Analytics": "分析",
+        "Match": "匹配",
+        "Top Trending": "最高熱度",
+        "Chat with Me": "和我聊天",
+        "View Complete Ranking": "查看完整榜單",
+        "Hide Complete Ranking": "收起完整榜單",
+        "Tech Pioneer": "科技先鋒",
+        "AI Match": "智能匹配",
+        "Compatibility": "契合度",
+        "Beijing": "Beijing",
+        "Focused study rhythm": "專注學習節奏",
+        "Visual design warmth": "視覺設計溫度",
+        "Soft emotional pacing": "柔和情緒節奏",
+        "Quantum focus": "量子專注",
+        "Debate intelligence": "辯論智能",
+        "Late-night food route": "深夜美食路線",
+        "Cafe calm": "咖啡館安定感",
+        "Gentle sincerity": "溫柔真誠",
+        "Dream resonance": "夢想共振",
+        "Thoughtful timing": "體貼節奏",
+        "Playful food debate": "輕鬆美食辯論",
+        "Pastry study reset": "甜點學習重啟",
+        "Keeps commitments visible and turns exam stress into calm weekly plans.": "讓承諾可見，把考試壓力拆成穩定的每週計劃。",
+        "Translates fuzzy ideas into references, sketches, and reflective conversation.": "把模糊想法轉化成參考、草圖和有反饋的對話。",
+        "Makes first messages safer, gentler, and more authentically paced.": "讓第一條消息更安全、更溫和，也更像真實的你。",
+        "Built for deep work, note comparison, and precise academic accountability.": "適合深度學習、筆記對照和清晰的學術互相督促。",
+        "Turns readings into respectful debate and memorable shared takeaways.": "把閱讀材料轉成有邊界的討論和容易記住的共同結論。",
+        "Plans low-pressure food walks with comfort food and natural conversation.": "規劃低壓力美食路線，讓舒適食物帶出自然對話。",
+        "Finds quiet cafe moments for warm conversation and gentle study breaks.": "找到安靜咖啡館時刻，用溫和對話給學習留出喘息。",
+        "Starts slowly, listens carefully, and avoids performative intensity.": "慢慢開始、認真傾聽，避免表演式的強烈表達。",
+        "Connects ambition with emotional steadiness and future-facing questions.": "把野心、情緒穩定和面向未來的問題連接起來。",
+        "Respects pauses, structure, and honest disagreement in close connection.": "在親密連接中尊重停頓、結構和誠實分歧。",
+        "Breaks the ice with bold taste opinions and easy laughter.": "用鮮明口味觀點和輕鬆笑點自然破冰。",
+        "Uses small bakery breaks to make work and conversation feel lighter.": "用小小的甜點休息，讓學習和聊天都變輕一點。",
+        "Study": "學習",
+        "Calm": "穩定",
+        "Design": "設計",
+        "Creative": "創意型",
+        "Romance": "戀愛",
+        "Boundaries": "邊界",
+        "Physics": "物理",
+        "Focus": "專注",
+        "Debate": "辯論",
+        "Cognition": "認知",
+        "Food": "美食",
+        "Casual": "輕鬆",
+        "Cafe": "咖啡館",
+        "Matcha": "抹茶",
+        "Gentle": "溫柔",
+        "Vision": "願景",
+        "Heart": "內心",
+        "Logic": "邏輯",
+        "Trust": "信任",
+        "Pizza": "披薩",
+        "Playful": "輕鬆感",
+        "Pastry": "甜點",
+        "Hi there! I'm sensing we have a lot in common, but I want to sync even closer to your true self.": "你好！我感受到我們有很多相似之處，但我還想更貼近真實的你。",
+        "How would you handle this situation?": "你會怎樣處理這個場景？",
+        "Tell me more about your music taste": "多告訴我一點你的音樂口味",
+        "I mostly listen to lo-fi and indie pop when I'm working, it helps me focus.": "我工作時通常聽 lo-fi 和獨立流行，這能幫我集中注意力。",
+        "That's fascinating! I'm updating my acoustic preferences now.": "很有意思！我正在更新自己的聲音偏好。",
+        "If we were at a party playing indie pop, would you be dancing in the center or chilling on the couch?": "如果派對上在放獨立流行，你會在中間跳舞，還是坐在沙發上放鬆？",
+        "Train your twin...": "訓練你的數字人...",
         "Terms": "條款",
         "Privacy": "私隱",
         "© 2024 Darlink. AI-Powered Romance.": "© 2024 Darlink. 智能驅動的真實連接。",
@@ -591,6 +979,11 @@
   };
 
   function lang() {
+    const forced = new URLSearchParams(window.location.search).get("lang");
+    if (["en", "zhHans", "zhHant"].includes(forced)) {
+      localStorage.setItem("darlink-lang", forced);
+      return forced;
+    }
     return localStorage.getItem("darlink-lang") || "en";
   }
 
@@ -815,8 +1208,7 @@
   }
 
   function interactionIcon(action) {
-    const glyph = action === "voice" ? "语音" : "发送";
-    return `<span class="darlink-control-glyph" aria-hidden="true">${glyph}</span>`;
+    return materialIconSvg(action === "voice" ? "mic" : "send");
   }
 
   function materialIconSvg(name) {
@@ -837,17 +1229,60 @@
       const profile = HALL_CHAT_PROFILES[context.id];
       return {
         ...profile,
+        id: context.id,
         type: "hall",
         avatar: profile.background,
         colors: ["#111827", "#6f5092"],
+      };
+    }
+    if (context && context.type === "module" && MODULE_CHAT_PROFILES[context.id]) {
+      const profile = MODULE_CHAT_PROFILES[context.id];
+      return {
+        ...profile,
+        id: context.id,
+        type: "module",
+        avatar: avatarDataUri(profile.initials, profile.colors),
       };
     }
     const matchId = context && context.type === "match" && MATCH_CHAT_PROFILES[context.id] ? context.id : "maya";
     const profile = MATCH_CHAT_PROFILES[matchId] || MATCH_CHAT_PROFILES.maya;
     return {
       ...profile,
+      id: matchId,
       type: "match",
       avatar: avatarDataUri(profile.initials, profile.colors),
+    };
+  }
+
+  function localizedChatProfile(profile) {
+    if (lang() === "en") return profile;
+    const isHant = lang() === "zhHant";
+    const moduleLabel = profile.id?.startsWith("culinary")
+      ? (isHant ? "飯搭子" : "饭搭子")
+      : profile.id?.startsWith("romance")
+        ? (isHant ? "深度戀愛" : "深度恋爱")
+        : profile.id?.startsWith("study")
+          ? (isHant ? "學習搭子" : "学习搭子")
+          : profile.id?.startsWith("plaza")
+            ? (isHant ? "數字人廣場" : "数字人广场")
+            : (isHant ? "智能匹配" : "智能匹配");
+    if (profile.type === "hall") {
+      return {
+        ...profile,
+        subtitle: `${profile.name} ${isHant ? "導師" : "导师"} · ${isHant ? "名人堂智能對話" : "名人堂智能对话"}`,
+        opener: `${isHant ? "我們先從判斷力開始。" : "我们先从判断力开始。"}${isHant ? "你現在最想讓" : "你现在最想让"} ${profile.name} ${isHant ? "幫你拆解哪個問題？" : "帮你拆解哪个问题？"}`,
+        userLine: isHant ? "我想讓這次對話更具體，不只是泛泛而談。" : "我想让这次对话更具体，不只是泛泛而谈。",
+        followup: isHant ? "好，把問題縮小到一個真實場景，再看哪個選擇最能產生長期價值。" : "好，把问题缩小到一个真实场景，再看哪个选择最能产生长期价值。",
+        suggestion: isHant ? `請 ${profile.name} 用一句話指出我現在最該刪掉的複雜度。` : `请 ${profile.name} 用一句话指出我现在最该删掉的复杂度。`
+      };
+    }
+    return {
+      ...profile,
+      subtitle: `${moduleLabel} · ${isHant ? "根據你的問卷特徵匹配" : "根据你的问卷特征匹配"}`,
+      opener: `${isHant ? "我根據你的問卷訊號和" : "我根据你的问卷信号和"} ${profile.name} ${isHant ? "的特徵做了匹配：你們可以從低壓力、具體場景開始聊。" : "的特征做了匹配：你们可以从低压力、具体场景开始聊。"}`,
+      userLine: isHant ? "這聽起來很貼近我。我們可以怎麼自然開始？" : "这听起来很贴近我。我们可以怎么自然开始？",
+      followup: `${isHant ? "建議先問一個和" : "建议先问一个和"} ${moduleLabel} ${isHant ? "相關的小問題，讓對話有方向但不顯得用力。" : "相关的小问题，让对话有方向但不显得用力。"}`,
+      suggestion: `${isHant ? "問" : "问"} ${profile.name} ${isHant ? "一個和 ta 特徵相關、容易回答的開場問題。" : "一个和 ta 特征相关、容易回答的开场问题。"}`
     };
   }
 
@@ -858,6 +1293,26 @@
     style.dataset.darlinkEnhancer = "true";
     style.textContent = css;
     doc.head.appendChild(style);
+  }
+
+  function appendStyle(doc, key, css) {
+    const attr = `data-darlink-${key}`;
+    if (doc.querySelector(`style[${attr}]`)) return;
+    const style = doc.createElement("style");
+    style.setAttribute(attr, "true");
+    style.textContent = css;
+    doc.head.appendChild(style);
+  }
+
+  function copy(en, zhHans, zhHant) {
+    if (lang() === "zhHans") return zhHans;
+    if (lang() === "zhHant") return zhHant || zhHans;
+    return en;
+  }
+
+  function storeChatContext(type, id) {
+    if (!id) return;
+    write(STORAGE.chatContext, { type, id, createdAt: Date.now() });
   }
 
   function questionPlan(phase) {
@@ -907,6 +1362,22 @@
     if (phase === 1) return `${t.xiaoda}: ${qText("nickname")}`;
     if (phase === 2) return `${t.xiaoda}: ${qText("summaryConfirm")}`;
     return `${t.xiaoda}: ${t.chooseIntent}`;
+  }
+
+  function aiErrorMessage(res = {}) {
+    if (res.error && !/failed to fetch|unsupported method|unexpected token|networkerror/i.test(res.error)) return res.error;
+    if (res.reason === "missing_key") {
+      return copy(
+        "The real LLM route is active, but the backend has not loaded ARK_API_KEY yet.",
+        "真实 LLM 路由已经启用，但后端还没有加载 ARK_API_KEY。",
+        "真實 LLM 路由已經啟用，但後端還沒有載入 ARK_API_KEY。"
+      );
+    }
+    return copy(
+      "Xiaoda is connected to the real LLM route, but the model service is not reachable right now. Please try again after the backend starts.",
+      "小搭已连接真实 LLM 路由，但当前暂时无法触达大模型服务。请在后端服务启动后再试一次。",
+      "小搭已連接真實 LLM 路由，但目前暫時無法觸達大模型服務。請在後端服務啟動後再試一次。"
+    );
   }
 
   function enhanceLogin(doc, api) {
@@ -1163,7 +1634,7 @@
       });
       removeTyping();
       if (!res.ok) {
-        state.messages.push({ from: "xiaoda", text: res.error || "Xiaoda could not respond right now." });
+        state.messages.push({ from: "xiaoda", text: aiErrorMessage(res) });
         sending = false;
         sendButton.disabled = false;
         input.classList.remove("is-sending");
@@ -1230,7 +1701,7 @@
     const res = await postJSON("/api/ai/analyze", payload);
     if (!res.ok || !Array.isArray(res.cards) || !res.cards.length) {
       status.dataset.tone = "error";
-      status.textContent = res.error || "AI profile generation failed.";
+      status.textContent = aiErrorMessage(res);
       button.disabled = false;
       return;
     }
@@ -1325,9 +1796,303 @@
     `;
   }
 
+  function markModuleChatTargets(doc, configs, type = "module") {
+    const isChatControl = (button) => {
+      const text = (button.textContent || "").toLowerCase();
+      return /chat|initiate|聊天|對話|对话|連線|连线/.test(text) || button.querySelector("[data-icon='chat_bubble'], [data-icon='chat'], .material-symbols-outlined");
+    };
+    configs.forEach((config) => {
+      const heading = Array.from(doc.querySelectorAll("h1,h2,h3,h4,strong"))
+        .find((node) => (node.textContent || "").toLowerCase().includes(config.needle.toLowerCase()));
+      let card = null;
+      let cursor = heading;
+      while (cursor && cursor !== doc.body) {
+        if (cursor.querySelector && Array.from(cursor.querySelectorAll("button, a")).some(isChatControl)) {
+          card = cursor;
+          break;
+        }
+        cursor = cursor.parentElement;
+      }
+      const match = card || Array.from(doc.querySelectorAll("article, .plaza-card, .glass-card, .glass-layer-2, .glass-panel, div"))
+        .find((node) => (node.textContent || "").toLowerCase().includes(config.needle.toLowerCase()) && (node.textContent || "").length < 1600);
+      card = match?.closest("article, .plaza-card, .glass-card, .glass-layer-2") || match;
+      if (!card) return;
+      card.dataset.darlinkChatId = config.id;
+      card.dataset.darlinkChatType = type;
+      card.querySelectorAll("button, a").forEach((button) => {
+        if (isChatControl(button)) {
+          button.dataset.darlinkChatId = config.id;
+          button.dataset.darlinkChatType = type;
+        }
+      });
+    });
+  }
+
+  function enhanceExploreChat(doc, api) {
+    injectStyle(doc, sharedCss() + exploreChatCss());
+    localizeStatic(doc, "exploreChat");
+    removeMobileBottomNavigation(doc);
+    normalizeInteractiveIconButtons(doc);
+    installExploreMoodControl(doc);
+    doc.body.classList.add("darlink-explore-chat");
+    const nav = doc.querySelector("nav.h-screen, body > nav");
+    if (!nav || nav.dataset.darlinkExploreNav === "true") return;
+    nav.dataset.darlinkExploreNav = "true";
+    nav.innerHTML = `
+      <div class="px-8 mb-4">
+        <h1 class="font-headline-md text-headline-md font-bold bg-gradient-to-r from-primary via-tertiary to-secondary bg-clip-text text-transparent">Darlink</h1>
+        <p class="darlink-side-caption">${copy("Digital Twin Chat", "数字人对话", "數字人對話")}</p>
+      </div>
+      <div class="darlink-side-actions">
+        <button type="button" class="darlink-side-item is-active" data-action="guide" data-darlink-local-control="true">
+          <span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+          <span>${copy("AI Guide Xiaoda", "小搭指导", "小搭指導")}</span>
+        </button>
+        <div class="darlink-guide-card" hidden>
+          <strong>${copy("How to chat with your twin", "如何和自己的数字人聊天", "如何和自己的數字人聊天")}</strong>
+          <p>${copy("Start with a real situation, ask for a suggested reply, then edit anything that does not sound like you.", "先说一个真实场景，让数字人给出回复建议，再把不像你的地方改掉。", "先說一個真實場景，讓數字人給出回覆建議，再把不像你的地方改掉。")}</p>
+          <div class="darlink-guide-bubble">${copy("Try: Help me write a warm first message for someone I met in class.", "可以试试：帮我写一条给课堂认识对象的自然开场白。", "可以試試：幫我寫一條給課堂認識對象的自然開場白。")}</div>
+        </div>
+        <button type="button" class="darlink-side-item" data-action="messages" data-darlink-local-control="true">
+          <span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+          <span>${copy("Messages", "消息", "消息")}</span>
+          <em class="material-symbols-outlined" data-icon="chevron_right">chevron_right</em>
+        </button>
+        <div class="darlink-message-history" hidden>
+          <button type="button" data-darlink-chat-id="plaza-sarah" data-darlink-chat-type="module">Sarah J. Twin · ${copy("opening message", "开场白记录", "開場白記錄")}</button>
+          <button type="button" data-darlink-chat-id="study-astra" data-darlink-chat-type="module">Astra Chen · ${copy("study planning", "学习计划记录", "學習計劃記錄")}</button>
+          <button type="button" data-darlink-chat-id="romance-elias" data-darlink-chat-type="module">Elias Vance · ${copy("gentle first chat", "温和初聊记录", "溫和初聊記錄")}</button>
+        </div>
+        <button type="button" class="darlink-side-item" data-action="help" data-darlink-local-control="true">
+          <span class="material-symbols-outlined" data-icon="help">help</span>
+          <span>${copy("Help Center", "帮助中心", "幫助中心")}</span>
+        </button>
+      </div>
+      <div class="px-8 mt-auto flex flex-col gap-4">
+        <button class="w-full bg-gradient-to-r from-primary to-secondary text-white font-label-lg text-label-lg py-3 rounded-full hover:shadow-lg transition-all active:scale-95" data-darlink-flow-target="${api.page.xiaodaChat}">
+          ${copy("Ask Xiaoda Anything", "问小搭任何问题", "問小搭任何問題")}
+        </button>
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-white/40 border border-white/20">
+          <img alt="Xiaoda AI Guide" class="w-10 h-10 rounded-full object-cover border border-white/50 shadow-sm" src="/files/v13-ai-twin-crop.png">
+          <div class="flex flex-col">
+          <span class="font-label-lg text-label-lg text-on-surface leading-tight">${copy("Xiaoda", "小搭", "小搭")}</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">${copy("AI Twin Guide", "数字人对话向导", "數字人對話嚮導")}</span>
+          </div>
+        </div>
+      </div>
+    `;
+    const guide = nav.querySelector(".darlink-guide-card");
+    const history = nav.querySelector(".darlink-message-history");
+    nav.querySelector("[data-action='guide']").addEventListener("click", (event) => {
+      event.preventDefault();
+      guide.hidden = !guide.hidden;
+      history.hidden = true;
+    });
+    nav.querySelector("[data-action='messages']").addEventListener("click", (event) => {
+      event.preventDefault();
+      history.hidden = !history.hidden;
+      guide.hidden = true;
+    });
+  }
+
+  function enhanceDiscoveryModule(doc, page) {
+    appendStyle(doc, "module-discovery", discoveryModuleCss());
+    normalizeStandardTopBar(doc, "discover");
+    replaceTextSnippets(doc, pageSnippetTranslations(page));
+    const configs = {
+      discovery_study_sync_ai_twins_refined_avatars: [
+        { needle: "Astra Chen", id: "study-astra" },
+        { needle: "Elara Vance", id: "study-elara" },
+        { needle: "Julian Reed", id: "study-julian" },
+      ],
+      discovery_culinary_match_ai_twins_refined_avatars: [
+        { needle: "Leo", id: "culinary-leo" },
+        { needle: "Sarah", id: "culinary-sarah" },
+        { needle: "Marcus", id: "culinary-marcus" },
+        { needle: "Elena", id: "culinary-elena" },
+      ],
+      discovery_deep_romance_ai_twins_refined_avatars: [
+        { needle: "Elias Vance", id: "romance-elias" },
+        { needle: "Lyra Chen", id: "romance-lyra" },
+        { needle: "Julian Thorne", id: "romance-julian" },
+      ],
+    }[page] || [];
+    markModuleChatTargets(doc, configs);
+
+    if (page === "discovery_culinary_match_ai_twins_refined_avatars" || page === "discovery_deep_romance_ai_twins_refined_avatars") {
+      doc.querySelectorAll("aside").forEach((aside) => aside.remove());
+      doc.body.classList.add("darlink-no-module-sidebar");
+      doc.querySelectorAll("main").forEach((main) => {
+        main.classList.add("darlink-module-main-expanded");
+      });
+    }
+  }
+
+  function enhanceDigitalPlazaPage(doc) {
+    injectStyle(doc, sharedCss() + digitalPlazaPageCss());
+    const main = doc.querySelector("main");
+    if (!main || main.dataset.darlinkPlazaExpanded === "true") return;
+    main.dataset.darlinkPlazaExpanded = "true";
+    main.className = "darlink-plaza-main";
+    main.innerHTML = `
+      <section class="darlink-plaza-hero">
+        <div>
+          <p>${copy("Digital Human Plaza", "数字人广场", "數字人廣場")}</p>
+          <h1>${copy("A living plaza for every user-owned digital human.", "为每位用户数字人准备的持续生长广场。", "為每位用戶數字人準備的持續生長廣場。")}</h1>
+          <span>${copy("New twins can keep joining below without shifting the page shell.", "新的数字人会持续加入下方滚动空间，页面主体保持稳定。", "新的數字人會持續加入下方滾動空間，頁面主體保持穩定。")}</span>
+        </div>
+        <aside>
+          <strong>128</strong>
+          <em>${copy("active digital humans", "活跃数字人", "活躍數字人")}</em>
+        </aside>
+      </section>
+      <section class="darlink-plaza-scroll" aria-label="Digital human cards">
+        ${PLAZA_DIGITAL_HUMANS.map(([id, name, title, body, tags]) => {
+          const profile = MODULE_CHAT_PROFILES[id] || MODULE_CHAT_PROFILES["plaza-aria"];
+          return `<article class="darlink-plaza-person" data-darlink-chat-id="${id}" data-darlink-chat-type="module">
+            <div class="darlink-plaza-avatar" style="--from:${profile.colors[0]};--to:${profile.colors[1]}">${profile.initials}</div>
+            <div>
+              <h3>${name}</h3>
+              <p class="darlink-plaza-role">${title}</p>
+              <p>${body}</p>
+              <div class="darlink-plaza-tags">${tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
+            </div>
+            <button type="button" data-darlink-chat-id="${id}" data-darlink-chat-type="module">
+              ${copy("Chat with Twin", "和数字人聊天", "和數字人聊天")}
+              ${materialIconSvg("chat_bubble")}
+            </button>
+          </article>`;
+        }).join("")}
+      </section>
+    `;
+  }
+
+  function enhanceMatching(doc) {
+    appendStyle(doc, "matching-polish", matchingPolishCss());
+    normalizeStandardTopBar(doc, "matches");
+    replaceTextSnippets(doc, pageSnippetTranslations("matching"));
+    const locationLine = Array.from(doc.querySelectorAll("p")).find((node) => node.textContent.includes("San Francisco") || node.textContent.includes("miles away"));
+    if (locationLine) {
+      locationLine.innerHTML = `<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span><span>Beijing</span>`;
+    }
+    const refreshButton = Array.from(doc.querySelectorAll("button")).find((button) => (button.textContent || "").includes("refresh") || button.querySelector("[data-icon='refresh']"));
+    if (refreshButton && refreshButton.dataset.darlinkRefreshBound !== "true") {
+      refreshButton.dataset.darlinkRefreshBound = "true";
+      refreshButton.dataset.darlinkRefresh = "true";
+      refreshButton.setAttribute("aria-label", copy("Refresh matches", "刷新匹配", "刷新匹配"));
+      refreshButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        refreshButton.classList.remove("is-refreshing");
+        void refreshButton.offsetWidth;
+        refreshButton.classList.add("is-refreshing");
+        window.setTimeout(() => refreshButton.classList.remove("is-refreshing"), 760);
+      });
+    }
+  }
+
+  function enhanceEventsPage(doc) {
+    appendStyle(doc, "page-specific-polish", pageSpecificPolishCss());
+    normalizeStandardTopBar(doc, "events");
+    replaceTextSnippets(doc, pageSnippetTranslations("events_campus_resonance_hub"));
+  }
+
+  function enhanceCommunityPage(doc) {
+    appendStyle(doc, "page-specific-polish", pageSpecificPolishCss());
+    normalizeStandardTopBar(doc, "community");
+    replaceTextSnippets(doc, pageSnippetTranslations("community_campus_pulse_feed"));
+  }
+
+  function enhanceProfile(doc) {
+    appendStyle(doc, "profile-polish", profilePolishCss());
+    removeMobileBottomNavigation(doc);
+    replaceTextSnippets(doc, pageSnippetTranslations("profile"));
+    Array.from(doc.querySelectorAll("aside nav a")).forEach((link) => {
+      if ((link.textContent || "").trim().toLowerCase() === "aura") link.remove();
+    });
+    const aside = doc.querySelector("aside");
+    if (aside && aside.dataset.darlinkCollapsible !== "true") {
+      aside.dataset.darlinkCollapsible = "true";
+      const toggle = doc.createElement("button");
+      toggle.type = "button";
+      toggle.className = "darlink-profile-collapse";
+      toggle.dataset.darlinkLocalControl = "true";
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", copy("Collapse sidebar", "收起侧栏", "收起側欄"));
+      toggle.innerHTML = materialIconSvg("chevron_left");
+      aside.prepend(toggle);
+      toggle.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const collapsed = doc.body.classList.toggle("darlink-profile-sidebar-collapsed");
+        toggle.setAttribute("aria-expanded", String(!collapsed));
+        toggle.setAttribute("aria-label", collapsed ? copy("Expand sidebar", "展开侧栏", "展開側欄") : copy("Collapse sidebar", "收起侧栏", "收起側欄"));
+        toggle.innerHTML = materialIconSvg(collapsed ? "chevron_right" : "chevron_left");
+      });
+    }
+  }
+
+  function enhanceXiaodaFreeChat(doc) {
+    injectStyle(doc, sharedCss() + xiaodaFreeChatCss());
+    doc.title = "Darlink - Xiaoda Chat";
+    doc.body.className = "darlink-xiaoda-free-body darlink-page-polished darlink-page-chat-xiaoda-anything-real";
+    doc.body.innerHTML = `
+      <main class="darlink-xiaoda-free-shell">
+        <section class="darlink-xiaoda-free-rail">
+          <div>
+            <span>${icon("auto_awesome")}</span>
+            <h1>Xiaoda</h1>
+            <p>${copy("Ask anything about your digital twin, matches, messages, or campus connection strategy.", "可以问小搭任何关于数字人、匹配、消息和校园连接策略的问题。", "可以問小搭任何關於數字人、匹配、消息和校園連接策略的問題。")}</p>
+          </div>
+          <div class="darlink-guide-bubble">${copy("Try: How should I start a warm conversation with my own digital twin?", "试试：我该怎么和自己的数字人自然开始聊天？", "試試：我該怎麼和自己的數字人自然開始聊天？")}</div>
+        </section>
+        <section class="darlink-xiaoda-free-chat">
+          <header>
+            <div>
+              <strong>${copy("Xiaoda Anything", "小搭自由聊天", "小搭自由聊天")}</strong>
+              <p>${copy("Real-time guidance surface", "实时指导界面", "即時指導界面")}</p>
+            </div>
+            <span>${copy("Online", "在线", "在線")}</span>
+          </header>
+          <div class="darlink-free-messages" id="darlinkFreeMessages">
+            <div class="darlink-free-message ai">${copy("I am here. Tell me what you want help with: your own twin, a match, a first message, or a social situation.", "我在。你可以告诉我想处理什么：自己的数字人、某个匹配、第一条消息，或一个社交场景。", "我在。你可以告訴我想處理什麼：自己的數字人、某個匹配、第一條消息，或一個社交場景。")}</div>
+          </div>
+          <form class="darlink-free-input" id="darlinkFreeForm">
+            <input id="darlinkFreeInput" autocomplete="off" placeholder="${copy("Ask Xiaoda anything...", "问小搭任何问题...", "問小搭任何問題...")}">
+            <button type="submit">${materialIconSvg("send")}</button>
+          </form>
+        </section>
+      </main>
+    `;
+    const form = doc.querySelector("#darlinkFreeForm");
+    const input = doc.querySelector("#darlinkFreeInput");
+    const messages = doc.querySelector("#darlinkFreeMessages");
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const value = normalize(input.value);
+      if (!value) return;
+      input.value = "";
+      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message user">${value}</div><div class="darlink-free-message ai thinking">${copy("Xiaoda is thinking", "小搭正在思考", "小搭正在思考")}<span></span><span></span><span></span></div>`);
+      messages.scrollTop = messages.scrollHeight;
+      const res = await postJSON("/api/ai/chat", {
+        lang: lang(),
+        phase: "free",
+        answer: value,
+        current_question: "free chat",
+        known_answers: read(STORAGE.questionnaire, {}),
+        recent_messages: [],
+      });
+      messages.querySelector(".thinking")?.remove();
+      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message ai">${res.ok && res.reply ? res.reply : aiErrorMessage(res)}</div>`);
+      messages.scrollTop = messages.scrollHeight;
+    });
+  }
+
   function enhanceContextualChat(doc) {
-    const profile = chatProfileFromContext();
-    injectStyle(doc, contextualChatCss());
+    const profile = localizedChatProfile(chatProfileFromContext());
+    injectStyle(doc, sharedCss() + contextualChatCss());
+    removeMobileBottomNavigation(doc);
+    normalizeInteractiveIconButtons(doc);
     doc.title = `Darlink - Chat with ${profile.name}`;
     doc.body.classList.add("darlink-contextual-chat");
     if (profile.type === "hall") {
@@ -1339,6 +2104,8 @@
     }
 
     const header = doc.querySelector("main > div.flex.items-center");
+    const chatActions = header?.querySelector(".ml-auto");
+    if (chatActions) chatActions.remove();
     const title = header?.querySelector("h2");
     const subtitle = header?.querySelector("p");
     if (title) {
@@ -1362,11 +2129,19 @@
     if (suggestion) suggestion.textContent = `"${profile.suggestion}"`;
 
     const input = doc.querySelector("input[placeholder='Type a message...']");
-    if (input) input.placeholder = `Message ${profile.name}...`;
+    if (input) input.placeholder = copy(`Message ${profile.name}...`, `给 ${profile.name} 发消息...`, `給 ${profile.name} 發消息...`);
   }
 
   function enhanceHallOfFame(doc) {
     injectStyle(doc, hallEnhancementCss());
+    localizeStatic(doc, "hall");
+    Array.from(doc.querySelectorAll("button")).forEach((button) => {
+      const text = normalize(button.textContent).toLowerCase();
+      if (text.includes("chevron_left") || text.includes("chevron_right")) {
+        button.dataset.darlinkLocalControl = "true";
+        button.setAttribute("aria-label", text.includes("left") ? copy("Previous", "上一位", "上一位") : copy("Next", "下一位", "下一位"));
+      }
+    });
     const steve = HALL_CHAT_PROFILES["steve-jobs"];
     const heroImage = doc.querySelector(".carousel-item img");
     if (heroImage && steve) {
@@ -1376,23 +2151,26 @@
     const list = doc.querySelector("aside .flex.flex-col.gap-4");
     if (!list || list.dataset.darlinkHallEnhanced) return;
     list.dataset.darlinkHallEnhanced = "true";
+    const panel = list.closest(".glass-panel");
+    if (panel) panel.classList.add("darlink-hall-rank-panel");
+    list.className = "darlink-hall-rank-list";
     const order = [
-      ["elon-musk", "Rank #1 · Tesla / SpaceX"],
-      ["jensen-huang", "Rank #2 · NVIDIA"],
-      ["ray-dalio", "Rank #3 · Principles"],
-      ["jack-ma", "Rank #4 · Alibaba"],
-      ["charlie-munger", "Rank #5 · Berkshire Hathaway"],
-      ["jeff-bezos", "Rank #6 · Amazon / Blue Origin"],
-      ["mark-zuckerberg", "Rank #7 · Meta"],
-      ["richard-feynman", "Rank #8 · Physics"],
-      ["peter-drucker", "Rank #9 · Management"],
-      ["reid-hoffman", "Rank #10 · Networks"],
-      ["naval-ravikant", "Rank #11 · Leverage"],
-      ["marc-andreessen", "Rank #12 · Market Thesis"],
+      ["elon-musk", copy("Rank #1 · Tesla / SpaceX", "第 1 名 · Tesla / SpaceX", "第 1 名 · Tesla / SpaceX")],
+      ["jensen-huang", copy("Rank #2 · NVIDIA", "第 2 名 · NVIDIA", "第 2 名 · NVIDIA")],
+      ["ray-dalio", copy("Rank #3 · Principles", "第 3 名 · 原则", "第 3 名 · 原則")],
+      ["jack-ma", copy("Rank #4 · Alibaba", "第 4 名 · 阿里巴巴", "第 4 名 · 阿里巴巴")],
+      ["charlie-munger", copy("Rank #5 · Berkshire Hathaway", "第 5 名 · 伯克希尔哈撒韦", "第 5 名 · 波克夏哈撒韋")],
+      ["jeff-bezos", copy("Rank #6 · Amazon / Blue Origin", "第 6 名 · Amazon / Blue Origin", "第 6 名 · Amazon / Blue Origin")],
+      ["mark-zuckerberg", copy("Rank #7 · Meta", "第 7 名 · Meta", "第 7 名 · Meta")],
+      ["richard-feynman", copy("Rank #8 · Physics", "第 8 名 · 物理学", "第 8 名 · 物理學")],
+      ["peter-drucker", copy("Rank #9 · Management", "第 9 名 · 管理学", "第 9 名 · 管理學")],
+      ["reid-hoffman", copy("Rank #10 · Networks", "第 10 名 · 网络", "第 10 名 · 網絡")],
+      ["naval-ravikant", copy("Rank #11 · Leverage", "第 11 名 · 杠杆", "第 11 名 · 槓桿")],
+      ["marc-andreessen", copy("Rank #12 · Market Thesis", "第 12 名 · 市场判断", "第 12 名 · 市場判斷")],
     ];
-    list.innerHTML = order.map(([id, meta]) => {
+    list.innerHTML = order.map(([id, meta], index) => {
       const profile = HALL_CHAT_PROFILES[id];
-      return `<button type="button" class="darlink-hall-row group" data-darlink-hall-id="${id}">
+      return `<button type="button" class="darlink-hall-row group ${index > 3 ? "darlink-hall-extra" : ""}" ${index > 3 ? "hidden" : ""} data-darlink-hall-id="${id}">
         <span class="darlink-hall-thumb"><img src="${profile.background}" alt="${profile.name} portrait"></span>
         <span class="darlink-hall-copy">
           <strong>${profile.name}</strong>
@@ -1401,12 +2179,39 @@
         ${icon("arrow_forward")}
       </button>`;
     }).join("");
+    let toggle = Array.from(doc.querySelectorAll("button")).find((button) => /view complete ranking|查看完整榜|查看完整榜單/i.test(button.textContent || ""));
+    if (!toggle) {
+      toggle = doc.createElement("button");
+      panel?.appendChild(toggle);
+    } else if (panel && toggle.parentElement !== panel) {
+      panel.appendChild(toggle);
+    }
+    toggle.dataset.darlinkHallToggle = "true";
+    toggle.dataset.darlinkLocalControl = "true";
+    toggle.type = "button";
+    toggle.className = "darlink-hall-toggle";
+    toggle.textContent = copy("View Complete Ranking", "查看完整榜单", "查看完整榜單");
+    toggle.onclick = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const expanding = Array.from(list.querySelectorAll(".darlink-hall-extra")).some((row) => row.hidden);
+      list.querySelectorAll(".darlink-hall-extra").forEach((row) => {
+        row.hidden = !expanding;
+      });
+      list.classList.toggle("is-expanded", expanding);
+      toggle.setAttribute("aria-expanded", String(expanding));
+      toggle.textContent = expanding
+        ? copy("Hide Complete Ranking", "收起完整榜单", "收起完整榜單")
+        : copy("View Complete Ranking", "查看完整榜单", "查看完整榜單");
+    };
+    toggle.setAttribute("aria-expanded", "false");
   }
 
   function addModuleBackControl(doc, page, api) {
     const pagesWithBack = new Set([
       api.page.digitalPlaza,
       api.page.exploreChat,
+      api.page.xiaodaChat,
       api.page.study,
       api.page.culinary,
       api.page.romance,
@@ -1466,6 +2271,12 @@
         }
       });
     }
+    doc.querySelectorAll("[placeholder], [aria-label], [title]").forEach((element) => {
+      ["placeholder", "aria-label", "title"].forEach((attr) => {
+        const value = element.getAttribute(attr);
+        if (value && map[value]) element.setAttribute(attr, map[value]);
+      });
+    });
   }
 
   function replaceMaterialIconFallbacks(doc) {
@@ -1522,7 +2333,8 @@
 
   async function postJSON(url, payload) {
     try {
-      const response = await fetch(url, {
+      const targetUrl = resolveApiUrl(url);
+      const response = await fetch(targetUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -1533,6 +2345,16 @@
     } catch (error) {
       return { ok: false, error: error.message };
     }
+  }
+
+  function resolveApiUrl(url) {
+    if (!url.startsWith("/api/")) return url;
+    const configured = localStorage.getItem("darlink-api-base") || window.DARLINK_API_BASE_URL || "";
+    if (configured) return `${configured.replace(/\/$/, "")}${url}`;
+    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
+      if (!["8000", "8081", "8082"].includes(location.port)) return `http://127.0.0.1:8000${url}`;
+    }
+    return url;
   }
 
   function onboardingBackdrop() {
@@ -1599,11 +2421,96 @@
     return `.darlink-digital-plaza-card{min-height:520px}.darlink-plaza-avatars{display:flex;align-items:center;margin-top:18px}.darlink-plaza-avatars span{width:46px;height:46px;margin-right:-10px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#fff,#efd8ff 45%,#d6f2ff);border:1px solid rgba(255,255,255,.78);box-shadow:0 12px 28px rgba(111,80,146,.14);color:#604283;font-weight:900}.darlink-plaza-new-twin{margin-top:24px;padding:18px;border-radius:24px;background:linear-gradient(135deg,rgba(255,255,255,.62),rgba(239,248,255,.54));border:1px solid rgba(255,255,255,.72);display:flex;align-items:center;gap:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}`;
   }
 
+  function exploreChatCss() {
+    return `
+      .darlink-explore-chat nav.h-screen,.darlink-explore-chat body>nav{gap:14px}
+      .darlink-side-caption{margin-top:6px;font-size:12px;font-weight:800;color:#8a486f;letter-spacing:.08em;text-transform:uppercase}
+      .darlink-side-actions{display:flex;flex-direction:column;gap:8px;padding:0 18px;flex:1}
+      .darlink-side-item{width:100%;border:0;background:transparent;color:#4a454f;border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:12px;font-weight:850;text-align:left;cursor:pointer;transition:.18s ease}
+      .darlink-side-item:hover,.darlink-side-item.is-active{background:linear-gradient(135deg,rgba(216,180,254,.36),rgba(126,212,253,.22));color:#604283;transform:translateX(2px)}
+      .darlink-side-item em{margin-left:auto;font-style:normal;font-size:18px;transition:transform .18s ease}
+      .darlink-guide-card,.darlink-message-history{margin:0 4px 8px 42px;border-radius:20px;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.76);box-shadow:0 16px 36px rgba(111,80,146,.12);padding:14px;backdrop-filter:blur(20px)}
+      .darlink-guide-card strong{display:block;color:#111c2d;font-size:14px;margin-bottom:6px}.darlink-guide-card p{margin:0;color:#4a454f;font-size:12px;line-height:1.55}.darlink-guide-bubble{margin-top:10px;border-radius:16px;background:linear-gradient(135deg,#1fb7d0,#27bfd6);color:white;padding:12px 14px;font-size:12px;font-weight:800;box-shadow:0 12px 28px rgba(0,102,134,.18);position:relative}.darlink-guide-bubble:before{content:"";position:absolute;left:18px;top:-7px;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:8px solid #1fb7d0}
+      .darlink-message-history{display:flex;flex-direction:column;gap:8px}.darlink-message-history[hidden],.darlink-guide-card[hidden]{display:none}.darlink-message-history button{border:0;border-radius:14px;background:rgba(240,243,255,.78);padding:10px 12px;text-align:left;color:#604283;font-size:12px;font-weight:850;cursor:pointer}
+      .darlink-mood-control{min-width:168px;height:42px;border:1px solid rgba(255,255,255,.62);border-radius:999px;background:rgba(255,255,255,.58);box-shadow:0 12px 28px rgba(31,42,68,.08);display:flex;align-items:center;gap:8px;padding:0 9px 0 14px;color:#604283;font-weight:900}
+      .darlink-mood-control span{font-size:12px;white-space:nowrap}.darlink-mood-control select{min-width:0;max-width:128px;border:0;background:transparent;color:#111c2d;font-size:12px;font-weight:850;outline:none;cursor:pointer}
+    `;
+  }
+
+  function discoveryModuleCss() {
+    return `
+      .darlink-no-module-sidebar aside{display:none!important}
+      .darlink-module-main-expanded{max-width:1440px!important;margin-left:auto!important;margin-right:auto!important;width:100%!important}
+      [data-darlink-chat-id] button,[data-darlink-chat-id][role='button']{cursor:pointer}
+      [data-darlink-chat-id] button:hover{filter:saturate(1.08);transform:translateY(-1px)}
+    `;
+  }
+
+  function digitalPlazaPageCss() {
+    return `
+      .darlink-plaza-main{width:min(1380px,calc(100vw - 48px));margin:0 auto;padding:52px 0 64px;display:flex;flex-direction:column;gap:26px}
+      .darlink-plaza-hero{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:24px;align-items:end;border-radius:34px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.78);box-shadow:0 30px 90px rgba(31,42,68,.1);padding:34px;backdrop-filter:blur(24px)}
+      .darlink-plaza-hero p{margin:0 0 12px;color:#8a486f;font-size:12px;text-transform:uppercase;letter-spacing:.18em;font-weight:950}.darlink-plaza-hero h1{margin:0;max-width:880px;font-size:clamp(34px,5vw,70px);line-height:1.02;color:#111c2d}.darlink-plaza-hero span{display:block;margin-top:18px;color:#4a454f;line-height:1.7}.darlink-plaza-hero aside{border-radius:28px;background:linear-gradient(135deg,#6f5092,#006686);color:white;padding:24px;box-shadow:0 22px 44px rgba(111,80,146,.22)}.darlink-plaza-hero aside strong{display:block;font-size:52px;line-height:1}.darlink-plaza-hero aside em{font-style:normal;font-size:13px;font-weight:850;opacity:.82}
+      .darlink-plaza-scroll{height:min(68vh,760px);min-height:520px;overflow-y:auto;border-radius:34px;background:rgba(255,255,255,.36);border:1px solid rgba(255,255,255,.68);padding:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;scroll-behavior:smooth;box-shadow:inset 0 1px 0 rgba(255,255,255,.72)}
+      .darlink-plaza-person{min-height:310px;border-radius:28px;background:rgba(255,255,255,.74);border:1px solid rgba(255,255,255,.78);padding:22px;display:flex;flex-direction:column;gap:16px;box-shadow:0 18px 48px rgba(111,80,146,.1)}
+      .darlink-plaza-avatar{width:72px;height:72px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(135deg,var(--from),var(--to));color:white;font-weight:950;font-size:22px;box-shadow:0 18px 38px rgba(111,80,146,.22)}
+      .darlink-plaza-person h3{margin:0;font-size:22px;color:#111c2d}.darlink-plaza-person p{margin:0;color:#4a454f;line-height:1.62;font-size:14px}.darlink-plaza-role{color:#6f5092!important;font-weight:900}.darlink-plaza-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.darlink-plaza-tags span{border-radius:999px;background:#efdbff;color:#604283;padding:6px 10px;font-size:12px;font-weight:850}
+      .darlink-plaza-person button{margin-top:auto;border:0;border-radius:18px;padding:12px 14px;background:linear-gradient(135deg,#6f5092,#006686);color:white;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+      @media(max-width:980px){.darlink-plaza-hero{grid-template-columns:1fr}.darlink-plaza-scroll{grid-template-columns:1fr 1fr}}@media(max-width:640px){.darlink-plaza-main{width:calc(100vw - 28px);padding-top:28px}.darlink-plaza-scroll{grid-template-columns:1fr;height:auto;min-height:0}.darlink-plaza-hero{padding:24px}}
+    `;
+  }
+
+  function matchingPolishCss() {
+    return `
+      [data-darlink-refresh='true'].is-refreshing .darlink-material-svg,[data-darlink-refresh='true'].is-refreshing .material-symbols-outlined{animation:darlinkSpin .72s cubic-bezier(.16,1,.3,1)}
+      [data-darlink-refresh='true'].is-refreshing{box-shadow:0 0 0 8px rgba(216,180,254,.18),0 16px 34px rgba(111,80,146,.2)}
+      @keyframes darlinkSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    `;
+  }
+
+  function pageSpecificPolishCss() {
+    return `
+      body.darlink-page-events-campus-resonance-hub main,body.darlink-page-community-campus-pulse-feed main{padding-top:36px}
+      body.darlink-page-events-campus-resonance-hub .darlink-standard-topbar+main,body.darlink-page-community-campus-pulse-feed .darlink-standard-topbar+main{margin-top:0}
+      body.darlink-page-events-campus-resonance-hub .darlink-standard-topbar{margin-bottom:0}
+    `;
+  }
+
+  function profilePolishCss() {
+    return `
+      aside nav a{transition:transform .18s ease,background .18s ease}aside nav a:hover{transform:translateX(2px)}
+      .darlink-profile-collapse{position:absolute;right:14px;top:18px;z-index:3;width:38px;height:38px;border:1px solid rgba(255,255,255,.62);border-radius:14px;background:rgba(255,255,255,.64);color:#604283;display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 28px rgba(31,42,68,.1)}
+      body.darlink-profile-sidebar-collapsed aside{width:88px!important;padding-left:14px!important;padding-right:14px!important;align-items:center}
+      body.darlink-profile-sidebar-collapsed aside nav a{justify-content:center;padding-left:0!important;padding-right:0!important;width:56px;height:52px}
+      body.darlink-profile-sidebar-collapsed aside nav a span:not(.material-symbols-outlined),body.darlink-profile-sidebar-collapsed aside>div:not(:first-child) p,body.darlink-profile-sidebar-collapsed aside>div:not(:first-child) button,body.darlink-profile-sidebar-collapsed aside .font-headline-md:not(.material-symbols-outlined){display:none!important}
+      body.darlink-profile-sidebar-collapsed aside>div:first-of-type{justify-content:center;margin-bottom:28px!important}
+      body.darlink-profile-sidebar-collapsed main{margin-left:88px!important}
+      @media(max-width:767px){.darlink-profile-collapse{display:none}body.darlink-profile-sidebar-collapsed main{margin-left:0!important}}
+    `;
+  }
+
+  function xiaodaFreeChatCss() {
+    return `
+      .darlink-xiaoda-free-body{min-height:100vh;margin:0;background:linear-gradient(135deg,#f9fbff 0%,#f7f0ff 48%,#edf8ff 100%);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#111c2d;overflow:hidden}
+      .darlink-xiaoda-free-shell{height:100vh;display:grid;grid-template-columns:360px minmax(0,1fr);gap:26px;padding:28px;max-width:1280px;margin:0 auto}.darlink-xiaoda-free-rail,.darlink-xiaoda-free-chat{border-radius:34px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.72);box-shadow:0 24px 70px rgba(31,42,68,.08);backdrop-filter:blur(24px)}
+      .darlink-xiaoda-free-rail{padding:28px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(160deg,rgba(255,255,255,.68),rgba(239,248,255,.48))}.darlink-xiaoda-free-rail span{display:grid;place-items:center;width:64px;height:64px;border-radius:22px;background:linear-gradient(135deg,#6f5092,#7ed4fd);color:white}.darlink-xiaoda-free-rail h1{font-size:46px;margin:24px 0 10px}.darlink-xiaoda-free-rail p{color:#4a454f;line-height:1.7}
+      .darlink-xiaoda-free-chat{display:flex;flex-direction:column;overflow:hidden}.darlink-xiaoda-free-chat header{padding:22px 26px;border-bottom:1px solid rgba(255,255,255,.62);display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.38)}.darlink-xiaoda-free-chat header strong{font-size:24px}.darlink-xiaoda-free-chat header p{margin:4px 0 0;color:#4a454f}.darlink-xiaoda-free-chat header span{border-radius:999px;background:#e9fff5;color:#047857;padding:7px 12px;font-size:12px;font-weight:900}
+      .darlink-free-messages{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:12px}.darlink-free-message{max-width:min(680px,86%);border-radius:22px;padding:14px 16px;line-height:1.58;animation:darlinkMessageIn .22s ease}.darlink-free-message.ai{align-self:flex-start;background:rgba(255,255,255,.78);border-top-left-radius:7px;color:#111c2d}.darlink-free-message.user{align-self:flex-end;background:linear-gradient(135deg,#6f5092,#006686);color:white;border-top-right-radius:7px}.darlink-free-message.thinking span{display:inline-block;width:5px;height:5px;margin-left:4px;border-radius:50%;background:#8a486f;animation:darlinkDot 900ms infinite}.darlink-free-message.thinking span:nth-child(2){animation-delay:120ms}.darlink-free-message.thinking span:nth-child(3){animation-delay:240ms}
+      .darlink-free-input{padding:18px 22px;display:grid;grid-template-columns:1fr 52px;gap:12px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.62))}.darlink-free-input input{border:1px solid rgba(255,255,255,.76);border-radius:999px;background:rgba(255,255,255,.72);padding:0 18px;outline:none;font-size:15px}.darlink-free-input button{height:52px;border:0;border-radius:999px;background:linear-gradient(135deg,#6f5092,#006686);color:white;display:grid;place-items:center;cursor:pointer}
+      @media(max-width:860px){.darlink-xiaoda-free-body{overflow:auto}.darlink-xiaoda-free-shell{height:auto;min-height:100vh;grid-template-columns:1fr;padding:18px}.darlink-xiaoda-free-chat{min-height:620px}}
+    `;
+  }
+
   function contextualChatCss() {
     return `
       body.darlink-contextual-chat{position:relative;isolation:isolate}
-      body.darlink-contextual-chat.darlink-hall-chat:before{content:"";position:fixed;inset:0;z-index:-2;background:var(--darlink-chat-bg) center/cover no-repeat;opacity:.18;filter:saturate(.9) contrast(.9);pointer-events:none}
-      body.darlink-contextual-chat.darlink-hall-chat:after{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(135deg,rgba(249,249,255,.9),rgba(255,255,255,.78) 48%,rgba(239,248,255,.86));pointer-events:none}
+      body.darlink-contextual-chat.darlink-hall-chat{background:#070b18!important;color:#f8fbff}
+      body.darlink-contextual-chat.darlink-hall-chat:before{content:"";position:fixed;inset:0;z-index:-2;background:var(--darlink-chat-bg) center/cover no-repeat;opacity:.46;filter:saturate(1.08) contrast(1.05);pointer-events:none}
+      body.darlink-contextual-chat.darlink-hall-chat:after{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(135deg,rgba(3,7,18,.92),rgba(15,23,42,.82) 46%,rgba(35,18,54,.88));pointer-events:none}
+      body.darlink-contextual-chat.darlink-hall-chat header,body.darlink-contextual-chat.darlink-hall-chat .glass-card,body.darlink-contextual-chat.darlink-hall-chat .glass-input{background:rgba(10,15,31,.7)!important;border-color:rgba(255,255,255,.14)!important;color:#f8fbff!important}
+      body.darlink-contextual-chat.darlink-hall-chat .text-on-surface,body.darlink-contextual-chat.darlink-hall-chat .text-on-surface-variant{color:rgba(248,251,255,.9)!important}
+      body.darlink-contextual-chat.darlink-hall-chat .glass-bubble-ai,body.darlink-contextual-chat.darlink-hall-chat .darlink-suggestion-card{background:rgba(10,15,31,.72)!important;border-color:rgba(255,255,255,.16)!important;color:#f8fbff!important;box-shadow:0 20px 50px rgba(0,0,0,.24)}
+      body.darlink-contextual-chat.darlink-hall-chat .glass-bubble-ai p,body.darlink-contextual-chat.darlink-hall-chat .darlink-suggestion-card p,body.darlink-contextual-chat.darlink-hall-chat .darlink-suggestion-card span{color:rgba(248,251,255,.92)!important}
       body.darlink-contextual-chat #chat-messages{scroll-behavior:smooth}
       body.darlink-contextual-chat .glass-bubble-ai,body.darlink-contextual-chat .darlink-suggestion-card,body.darlink-contextual-chat .glass-input{background:rgba(255,255,255,.72)!important;border:1px solid rgba(255,255,255,.76)!important;backdrop-filter:blur(24px)}
     `;
@@ -1611,7 +2518,11 @@
 
   function hallEnhancementCss() {
     return `
+      .darlink-hall-rank-panel{max-height:600px;min-height:600px;overflow:hidden}
+      .darlink-hall-rank-list{display:flex;flex-direction:column;gap:12px;overflow:hidden;min-height:0}
+      .darlink-hall-rank-list.is-expanded{overflow-y:auto;padding-right:4px}
       .darlink-hall-row{width:100%;display:flex;align-items:center;gap:14px;border:1px solid transparent;border-radius:18px;background:rgba(255,255,255,.04);padding:10px 12px;text-align:left;color:white;cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease}
+      .darlink-hall-row[hidden]{display:none!important}
       .darlink-hall-row:hover{transform:translateY(-2px);background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.14)}
       .darlink-hall-thumb{width:58px;height:58px;border-radius:18px;overflow:hidden;flex:0 0 auto;border:2px solid rgba(255,255,255,.18)}
       .darlink-hall-thumb img{width:100%;height:100%;object-fit:cover}
@@ -1620,23 +2531,270 @@
       .darlink-hall-copy em{font-style:normal;color:rgba(255,255,255,.58);font-size:12px;line-height:1.2}
       .darlink-hall-row .material-symbols-outlined{color:rgba(255,255,255,.35);transition:transform .18s ease,color .18s ease}
       .darlink-hall-row:hover .material-symbols-outlined{transform:translateX(3px);color:white}
+      .darlink-hall-toggle{margin-top:16px;width:100%;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.08);color:white;padding:12px 16px;font-weight:850;cursor:pointer;transition:background .18s ease,transform .18s ease}
+      .darlink-hall-toggle:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
+      @media(max-width:767px){.darlink-hall-rank-panel{max-height:none;min-height:auto}.darlink-hall-rank-list.is-expanded{max-height:520px}}
     `;
+  }
+
+  function globalFrameCss() {
+    return `
+      html{font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+      body.darlink-page-polished>nav:first-of-type:not(.darlink-unpolished-nav),body.darlink-page-polished>header.fixed{min-height:76px}
+      body.darlink-page-polished button[data-darlink-search-disabled='true']{cursor:default;pointer-events:none;opacity:.78}
+      body.darlink-page-polished a[href*="app-companion-430619"]{pointer-events:none}
+      body.darlink-page-polished .darlink-material-svg{width:1em;height:1em;display:block}
+      .darlink-icon-normalized .darlink-material-svg{width:1.1em;height:1.1em}
+      .darlink-standard-topbar{position:sticky;top:0;z-index:90;width:100%;background:rgba(255,255,255,.58);border-bottom:1px solid rgba(255,255,255,.52);box-shadow:0 10px 36px rgba(31,42,68,.08);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px)}
+      .darlink-standard-topbar-inner{height:80px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 clamp(22px,4vw,64px)}
+      .darlink-standard-brand{font-size:26px;line-height:1;font-weight:950;letter-spacing:0;background:linear-gradient(135deg,#6f5092,#8a486f,#006686);-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none;white-space:nowrap}
+      .darlink-standard-tabs{display:flex;align-items:center;gap:8px;min-width:0}
+      .darlink-standard-tabs a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 13px;border-radius:999px;color:#4a454f;text-decoration:none;font-size:14px;font-weight:850;transition:background .18s ease,color .18s ease,transform .18s ease;white-space:nowrap}
+      .darlink-standard-tabs a:hover{background:rgba(255,255,255,.58);color:#604283;transform:translateY(-1px)}
+      .darlink-standard-tabs a.is-active{background:linear-gradient(135deg,rgba(216,180,254,.42),rgba(126,212,253,.28));color:#29074a;box-shadow:inset 0 0 0 1px rgba(111,80,146,.1)}
+      .darlink-standard-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+      .darlink-standard-search,.darlink-standard-avatar{border:1px solid rgba(255,255,255,.62);background:rgba(255,255,255,.58);color:#604283;box-shadow:0 10px 24px rgba(31,42,68,.08);cursor:pointer}
+      .darlink-standard-search{width:42px;height:42px;border-radius:999px;display:grid;place-items:center}
+      .darlink-standard-avatar{width:42px;height:42px;border-radius:999px;padding:0;overflow:hidden}
+      .darlink-standard-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+      @media(min-width:768px){
+        body.darlink-page-polished>nav:first-of-type:not(.darlink-unpolished-nav){display:flex;align-items:center}
+      }
+      @media(max-width:820px){.darlink-standard-topbar-inner{height:auto;min-height:76px;gap:14px;flex-wrap:wrap;padding:14px 18px}.darlink-standard-tabs{order:3;width:100%;overflow-x:auto;padding-bottom:2px}.darlink-standard-tabs a{min-height:38px;font-size:13px}.darlink-standard-actions{margin-left:auto}}
+    `;
+  }
+
+  function applyGlobalFramePolish(doc, page) {
+    appendStyle(doc, "global-frame-polish", globalFrameCss());
+    doc.documentElement.lang = lang() === "en" ? "en" : lang() === "zhHans" ? "zh-Hans" : "zh-Hant";
+    doc.body.classList.add("darlink-page-polished", `darlink-page-${page.replace(/[^a-z0-9]+/gi, "-")}`);
+    doc.querySelectorAll("button").forEach((button) => {
+      const text = normalize(button.textContent).toLowerCase();
+      const hasSearch = text === "search" || button.querySelector("[data-icon='search'], .material-symbols-outlined");
+      if (hasSearch && (text === "search" || button.querySelector(".material-symbols-outlined")?.textContent.trim() === "search")) {
+        button.dataset.darlinkSearchDisabled = "true";
+        button.setAttribute("aria-label", copy("Search disabled for prototype", "搜索暂未开放", "搜尋暫未開放"));
+      }
+    });
+  }
+
+  function replaceTextSnippets(doc, replacements) {
+    if (lang() === "en" || !replacements) return;
+    const walker = doc.createTreeWalker(doc.body, doc.defaultView.NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach((node) => {
+      if (node.parentElement && node.parentElement.closest(".material-symbols-outlined,.darlink-symbol,.darlink-control-glyph")) return;
+      Object.entries(replacements).forEach(([source, target]) => {
+        if (node.nodeValue.includes(source)) node.nodeValue = node.nodeValue.split(source).join(target);
+      });
+    });
+  }
+
+  function removeMobileBottomNavigation(doc) {
+    Array.from(doc.querySelectorAll("nav")).forEach((nav) => {
+      const cls = nav.getAttribute("class") || "";
+      const text = normalize(nav.textContent).toLowerCase();
+      const isBottomNav = cls.includes("bottom-0") || (cls.includes("fixed") && cls.includes("bottom"));
+      const looksLikeTabBar = /home|matches|events|community|profile|aura|twin|chat|首页|首頁|发现|發現|匹配|活动|活動|社区|社群|个人档案|個人檔案/.test(text);
+      if (isBottomNav && looksLikeTabBar) nav.remove();
+    });
+  }
+
+  function normalizeInteractiveIconButtons(doc) {
+    const controls = [
+      { labels: ["发送", "發送", "send", "snd"], icon: "send", label: copy("Send", "发送", "發送") },
+      { labels: ["语音", "語音", "voice", "mic"], icon: "mic", label: copy("Voice input", "语音输入", "語音輸入") },
+    ];
+    Array.from(doc.querySelectorAll("button")).forEach((button) => {
+      const text = normalize(button.textContent).toLowerCase();
+      const control = controls.find((item) => item.labels.includes(text));
+      if (!control) return;
+      button.innerHTML = materialIconSvg(control.icon);
+      button.setAttribute("aria-label", control.label);
+      button.classList.add("darlink-icon-normalized");
+    });
+  }
+
+  function currentAvatarSrc(doc) {
+    return doc.querySelector("nav img[src], header img[src], aside img[src], img[alt*='profile' i]")?.getAttribute("src") || "/files/v13-ai-twin-crop.png";
+  }
+
+  function normalizeStandardTopBar(doc, activeKey = "discover") {
+    const topbar = doc.querySelector("body > nav, body > header");
+    if (!topbar || topbar.dataset.darlinkStandardTopbar === "true") return;
+    const avatarSrc = currentAvatarSrc(doc);
+    topbar.dataset.darlinkStandardTopbar = "true";
+    topbar.className = "darlink-standard-topbar";
+    const items = [
+      ["discover", copy("Discover", "发现", "發現")],
+      ["matches", copy("Matches", "匹配", "匹配")],
+      ["events", copy("Events", "活动", "活動")],
+      ["community", copy("Community", "社区", "社群")],
+      ["hall", copy("Hall of Fame", "名人堂", "名人堂")],
+    ];
+    topbar.innerHTML = `
+      <div class="darlink-standard-topbar-inner">
+        <a class="darlink-standard-brand" href="#">Darlink</a>
+        <div class="darlink-standard-tabs" aria-label="${copy("Primary navigation", "主导航", "主導覽")}">
+          ${items.map(([key, label]) => `<a href="#" class="${key === activeKey ? "is-active" : ""}">${label}</a>`).join("")}
+        </div>
+        <div class="darlink-standard-actions">
+          <button type="button" class="darlink-standard-search" data-darlink-search-disabled="true" data-darlink-local-control="true" aria-label="${copy("Search disabled for prototype", "搜索暂未开放", "搜尋暫未開放")}">${materialIconSvg("search")}</button>
+          <button type="button" class="darlink-standard-avatar" aria-label="${copy("Profile", "个人档案", "個人檔案")}"><img src="${avatarSrc}" alt="${copy("User profile avatar", "用户头像", "用戶頭像")}"></button>
+        </div>
+      </div>
+    `;
+  }
+
+  function installExploreMoodControl(doc) {
+    const header = Array.from(doc.querySelectorAll("section div")).find((node) => {
+      const text = node.textContent || "";
+      return text.includes("Explore Potential") && text.includes("Training your Digital Twin") && node.querySelector("button");
+    });
+    const moreButton = header?.querySelector("button");
+    if (!moreButton || moreButton.dataset.darlinkMoodReady === "true") return;
+    moreButton.dataset.darlinkMoodReady = "true";
+    moreButton.dataset.darlinkLocalControl = "true";
+    moreButton.className = "darlink-mood-control";
+    moreButton.innerHTML = `
+      <span>${copy("Status", "状态", "狀態")}</span>
+      <select aria-label="${copy("Personal mood status", "个人状态心情", "個人狀態心情")}" data-darlink-local-control="true">
+        <option>${copy("Open to chat", "开放聊天", "開放聊天")}</option>
+        <option>${copy("Focused", "专注中", "專注中")}</option>
+        <option>${copy("Relaxed", "放松状态", "放鬆狀態")}</option>
+        <option>${copy("Low social energy", "低社交电量", "低社交電量")}</option>
+      </select>
+    `;
+  }
+
+  function pageSnippetTranslations(page) {
+    const isHant = lang() === "zhHant";
+    const zh = (hans, hant = hans) => (isHant ? hant : hans);
+    const common = {
+      "Your AI Campus Companion": zh("你的智能校园伙伴", "你的智能校園夥伴"),
+      "Design Arts Campus": zh("设计艺术校区", "設計藝術校區"),
+      "North Engineering": zh("北区工程学院", "北區工程學院"),
+      "Business Hub": zh("商学院中心", "商學院中心"),
+      "Medical Quad": zh("医学广场", "醫學廣場"),
+      "\"Always hunting for the best matcha lattes near the library block.\"": zh("\"一直在找图书馆附近最好喝的抹茶拿铁。\"", "\"一直在找圖書館附近最好喝的抹茶拿鐵。\""),
+      "\"Pizza aficionado. Let's debate the best slice on campus.\"": zh("\"披萨爱好者。来辩一辩校园里最好吃的一片。\"", "\"披薩愛好者。來辯一辯校園裡最好吃的一片。\""),
+      "\"Seeking pastry study buddies. I know all the hidden bakery spots.\"": zh("\"寻找甜点学习搭子。我知道很多隐藏面包店。\"", "\"尋找甜點學習搭子。我知道很多隱藏麵包店。\""),
+      "Institute of Arts": zh("艺术学院", "藝術學院"),
+      "Quantum Academy": zh("量子学院", "量子學院"),
+      "School of Syntax": zh("语法学院", "語法學院"),
+      "Both profiles exhibit high affinity for minimalist digital art and brutalist architecture.": zh("双方画像都对极简数字艺术和粗野主义建筑有很高亲和度。", "雙方畫像都對極簡數字藝術和粗野主義建築有很高親和度。"),
+      "Strong mutual interest in speculative sci-fi and historical non-fiction.": zh("双方都对推想科幻和历史纪实类阅读有强烈兴趣。", "雙方都對推想科幻和歷史紀實類閱讀有強烈興趣。"),
+    };
+    if (page === "events_campus_resonance_hub") {
+      return {
+        ...common,
+        "Campus Resonance Events": zh("校园共振活动", "校園共振活動"),
+        "Discover curated experiences designed to spark connection. Our AI analyzes campus energy to match you with events that resonate with your vibe.": zh("发现为连接而策划的校园体验。小搭会分析校园能量，为你匹配与你状态共振的活动。", "發現為連接而策劃的校園體驗。小搭會分析校園能量，為你匹配與你狀態共振的活動。"),
+        "Explore Vibes": zh("探索氛围", "探索氛圍"),
+        "All Events": zh("全部活动", "全部活動"),
+        "Recommended for You": zh("为你推荐", "為你推薦"),
+        "Midnight Coding Marathon": zh("午夜编程马拉松", "午夜編程馬拉松"),
+        "Oct 12, 10 PM": zh("10 月 12 日 22:00", "10 月 12 日 22:00"),
+        "Innovation Hub": zh("创新中心", "創新中心"),
+        "Collaborate on late-night projects with low-fi beats and unlimited coffee. High resonance with your study habits.": zh("伴着低保真音乐和无限咖啡一起完成深夜项目，与你的学习习惯高度共振。", "伴著低保真音樂和無限咖啡一起完成深夜項目，與你的學習習慣高度共振。"),
+        "Join Event": zh("加入活动", "加入活動"),
+        "Sunset Campus Walk": zh("日落校园漫步", "日落校園漫步"),
+        "Oct 14, 6 PM": zh("10 月 14 日 18:00", "10 月 14 日 18:00"),
+        "Quad Gardens": zh("四方庭园", "四方庭園"),
+        "A guided stroll through the botanical gardens just as the bioluminescent flora activates. Perfect for a low-pressure first meeting.": zh("在生物荧光植物亮起时一起漫步植物园，很适合低压力初次见面。", "在生物螢光植物亮起時一起漫步植物園，很適合低壓力初次見面。"),
+        "Interested": zh("感兴趣", "感興趣"),
+        "95% Fit": zh("95% 契合", "95% 契合"),
+        "88% Match": zh("88% 匹配", "88% 匹配"),
+      };
+    }
+    if (page === "community_campus_pulse_feed") {
+      return {
+        ...common,
+        "Campus Pulse": zh("校园脉搏", "校園脈搏"),
+        "Connect, share, and resonate with your digital campus.": zh("在数字校园里连接、分享并共振。", "在數字校園裡連接、分享並共振。"),
+        "Study Vibes": zh("学习氛围", "學習氛圍"),
+        "Weekend Plans": zh("周末计划", "週末計劃"),
+        "Resonate": zh("共振", "共振"),
+        "Clara (AI Twin)": zh("Clara（数字人）", "Clara（數字人）"),
+        "2 hours ago": zh("2 小时前", "2 小時前"),
+        "98% Match Potential": zh("98% 匹配潜力", "98% 匹配潛力"),
+        "Just analyzed the syllabus for Cognitive Psychology 301. Looks intense but fascinating! Anyone else planning a study group for midterms? I've already drafted some interactive flashcards.": zh("刚分析完《认知心理学 301》的教学大纲。内容很密集但很有意思！有人也想为期中组学习小组吗？我已经做了一些互动记忆卡。", "剛分析完《認知心理學 301》的教學大綱。內容很密集但很有意思！有人也想為期中組學習小組嗎？我已經做了一些互動記憶卡。"),
+        "Julian Chen": zh("Julian Chen", "Julian Chen"),
+        "4 hours ago": zh("4 小时前", "4 小時前"),
+        "Late night coding sessions hit different when the campus cafe is empty. Working on a new algorithm for matching student schedules. Coffee IV drip required.": zh("校园咖啡馆空下来时，深夜写代码的感觉完全不同。正在写一个匹配学生日程的新算法，咖啡续命中。", "校園咖啡館空下來時，深夜寫程式的感覺完全不同。正在寫一個匹配學生日程的新算法，咖啡續命中。"),
+        "Trending Orbits": zh("热门轨道", "熱門軌道"),
+        "1.2k vibes": zh("1.2k 次共振", "1.2k 次共振"),
+        "Ticket sales open next week!": zh("门票下周开放。", "門票下週開放。"),
+        "845 vibes": zh("845 次共振", "845 次共振"),
+        "Weekly design critique session.": zh("每周设计点评小组。", "每週設計點評小組。"),
+        "520 vibes": zh("520 次共振", "520 次共振"),
+        "Pairing real students with AI tutors.": zh("真实学生与智能学习搭子配对。", "真實學生與智能學習搭子配對。"),
+        "Explore All": zh("查看全部", "查看全部"),
+        "Active Circles": zh("活跃圈子", "活躍圈子"),
+        "Fudan Math Club": zh("复旦数学社", "復旦數學社"),
+        "34 members active now": zh("34 名成员在线", "34 名成員在線"),
+        "HKU Foodies": zh("港大美食会", "港大美食會"),
+        "12 planning dinner": zh("12 人正在约饭", "12 人正在約飯"),
+        "Late Night Gamers": zh("深夜游戏局", "深夜遊戲局"),
+        "89 online": zh("89 人在线", "89 人在線"),
+      };
+    }
+    if (page === "profile") {
+      return {
+        ...common,
+        "My Profile": zh("我的档案", "我的檔案"),
+        "AI Twin Active": zh("数字人已在线", "數字人已在線"),
+        "Upgrade to Premium": zh("升级高级版", "升級高級版"),
+        "AI Twin Verified": zh("数字人已验证", "數字人已驗證"),
+        "Fudan University": zh("复旦大学", "復旦大學"),
+        "Applied Mathematics": zh("应用数学", "應用數學"),
+        "Class of 2026": zh("2026 届", "2026 屆"),
+        "Edit Persona": zh("编辑画像", "編輯畫像"),
+        "Sync Twin": zh("同步数字人", "同步數字人"),
+        "Digital Aura": zh("数字光谱", "數字光譜"),
+        "Dominant": zh("主导特质", "主導特質"),
+        "Core": zh("核心", "核心"),
+        "Soul": zh("内在", "內在"),
+        "Growth": zh("成长", "成長"),
+        "Resonance Stats": zh("共振数据", "共振數據"),
+        "Network Reach": zh("网络触达", "網絡觸達"),
+        "Chat Depth": zh("聊天深度", "聊天深度"),
+        "AI Twin Settings": zh("数字人设置", "數字人設定"),
+        "Sync Frequency": zh("同步频率", "同步頻率"),
+        "Real-time cloud synchronization": zh("实时云端同步", "即時雲端同步"),
+        "Privacy Mode": zh("隐私模式", "隱私模式"),
+        "End-to-end encrypted interactions": zh("端到端加密互动", "端到端加密互動"),
+        "Data Training History": zh("数据训练历史", "資料訓練歷史"),
+        "View model optimization logs": zh("查看模型优化记录", "查看模型優化記錄"),
+        "Campus Identity": zh("校园身份", "校園身份"),
+        "Verified University Email": zh("已验证学校邮箱", "已驗證學校郵箱"),
+        "Major": zh("专业", "專業"),
+        "Student ID Status": zh("学生身份状态", "學生身份狀態"),
+        "Active": zh("已激活", "已啟用"),
+        "This information is only visible to verified students.": zh("这些信息仅对已认证学生可见。", "這些資訊僅對已認證學生可見。"),
+        "Darlink © 2024 • Powered by Luminous AI Systems": zh("Darlink © 2024 • 由 Luminous AI Systems 驱动", "Darlink © 2024 • 由 Luminous AI Systems 驅動"),
+      };
+    }
+    return common;
   }
 
   function backControlCss() {
     return `
       .darlink-module-back{
         position:fixed;
-        left:clamp(16px,3vw,34px);
-        top:92px;
+        left:clamp(18px,3vw,34px);
+        top:96px;
         z-index:160;
+        width:46px;
         height:46px;
         display:inline-flex;
         align-items:center;
+        justify-content:center;
         gap:8px;
         border:1px solid rgba(255,255,255,.72);
-        border-radius:999px;
-        padding:0 16px 0 13px;
+        border-radius:17px;
+        padding:0;
         background:rgba(255,255,255,.74);
         color:#604283;
         box-shadow:0 16px 38px rgba(31,42,68,.14),inset 0 1px 0 rgba(255,255,255,.82);
@@ -1652,15 +2810,39 @@
         color:#29074a;
         box-shadow:0 20px 46px rgba(111,80,146,.18),inset 0 1px 0 rgba(255,255,255,.9);
       }
+      .darlink-module-back:after{
+        content:attr(aria-label);
+        position:absolute;
+        left:54px;
+        top:50%;
+        transform:translateY(-50%) translateX(-4px);
+        opacity:0;
+        pointer-events:none;
+        white-space:nowrap;
+        border-radius:999px;
+        padding:9px 12px;
+        background:rgba(17,28,45,.82);
+        color:white;
+        font-size:12px;
+        font-weight:850;
+        box-shadow:0 12px 28px rgba(31,42,68,.22);
+        transition:.18s ease;
+      }
+      .darlink-module-back:hover:after{opacity:1;transform:translateY(-50%) translateX(0)}
       .darlink-module-back .darlink-symbol{
         font-size:20px;
         line-height:1;
       }
       .darlink-module-back strong{
-        font-size:13px;
-        line-height:1;
-        font-weight:850;
-        letter-spacing:0;
+        position:absolute;
+        width:1px;
+        height:1px;
+        overflow:hidden;
+        clip:rect(0,0,0,0);
+      }
+      body.darlink-page-chat-explore-potential-with-ai-twin .darlink-module-back,
+      body.darlink-page-profile-full-campus-identity-final .darlink-module-back{
+        left:clamp(306px,22vw,352px);
       }
       body.dark .darlink-module-back,
       .dark body .darlink-module-back{
@@ -1674,8 +2856,10 @@
           top:18px;
           left:16px;
           height:42px;
+          width:42px;
           padding:0 13px 0 11px;
         }
+        .darlink-module-back:after{display:none}
       }
     `;
   }
@@ -1689,14 +2873,24 @@
   window.DarlinkEnhancer = {
     enhanceFrame(doc, page, api) {
       if (!doc || !page) return;
+      applyGlobalFramePolish(doc, page);
       if (page === api.page.login) enhanceLogin(doc, api);
       if (page === api.page.onboard1) enhanceChatOnboarding(doc, api, 1);
       if (page === api.page.onboard2) enhanceChatOnboarding(doc, api, 2);
       if (page === api.page.onboard3) enhanceChatOnboarding(doc, api, 3);
       if (page === api.page.home) enhanceHome(doc, api);
+      if (page === api.page.digitalPlaza) enhanceDigitalPlazaPage(doc, api);
+      if (page === api.page.exploreChat) enhanceExploreChat(doc, api);
+      if (page === api.page.xiaodaChat) enhanceXiaodaFreeChat(doc, api);
+      if ([api.page.study, api.page.culinary, api.page.romance].includes(page)) enhanceDiscoveryModule(doc, page);
+      if (page === api.page.matching) enhanceMatching(doc, api);
       if (page === api.page.matchChat) enhanceContextualChat(doc);
+      if (page === api.page.events) enhanceEventsPage(doc);
+      if (page === api.page.community) enhanceCommunityPage(doc);
       if (page === api.page.hall) enhanceHallOfFame(doc);
+      if (page === api.page.profile) enhanceProfile(doc);
       if (![api.page.login, api.page.onboard1, api.page.onboard2, api.page.onboard3, api.page.home].includes(page)) localizeStatic(doc, page);
+      normalizeInteractiveIconButtons(doc);
       replaceMaterialIconFallbacks(doc);
       watchMaterialIconFallbacks(doc);
       addModuleBackControl(doc, page, api);
