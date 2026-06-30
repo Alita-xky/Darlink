@@ -822,7 +822,7 @@
   function materialIconSvg(name) {
     const key = MATERIAL_ICON_ALIASES[name] || name;
     const body = MATERIAL_ICON_SVGS[key] || MATERIAL_ICON_SVGS.auto_awesome;
-    return `<svg class="darlink-material-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${body}</svg>`;
+    return `<svg class="darlink-material-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="width:1em;height:1em;display:block;overflow:visible;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round">${body}</svg>`;
   }
 
   function avatarDataUri(initials, colors) {
@@ -1242,7 +1242,7 @@
   }
 
   function enhanceHome(doc) {
-    injectStyle(doc, profileModalCss() + digitalPlazaCss());
+    injectStyle(doc, sharedCss() + profileModalCss() + digitalPlazaCss());
     localizeStatic(doc, "home");
     enhanceDigitalPlaza(doc);
     doc.defaultView.setTimeout(() => localizeStatic(doc, "home"), 0);
