@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Deep Romance - Darlink</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#d8b4fe",
+                      "inverse-surface": "#263143",
+                      "secondary-container": "#7ed4fd",
+                      "on-primary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "surface-bright": "#f9f9ff",
+                      "on-secondary-fixed-variant": "#004d66",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed-dim": "#ffaeda",
+                      "on-tertiary-container": "#793a60",
+                      "tertiary": "#8a486f",
+                      "on-primary-container": "#604283",
+                      "surface-tint": "#6f5092",
+                      "surface": "#f9f9ff",
+                      "on-primary-fixed": "#29074a",
+                      "inverse-primary": "#dbb8ff",
+                      "on-error-container": "#93000a",
+                      "on-tertiary": "#ffffff",
+                      "secondary": "#006686",
+                      "on-primary-fixed-variant": "#573878",
+                      "surface-container": "#e7eeff",
+                      "secondary-fixed-dim": "#7bd1fa",
+                      "primary": "#6f5092",
+                      "on-error": "#ffffff",
+                      "outline": "#7c7480",
+                      "on-tertiary-fixed-variant": "#6f3157",
+                      "on-secondary-fixed": "#001e2b",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed": "#efdbff",
+                      "tertiary-container": "#fcaad6",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-container": "#005b78",
+                      "tertiary-fixed": "#ffd8ea",
+                      "surface-dim": "#cfdaf2",
+                      "background": "#f9f9ff",
+                      "surface-container-low": "#f0f3ff",
+                      "surface-container-high": "#dee8ff",
+                      "secondary-fixed": "#c0e8ff",
+                      "on-surface": "#111c2d",
+                      "primary-fixed-dim": "#dbb8ff",
+                      "outline-variant": "#cdc3d0",
+                      "on-background": "#111c2d",
+                      "inverse-on-surface": "#ecf1ff",
+                      "surface-variant": "#d8e3fb",
+                      "on-tertiary-fixed": "#3a0329",
+                      "on-surface-variant": "#4a454f",
+                      "surface-container-highest": "#d8e3fb"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "base": "8px",
+                      "container-padding-desktop": "40px",
+                      "element-gap": "12px",
+                      "container-padding-mobile": "20px"
+              },
+              "fontFamily": {
+                      "body-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-sm": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-lg": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        /* Ambient Ethereal Background */
+        body {
+            background-color: #f9f9ff; /* background */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(216, 180, 254, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(126, 212, 253, 0.15), transparent 25%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-layer-1 {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-layer-2 {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            box-shadow: 0 8px 32px 0 rgba(216, 180, 254, 0.1);
+        }
+        
+        .glass-layer-2::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            margin: -1px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(216,180,254,0.5), rgba(126,212,253,0.5));
+        }
+
+        .glass-inner-glow {
+            box-shadow: inset 1px 1px 0px 0px rgba(255,255,255,0.5);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .animate-float-delayed {
+            animation: float 8s ease-in-out infinite 2s;
+        }
+        
+        /* Gradient Button */
+        .btn-gradient {
+            background: linear-gradient(135deg, #d8b4fe 0%, #7ed4fd 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            box-shadow: 0 0 20px rgba(216, 180, 254, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Text Gradients */
+        .text-gradient {
+            background: linear-gradient(to right, #6f5092, #8a486f, #006686);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col relative">
+<!-- Atmospheric Floating Elements (Decorative) -->
+<div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+<span class="material-symbols-outlined absolute top-[20%] left-[10%] text-primary-container/40 animate-float" style="font-size: 64px; font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined absolute top-[60%] right-[15%] text-tertiary-container/30 animate-float-delayed" style="font-size: 48px; font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined absolute top-[80%] left-[20%] text-secondary-container/30 animate-float" style="font-size: 32px; font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<!-- TopNavBar (Shared Component) -->
+<nav class="w-full top-0 sticky z-50 bg-white/40 dark:bg-white/10 backdrop-blur-3xl border-b border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(216,180,254,0.1)] transition-all duration-300">
+<div class="flex justify-between items-center px-container-padding-desktop max-w-full h-20">
+<!-- Brand -->
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md font-bold bg-gradient-to-r from-primary via-tertiary to-secondary bg-clip-text text-transparent">Darlink</span>
+</div>
+<!-- Desktop Nav Links -->
+<div class="hidden md:flex items-center gap-8">
+<a class="font-body-md text-body-md tracking-wider text-primary font-bold border-b-2 border-primary pb-1 transition-all duration-300 active:scale-95" href="#">Discover</a>
+<a class="font-body-md text-body-md tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-white/5 duration-300 active:scale-95 px-3 py-2 rounded-lg" href="#">Matches</a>
+<a class="font-body-md text-body-md tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-white/5 duration-300 active:scale-95 px-3 py-2 rounded-lg" href="#">Events</a>
+<a class="font-body-md text-body-md tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-white/5 duration-300 active:scale-95 px-3 py-2 rounded-lg" href="#">Community</a>
+<a class="font-body-md text-body-md tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors hover:bg-white/20 dark:hover:bg-white/5 duration-300 active:scale-95 px-3 py-2 rounded-lg" href="#">Hall of Fame</a>
+</div>
+<!-- Profile / Actions -->
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-white/20 transition-all duration-300 text-primary dark:text-primary-container">
+<span class="material-symbols-outlined">search</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-white/40 cursor-pointer">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A detailed profile avatar of a stylish young adult with soft lighting and a modern, ethereal light-mode aesthetic, highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7A7_msLBduBSRh-68Q-97RuoemcUT9GIX5KgdgVy7j_-D3xzSwoUwoRkfzAGxJ-dAszcE0FTzIiyGEyXGVRTnDlwaPczY_GAoQ_l4TFhGPLPavFw055OlqJTqbuwiBkQScOjneZJbComaSM0UEwcfIT0xcxg3er0KfdR0jK_VfSNxKVFN9bP_RyI5gQgNSjwRJ8yZLRnZBIJeCqKNhNPhrsODgto-1QFqeEziampkSVgLYPz6NUUkifbs6ieL4biw2GnROaQCiZuMNVk"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col md:flex-row max-w-[1600px] mx-auto w-full">
+<!-- SideNavBar (Shared Component) - Hidden on mobile, shown on desktop -->
+<aside class="hidden md:flex h-[calc(100vh-80px)] w-80 sticky top-[80px] left-0 border-r border-white/20 shadow-2xl bg-white/60 dark:bg-inverse-surface/80 backdrop-blur-3xl flex-col py-8 gap-y-4 z-40">
+<!-- Nav Items -->
+<a class="font-label-lg text-label-lg flex items-center gap-4 text-on-surface-variant dark:text-surface-variant py-3 px-8 hover:translate-x-1 transition-transform hover:bg-primary-container/20 scale-102 hover:backdrop-blur-md" href="#">
+<span class="material-symbols-outlined">person</span>
+                My Profile
+            </a>
+<a class="font-label-lg text-label-lg flex items-center gap-4 text-on-surface-variant dark:text-surface-variant py-3 px-8 hover:translate-x-1 transition-transform hover:bg-primary-container/20 scale-102 hover:backdrop-blur-md" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+                AI Guide Xiaoda
+            </a>
+<a class="font-label-lg text-label-lg flex items-center gap-4 text-on-surface-variant dark:text-surface-variant py-3 px-8 hover:translate-x-1 transition-transform hover:bg-primary-container/20 scale-102 hover:backdrop-blur-md" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+                Messages
+            </a>
+<a class="font-label-lg text-label-lg flex items-center gap-4 text-on-surface-variant dark:text-surface-variant py-3 px-8 hover:translate-x-1 transition-transform hover:bg-primary-container/20 scale-102 hover:backdrop-blur-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="font-label-lg text-label-lg flex items-center gap-4 text-on-surface-variant dark:text-surface-variant py-3 px-8 hover:translate-x-1 transition-transform hover:bg-primary-container/20 scale-102 hover:backdrop-blur-md" href="#">
+<span class="material-symbols-outlined">help</span>
+                Help Center
+            </a>
+<!-- Xiaoda CTA Anchor -->
+<div class="mt-auto px-6 mb-8">
+<div class="glass-layer-1 rounded-2xl p-4 flex flex-col items-center text-center gap-3 glass-inner-glow">
+<div class="w-16 h-16 rounded-full bg-primary-container/30 border-2 border-white/50 p-1">
+<img alt="Xiaoda AI Guide" class="w-full h-full object-cover rounded-full" data-alt="A highly detailed, ethereal 3D avatar of an AI guide named Xiaoda, soft holographic pink and lilac glow, modern romance-tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3bIHPl8FtIOLdVqiAAdMj_2GRvGX2jwdieQE7ENaWLzUctvc5M_fl6YGQ7hZjTzLaaG_8p1cg-PAogKO_CPn4SHMu53ZMrTo6TMcdJIVjvLhNo3kQ_s-JkbYonjPPCZ781Vuk54i274TfPZw8Q39bWB4pVge7cXOs0NWYoG_PainkptgsPiAnRoSR9RwzTy0YDZPCP9M5sU1p5rSGD8AZ2exDwc6xpL8j4rRuL1ELOh1bzh6MGNbKArqr83RKhBWESukLUVxezIMv"/>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-primary font-semibold text-lg">Xiaoda</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Your AI Campus Companion</p>
+</div>
+<button class="w-full py-2 px-4 rounded-full btn-gradient text-on-primary font-label-lg text-label-lg mt-2 shadow-sm">
+                        Ask Xiaoda Anything
+                    </button>
+</div>
+</div>
+</aside>
+<!-- Gallery Canvas -->
+<div class="flex-1 px-container-padding-mobile md:px-container-padding-desktop py-12 flex flex-col gap-12 relative z-10">
+<!-- Header Section -->
+<header class="max-w-3xl glass-layer-1 rounded-[2rem] p-8 md:p-12 glass-inner-glow relative overflow-hidden">
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary-container/40 rounded-full blur-3xl z-0 pointer-events-none"></div>
+<div class="relative z-10">
+<h1 class="font-display-lg text-display-lg font-bold text-gradient mb-4">Deep Romance: Soulful Synchronization</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                        Explore profound connections guided by advanced AI. Each potential match represents a unique tapestry of emotional resonance and intellectual harmony. Find the soul that vibrates at your frequency.
+                    </p>
+</div>
+</header>
+<!-- Grid Layout for Avatars -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-element-gap md:gap-8">
+<!-- Card 1 -->
+<article class="glass-layer-2 rounded-xl overflow-hidden flex flex-col group hover:shadow-[0_12px_48px_0_rgba(216,180,254,0.2)] transition-shadow duration-500">
+<div class="relative h-80 w-full overflow-hidden bg-surface-container-low">
+<img alt="Avatar image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A high-quality 3D cute cartoon anime-style AI digital human boy, Deep Romance theme, wearing a stylish romantic-tech outfit with subtle glowing accents, holding a small glowing holographic heart, soft porcelain skin, expressive eyes, ethereal pink and lilac dreamscape background, 8k resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjnyvzUoTgIBZC4RRxTFaEItTs5hyjHZnpoYpS-57dcPs8U37EeRtBWdxkYLW-FfjV_3aDF8d_sEI2mGJDK8Wrht9_THolSnM88A3fEYLnQnpDjzakv1X3ymIr52QUyEBYyapx4BcWbu0BErb4_SwcHwU4KHkXXowZK7hZJ7al0YNMYLOgNktQZoV0zCNKY0O63Irmj1iY4Yfua9oFSQklctb17PsDPi_pzOSFkMhqIgvMZA92dNjJogUg-3XexsxlOQMZgKQtypcA"/>
+<div class="absolute top-4 right-4 bg-white/60 backdrop-blur-md rounded-full px-3 py-1 flex items-center gap-1 border border-white/40">
+<span class="material-symbols-outlined text-tertiary" style="font-size: 16px; font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-lg text-label-lg text-primary font-bold">98%</span>
+</div>
+<!-- Gradient Overlay for text readability -->
+<div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-inverse-surface/80 to-transparent pointer-events-none"></div>
+<div class="absolute bottom-4 left-4 right-4 text-on-primary">
+<h2 class="font-headline-lg text-headline-lg font-semibold drop-shadow-md">Elias Vance</h2>
+<p class="font-label-lg text-label-lg opacity-90 drop-shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">school</span> Institute of Arts
+                            </p>
+</div>
+</div>
+<div class="p-6 flex flex-col gap-4 flex-grow">
+<div class="flex flex-wrap gap-2">
+<span class="bg-primary-container/30 text-on-primary-container font-label-sm text-label-sm px-3 py-1 rounded-full border border-primary-container/50">Gentle Soul</span>
+<span class="bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm px-3 py-1 rounded-full border border-secondary-container/50">Poetic</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">
+                            Seeks quiet moments and deep conversations. Resonates with introspective and empathetic energies.
+                        </p>
+<button class="w-full py-3 rounded-full btn-gradient text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 mt-auto">
+                            Initiate Heart-to-Heart
+                            <span class="font-bold leading-none" aria-hidden="true">→</span>
+</button>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="glass-layer-2 rounded-xl overflow-hidden flex flex-col group hover:shadow-[0_12px_48px_0_rgba(216,180,254,0.2)] transition-shadow duration-500">
+<div class="relative h-80 w-full overflow-hidden bg-surface-container-low">
+<img alt="Avatar image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A stunning 3D digital human avatar of a passionate female dreamer. Soft iridescent lilac and cyan glows, romance-tech glassmorphism aesthetic. Cinematic lighting, ethereal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwIykQnWnc9oRUM_4deyMNs_WTbPBd2Y0ic4mj8xNuEvZ7AGj8_7UqEBNgZOfRsxIMnNjFz8B1iBA9aLHHngnCofOlGK1ASPYze9TRZupIDuPlFH98ISAXt6q1L1JEl5fW-fgkpNFZavjZSYmpVcT0Zukbjbw1U3NuCPFGcZU7OoHhgJ6ZMZYGhDn8E4RbYEh_1bSKifPAvfvkQXiIQ_Xmhhb87RV1KrmKB4BjxGD4NLORohGdj1zfh4mWL5uoUjRSUE-F6jZjYTrlcPQ"/>
+<div class="absolute top-4 right-4 bg-white/60 backdrop-blur-md rounded-full px-3 py-1 flex items-center gap-1 border border-white/40">
+<span class="material-symbols-outlined text-tertiary" style="font-size: 16px; font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-lg text-label-lg text-primary font-bold">94%</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-inverse-surface/80 to-transparent pointer-events-none"></div>
+<div class="absolute bottom-4 left-4 right-4 text-on-primary">
+<h2 class="font-headline-lg text-headline-lg font-semibold drop-shadow-md">Lyra Chen</h2>
+<p class="font-label-lg text-label-lg opacity-90 drop-shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">school</span> Quantum Academy
+                            </p>
+</div>
+</div>
+<div class="p-6 flex flex-col gap-4 flex-grow">
+<div class="flex flex-wrap gap-2">
+<span class="bg-tertiary-container/30 text-on-tertiary-container font-label-sm text-label-sm px-3 py-1 rounded-full border border-tertiary-container/50">Passionate Dreamer</span>
+<span class="bg-primary-container/30 text-on-primary-container font-label-sm text-label-sm px-3 py-1 rounded-full border border-primary-container/50">Visionary</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">
+                            Driven by curiosity and a desire to build the future. Connects deeply through shared ambitions.
+                        </p>
+<button class="w-full py-3 rounded-full btn-gradient text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 mt-auto">
+                            Initiate Heart-to-Heart
+                            <span class="font-bold leading-none" aria-hidden="true">→</span>
+</button>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="glass-layer-2 rounded-xl overflow-hidden flex flex-col group hover:shadow-[0_12px_48px_0_rgba(216,180,254,0.2)] transition-shadow duration-500">
+<div class="relative h-80 w-full overflow-hidden bg-surface-container-low">
+<img alt="Avatar image" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A refined 3D digital human avatar of an analytical yet warm non-binary individual. Soft holographic pink lighting, romance-tech glassmorphism vibe. High fidelity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE68viCieSYBUq_AOKjLG92XjZ5QGWfxYFnjyllgf5UUBsaTQmCbxIzyvFVUjvRin8_4P8YyRGGdqqROtEJT_7NAmpgWrbwg-sO6NFjnJ6pJ_SlIgeB0aRCvANWu_Bc948iEGh1YSmNl2GjPN2J70RB6kbnURR7o6JzUU6YpeJXaQ6sLVPfqPlTnmjLSftslUMuF1X_edDWSX8s5_osgEgaRNJAAHE0IDiFYgCTalY5EmRuQpjvkuo_SjfHMh8I3_42J-I8BjNl-S-apc"/>
+<div class="absolute top-4 right-4 bg-white/60 backdrop-blur-md rounded-full px-3 py-1 flex items-center gap-1 border border-white/40">
+<span class="material-symbols-outlined text-tertiary" style="font-size: 16px; font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-label-lg text-label-lg text-primary font-bold">89%</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-inverse-surface/80 to-transparent pointer-events-none"></div>
+<div class="absolute bottom-4 left-4 right-4 text-on-primary">
+<h2 class="font-headline-lg text-headline-lg font-semibold drop-shadow-md">Julian Thorne</h2>
+<p class="font-label-lg text-label-lg opacity-90 drop-shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">school</span> School of Syntax
+                            </p>
+</div>
+</div>
+<div class="p-6 flex flex-col gap-4 flex-grow">
+<div class="flex flex-wrap gap-2">
+<span class="bg-secondary-container/30 text-on-secondary-container font-label-sm text-label-sm px-3 py-1 rounded-full border border-secondary-container/50">Logical Heart</span>
+<span class="bg-surface-variant/50 text-on-surface-variant font-label-sm text-label-sm px-3 py-1 rounded-full border border-outline-variant">Grounded</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">
+                            Approaches love with thoughtful precision. Values stability, honesty, and intellectual debates.
+                        </p>
+<button class="w-full py-3 rounded-full btn-gradient text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 mt-auto">
+                            Initiate Heart-to-Heart
+                            <span class="font-bold leading-none" aria-hidden="true">→</span>
+</button>
+</div>
+</article>
+</div>
+</div>
+</main>
+</body></html>

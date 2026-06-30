@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Darlink App Flow</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #fdfbff;
+    }
+
+    #flowFrame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #fdfbff;
+      opacity: 1;
+      transition: opacity 180ms ease;
+    }
+
+    #flowFrame.is-loading {
+      opacity: 0;
+    }
+
+    .sr-status {
+      position: fixed;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    #profileHotspot {
+      position: fixed;
+      top: 8px;
+      right: 18px;
+      z-index: 20;
+      width: 88px;
+      height: 88px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    #profileHotspot[hidden] {
+      display: none;
+    }
+
+    #topNavHotspots {
+      position: fixed;
+      top: 18px;
+      left: 28%;
+      z-index: 19;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      pointer-events: none;
+    }
+
+    #topNavHotspots[hidden] {
+      display: none;
+    }
+
+    .top-nav-hotspot {
+      height: 62px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .top-nav-hotspot.discover { width: 96px; }
+    .top-nav-hotspot.matches { width: 88px; }
+    .top-nav-hotspot.events { width: 82px; }
+    .top-nav-hotspot.community { width: 122px; }
+    .top-nav-hotspot.hall { width: 142px; }
+  </style>
+</head>
+<body>
+  <iframe id="flowFrame" title="Darlink connected app flow"></iframe>
+  <div id="topNavHotspots" aria-hidden="true" hidden>
+    <button class="top-nav-hotspot discover" type="button" data-route="home_luminous_dashboard_refined_v4" tabindex="-1"></button>
+    <button class="top-nav-hotspot matches" type="button" data-route="matching_luminous_resonance_network_final_polish" tabindex="-1"></button>
+    <button class="top-nav-hotspot events" type="button" data-route="events_campus_resonance_hub" tabindex="-1"></button>
+    <button class="top-nav-hotspot community" type="button" data-route="community_campus_pulse_feed" tabindex="-1"></button>
+    <button class="top-nav-hotspot hall" type="button" data-route="hall_of_fame_legendary_pioneers_gallery" tabindex="-1"></button>
+  </div>
+  <button id="profileHotspot" type="button" aria-label="Open profile" hidden></button>
+  <div id="flowStatus" class="sr-status" aria-live="polite"></div>
+  <script src="/questionnaire-data.js?v=20260629-1"></script>
+  <script src="/prototype-engine.js?v=20260629-22"></script>
+  <script src="/flow-router.js?v=20260629-9"></script>
+</body>
+</html>

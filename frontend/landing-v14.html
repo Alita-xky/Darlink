@@ -1,0 +1,3815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Darlink Landing V14</title>
+  <style>
+    :root {
+      --ink: #111114;
+      --muted: #6e7280;
+      --pink: #ff73ad;
+      --blue: #75adff;
+      --lilac: #c9b6ff;
+      --paper: #fffafd;
+      --line: rgba(17, 17, 20, 0.12);
+      --shadow: 0 30px 90px rgba(42, 32, 64, 0.14);
+      --soft-shadow: 0 24px 70px rgba(78, 92, 155, .14);
+      --runtime: #03050a;
+      --hot: #ff4f91;
+      --mint: #8ef7d3;
+    }
+
+    * { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+      max-width: 100%;
+      overflow-x: clip;
+    }
+    body {
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+      color: var(--ink);
+      font-family: Inter, "SF Pro Display", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        url("/files/lovable-ambient-v12.png") top center / 100% auto no-repeat,
+        radial-gradient(circle at 12% 8%, rgba(255, 115, 173, 0.18), transparent 30rem),
+        radial-gradient(circle at 92% 10%, rgba(117, 173, 255, 0.2), transparent 34rem),
+      linear-gradient(180deg, #fff8fc 0%, #f4f9ff 42%, #fff9fd 100%);
+      letter-spacing: 0;
+      overflow-x: clip;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(38px) scale(.985);
+      transition: opacity 720ms ease, transform 850ms cubic-bezier(.16,1,.3,1);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    body.intro-active { overflow: hidden; }
+
+    body.motion-lite *,
+    body.motion-lite *::before,
+    body.motion-lite *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 120ms !important;
+    }
+
+    body.public-tunnel .reveal,
+    body.public-tunnel .intro-cloud,
+    body.public-tunnel .darlink-avatar-card,
+    body.public-tunnel .floating,
+    body.public-tunnel .pulse-sync {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 160ms !important;
+    }
+
+    body.public-tunnel .intro {
+      animation-delay: 3.2s;
+    }
+
+    .intro {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      background:
+        radial-gradient(circle at 72% 18%, rgba(255,255,255,.45), rgba(255,255,255,0) 30%),
+        linear-gradient(180deg, rgba(64, 163, 239, .18), rgba(255, 247, 251, .1)),
+        url("/files/clouds-3d-bg.png") center / cover no-repeat;
+      animation: introFade 900ms ease 5.45s forwards;
+    }
+
+    .intro.hide-now {
+      animation: introFade 520ms ease forwards;
+    }
+
+    .intro-cloud {
+      position: absolute;
+      display: block;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      filter: blur(.2px);
+      box-shadow: 0 24px 90px rgba(66,113,159,.2), inset 0 -18px 38px rgba(150,189,224,.18);
+      animation: introCloud 8s ease-in-out infinite alternate;
+    }
+
+    .intro-cloud:before,
+    .intro-cloud:after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: inherit;
+    }
+
+    .intro-cloud.one { left: -6%; top: 18%; width: 310px; height: 86px; }
+    .intro-cloud.one:before { width: 140px; height: 140px; left: 64px; top: -70px; }
+    .intro-cloud.one:after { width: 112px; height: 112px; right: 54px; top: -50px; }
+    .intro-cloud.two { right: -7%; top: 22%; width: 360px; height: 98px; animation-delay: .5s; }
+    .intro-cloud.two:before { width: 158px; height: 158px; left: 76px; top: -78px; }
+    .intro-cloud.two:after { width: 118px; height: 118px; right: 64px; top: -48px; }
+    .intro-cloud.three { left: 14%; bottom: 12%; width: 440px; height: 112px; opacity: .76; animation-delay: 1s; }
+    .intro-cloud.three:before { width: 190px; height: 190px; left: 82px; top: -92px; }
+    .intro-cloud.three:after { width: 138px; height: 138px; right: 84px; top: -60px; }
+
+    @keyframes introCloud {
+      from { transform: translateX(-18px); }
+      to { transform: translate(30px, -8px); }
+    }
+
+    .intro-cupid {
+      position: absolute;
+      top: 8%;
+      right: 13%;
+      width: min(180px, 18vw);
+      object-fit: contain;
+      mix-blend-mode: normal;
+      filter: drop-shadow(0 18px 24px rgba(40,68,110,.26));
+      transform-origin: 68% 55%;
+      animation: introCupid 4.2s cubic-bezier(.18,.78,.22,1) forwards;
+    }
+
+    .intro-coin {
+      position: absolute;
+      top: 4%;
+      left: 50%;
+      width: clamp(126px, 15vw, 178px);
+      aspect-ratio: 1.08 / 1;
+      border-radius: 0;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      filter: drop-shadow(0 18px 22px rgba(210,154,42,.32));
+      animation: introCoinDrop 4.65s cubic-bezier(.2,.78,.14,1) forwards;
+      will-change: transform, opacity;
+      contain: layout paint style;
+      backface-visibility: hidden;
+    }
+
+    .intro-coin::before {
+      content: "";
+      position: absolute;
+      inset: 8% 12%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,238,170,.8), rgba(255,216,92,.18) 45%, rgba(255,216,92,0) 72%);
+      filter: blur(8px);
+      transform: translateZ(-20px);
+    }
+
+    .intro-coin img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      transform: translate(-50%, -50%);
+      animation: introCoinFaceSpin 1120ms linear infinite;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+
+    .intro-trail {
+      position: absolute;
+      top: 13%;
+      left: 50%;
+      width: 8px;
+      height: 66%;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,232,156,.92), rgba(122,196,255,.72), rgba(255,255,255,0));
+      filter: blur(3px);
+      box-shadow: 0 0 34px rgba(255,221,132,.9), 0 0 52px rgba(122,196,255,.56);
+      opacity: 0;
+      animation: introTrail 5.05s ease forwards;
+    }
+
+    .intro-title {
+      position: absolute;
+      left: clamp(28px, 8vw, 90px);
+      top: 32%;
+      max-width: 420px;
+      color: white;
+      text-shadow: 0 8px 24px rgba(34,70,110,.28);
+      opacity: 0;
+      animation: introText 4.7s ease forwards;
+    }
+
+    .intro-title small {
+      display: block;
+      color: #ffe2a3;
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .intro-title strong {
+      display: block;
+      margin-top: 14px;
+      font-size: clamp(42px, 5vw, 72px);
+      line-height: .96;
+      letter-spacing: -0.05em;
+    }
+
+    .intro-skip {
+      position: absolute;
+      right: 24px;
+      bottom: 22px;
+      z-index: 2;
+      height: 38px;
+      padding: 0 16px;
+      border: 1px solid rgba(255,255,255,.62);
+      border-radius: 999px;
+      background: rgba(255,255,255,.28);
+      color: white;
+      font-size: 13px;
+      font-weight: 780;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    @keyframes introCupid {
+      0% { transform: translate3d(46px, -22px, 0) rotate(-14deg) scale(.92); opacity: 0; }
+      12% { opacity: 1; }
+      24% { transform: translate3d(6px, 0, 40px) rotate(-8deg) scale(1); opacity: 1; }
+      42% { transform: translate3d(-12px, 8px, 22px) rotate(-3deg) scale(1.02); opacity: 1; }
+      76% { opacity: 1; }
+      100% { transform: translate3d(-40px, 22px, -40px) rotate(-5deg) scale(.92); opacity: 0; }
+    }
+
+    @keyframes introCoinDrop {
+      0% { transform: translate3d(-35vw, -12vh, -180px) rotateX(64deg) rotateY(-160deg) rotateZ(-24deg) scale(.28); opacity: 0; }
+      12% { opacity: 1; }
+      22% { transform: translate3d(-18vw, 2vh, 80px) rotateX(22deg) rotateY(90deg) rotateZ(6deg) scale(.74); opacity: 1; }
+      44% { transform: translate3d(-6vw, 28vh, 150px) rotateX(-8deg) rotateY(260deg) rotateZ(-4deg) scale(1.05); opacity: 1; }
+      64% { transform: translate3d(4vw, 51vh, 60px) rotateX(12deg) rotateY(430deg) rotateZ(4deg) scale(.94); opacity: 1; }
+      82% { transform: translate3d(-2vw, 61vh, -40px) rotateX(18deg) rotateY(600deg) rotateZ(-2deg) scale(.8); opacity: .95; }
+      100% { transform: translate3d(2vw, 74vh, -220px) rotateX(48deg) rotateY(760deg) rotateZ(0deg) scale(.45); opacity: 0; }
+    }
+
+    @keyframes introCoinFaceSpin {
+      from { transform: translate(-50%, -50%) rotateY(0deg); }
+      to { transform: translate(-50%, -50%) rotateY(360deg); }
+    }
+
+    @keyframes introTrail {
+      0%, 12% { opacity: 0; transform: translateX(-50%) scaleY(.12); }
+      28%, 75% { opacity: 1; transform: translateX(-50%) scaleY(1); }
+      100% { opacity: 0; transform: translateX(-50%) scaleY(.72); }
+    }
+
+    @keyframes introText {
+      0%, 22% { opacity: 0; transform: translateY(16px); }
+      38%, 82% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-12px); }
+    }
+
+    @keyframes introFade {
+      to { opacity: 0; visibility: hidden; pointer-events: none; }
+    }
+
+    .topbar {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      z-index: 60;
+      width: min(1120px, calc(100vw - 32px));
+      height: 60px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px 0 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(5, 5, 8, .92);
+      color: white;
+      box-shadow: 0 18px 64px rgba(0,0,0,.28);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 17px;
+      font-weight: 830;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 76px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .chat-logo {
+      font-family: "Snell Roundhand", "Brush Script MT", "Segoe Script", cursive;
+      font-weight: 700;
+      letter-spacing: -0.1em;
+      line-height: .75;
+      transform: rotate(-6deg);
+    }
+
+    .brand-mark img {
+      width: 78px;
+      height: 38px;
+      object-fit: contain;
+      filter: drop-shadow(0 5px 18px rgba(255,255,255,.18));
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+      color: rgba(255,255,255,.72);
+      font-size: 14px;
+      font-weight: 690;
+    }
+
+    .nav-actions { display: flex; gap: 8px; align-items: center; }
+
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 34px;
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+    }
+
+    .lang-btn {
+      min-width: 34px;
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: rgba(255,255,255,.66);
+      font-size: 12px;
+      font-weight: 850;
+      cursor: pointer;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .lang-btn:hover,
+    .lang-btn.active {
+      color: #111114;
+      background: #fff;
+      transform: translateY(-1px);
+    }
+
+    .nav-btn {
+      min-width: 92px;
+      height: 38px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .nav-btn.login { color: rgba(255,255,255,.78); }
+    .nav-btn.start { background: white; color: #111114; }
+
+    .sticky-coin {
+      position: fixed;
+      top: 108px;
+      right: clamp(18px, 4vw, 62px);
+      z-index: 45;
+      width: 98px;
+      height: 90px;
+      perspective: 900px;
+      pointer-events: none;
+      contain: layout paint style;
+    }
+
+    .coin {
+      position: relative;
+      width: 98px;
+      height: 90px;
+      transform-style: preserve-3d;
+      filter: drop-shadow(0 12px 20px rgba(211, 151, 38, .22));
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+
+    .coin-side {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 0;
+      overflow: hidden;
+      backface-visibility: hidden;
+      background: transparent;
+    }
+
+    .coin-side.back {
+      transform: rotateY(180deg);
+      background: transparent;
+    }
+
+    .coin-side img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      transform: translate(-50%, -50%);
+    }
+
+    .heart {
+      position: relative;
+      width: 39px;
+      height: 35px;
+      transform: rotate(-45deg);
+      border-radius: 9px 0 6px 0;
+      background: rgba(255,255,255,.94);
+    }
+
+    .heart:before,
+    .heart:after {
+      content: "";
+      position: absolute;
+      width: 39px;
+      height: 39px;
+      border-radius: 50%;
+      background: inherit;
+    }
+    .heart:before { top: -20px; left: 0; }
+    .heart:after { top: 0; right: -20px; }
+    .heart span {
+      position: absolute;
+      left: 9px;
+      top: -5px;
+      z-index: 2;
+      transform: rotate(45deg);
+      color: #111114;
+      font-weight: 980;
+      font-size: 13px;
+      letter-spacing: -1px;
+    }
+
+    .hero {
+      min-height: 96vh;
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: 116px 24px 68px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(70, 143, 212, .02), rgba(255, 248, 252, .18)),
+        url("/files/clouds-3d-bg.png") center / cover no-repeat;
+    }
+
+    .hero:before,
+    .hero:after {
+      content: "";
+      position: absolute;
+      inset: -8%;
+      background: url("/files/clouds-3d-bg.png") center / cover no-repeat;
+      pointer-events: none;
+    }
+
+    .hero:before {
+      opacity: .18;
+      filter: blur(10px);
+      transform: scale(1.08);
+      animation: cloudLayerA 22s ease-in-out infinite alternate;
+    }
+
+    .hero:after {
+      opacity: .16;
+      mix-blend-mode: screen;
+      transform: scale(1.16);
+      animation: cloudLayerB 28s ease-in-out infinite alternate;
+    }
+
+    @keyframes cloudLayerA {
+      from { transform: translate3d(-22px, 8px, 0) scale(1.08); }
+      to { transform: translate3d(28px, -18px, 0) scale(1.12); }
+    }
+
+    @keyframes cloudLayerB {
+      from { transform: translate3d(26px, -14px, 0) scale(1.16); }
+      to { transform: translate3d(-24px, 18px, 0) scale(1.2); }
+    }
+
+    .cloud {
+      position: absolute;
+      display: none;
+      border-radius: 999px;
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 18px 70px rgba(117,173,255,.16);
+      animation: drift 21s ease-in-out infinite alternate;
+      opacity: .9;
+    }
+    .cloud:before,
+    .cloud:after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: inherit;
+    }
+    .cloud.one { left: -52px; top: 158px; width: 286px; height: 78px; }
+    .cloud.one:before { left: 48px; top: -62px; width: 126px; height: 126px; }
+    .cloud.one:after { right: 42px; top: -42px; width: 96px; height: 96px; }
+    .cloud.two { right: -78px; top: 254px; width: 350px; height: 96px; animation-duration: 25s; }
+    .cloud.two:before { left: 76px; top: -80px; width: 150px; height: 150px; }
+    .cloud.two:after { right: 64px; top: -48px; width: 108px; height: 108px; }
+    .cloud.three { left: 8%; bottom: 120px; width: 230px; height: 66px; opacity: .62; animation-duration: 28s; }
+    .cloud.three:before { left: 40px; top: -50px; width: 98px; height: 98px; }
+    .cloud.three:after { right: 36px; top: -34px; width: 82px; height: 82px; }
+    @keyframes drift { from { transform: translateX(-18px); } to { transform: translate(34px, -10px); } }
+
+    .cupid {
+      position: absolute;
+      top: 102px;
+      right: clamp(92px, 16vw, 250px);
+      width: 144px;
+      height: 144px;
+      object-fit: contain;
+      mix-blend-mode: screen;
+      filter: drop-shadow(0 12px 18px rgba(20,30,60,.22));
+      opacity: .96;
+      animation: cupidFloat 4.2s ease-in-out infinite alternate;
+    }
+    @keyframes cupidFloat { from { transform: translateY(0) rotate(-8deg); } to { transform: translateY(-13px) rotate(-2deg); } }
+
+    .throw-coin {
+      position: absolute;
+      top: 126px;
+      left: 51%;
+      width: 96px;
+      height: 96px;
+      perspective: 900px;
+      animation: toss 4.8s cubic-bezier(.46,.05,.2,1) infinite;
+    }
+    .throw-coin .coin { width: 96px; height: 96px; animation: spin 760ms linear infinite; }
+    .throw-coin .coin-side { transform: scale(1.23); }
+    .throw-coin .coin-side.back { transform: rotateY(180deg) scale(1.23); }
+    @keyframes toss {
+      0% { transform: translate(142px, -86px) rotate(14deg); opacity: 0; }
+      11% { opacity: 1; }
+      34% { transform: translate(34px, 38px) rotate(-8deg); }
+      62% { transform: translate(-36px, 278px) rotate(7deg); }
+      86% { transform: translate(-16px, 456px) rotate(0deg); opacity: 1; }
+      100% { transform: translate(-16px, 456px) rotate(0deg); opacity: 0; }
+    }
+    @keyframes spin { from { transform: rotateY(0deg) rotateX(10deg); } to { transform: rotateY(360deg) rotateX(10deg); } }
+
+    .hero-panel {
+      position: relative;
+      z-index: 2;
+      width: min(820px, 100%);
+      margin-top: 38px;
+      padding: 0;
+      text-align: center;
+      border-radius: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      overflow: hidden;
+      opacity: 0;
+      transform: rotate(-1.2deg) translateY(-150px) scale(.46);
+      transform-origin: center top;
+    }
+
+    body.intro-ended .hero-panel {
+      animation: cloudTextJump 1050ms cubic-bezier(.16,1.08,.22,1) forwards;
+    }
+
+    .hero-panel:before {
+      display: none;
+    }
+
+    @keyframes cloudTextJump {
+      0% { opacity: .2; transform: rotate(-1.2deg) translateY(-150px) scale(.46); filter: blur(2px); }
+      62% { opacity: 1; transform: rotate(-1.2deg) translateY(32px) scale(1.04); filter: blur(0); }
+      78% { transform: rotate(-1.2deg) translateY(8px) scale(.98); }
+      100% { opacity: 1; transform: rotate(-1.2deg) translateY(18px) scale(1); filter: blur(0); }
+    }
+
+    .eyebrow {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(17,17,20,.1);
+      background: rgba(255,255,255,.7);
+      color: #5a5f6f;
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    h1, h2 {
+      margin: 0;
+      font-weight: 860;
+      letter-spacing: -0.055em;
+    }
+    h1 {
+      max-width: 720px;
+      margin: 24px auto 0;
+      font-size: clamp(50px, 7vw, 92px);
+      line-height: .92;
+    }
+
+    .hero h1 {
+      color: rgba(255,255,255,.96);
+      text-shadow: 0 12px 38px rgba(22,70,118,.34), 0 2px 0 rgba(255,255,255,.18);
+    }
+
+    .hero-copy {
+      max-width: 685px;
+      margin: 26px auto 0;
+      color: #4f5462;
+      font-size: clamp(18px, 2.3vw, 23px);
+      line-height: 1.5;
+      font-weight: 570;
+    }
+
+    .hero .hero-copy {
+      max-width: 560px;
+      color: rgba(255,255,255,.9);
+      text-shadow: 0 8px 26px rgba(22,70,118,.3);
+    }
+
+    .prompt {
+      max-width: 610px;
+      min-height: 76px;
+      margin: 38px auto 0;
+      padding: 12px 12px 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(17,17,20,.12);
+      background: rgba(255,255,255,.32);
+      text-align: left;
+      box-shadow: 0 24px 70px rgba(25,82,132,.14);
+      backdrop-filter: blur(18px);
+    }
+    .prompt span { flex: 1; color: rgba(17,17,20,.72); font-size: 16px; font-weight: 700; }
+    .prompt strong {
+      min-width: 146px;
+      height: 50px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: white;
+      background: #111114;
+      font-size: 15px;
+    }
+
+    .prompt-lab {
+      width: min(760px, 100%);
+      margin: 28px auto 0;
+      border-radius: 34px;
+      border: 1px solid rgba(255,255,255,.7);
+      background: rgba(255,255,255,.58);
+      box-shadow: 0 32px 90px rgba(35, 78, 130, .18);
+      backdrop-filter: blur(24px);
+      overflow: hidden;
+      transform: rotate(.7deg);
+    }
+
+    .prompt-lab-top {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      border-bottom: 1px solid rgba(17,17,20,.08);
+      color: rgba(17,17,20,.56);
+      font-size: 13px;
+      font-weight: 790;
+    }
+
+    .prompt-lab-body {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px;
+    }
+
+    .prompt-line {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      border-radius: 24px;
+      background: white;
+      border: 1px solid rgba(17,17,20,.08);
+      color: #2f3543;
+      font-size: 16px;
+      font-weight: 720;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.6);
+      transition: opacity 220ms ease, transform 260ms ease;
+    }
+
+    .prompt-line:after {
+      content: "";
+      width: 2px;
+      height: 23px;
+      margin-left: 4px;
+      border-radius: 999px;
+      background: #111114;
+      animation: cursorBlink 920ms steps(1) infinite;
+    }
+
+    @keyframes cursorBlink { 50% { opacity: 0; } }
+
+    .build-button {
+      width: 120px;
+      height: 62px;
+      display: grid;
+      place-items: center;
+      border-radius: 23px;
+      background: #111114;
+      color: white;
+      font-size: 15px;
+      font-weight: 850;
+      box-shadow: 0 18px 35px rgba(17,17,20,.22);
+    }
+
+    .signal-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 18px 18px;
+      overflow: visible;
+    }
+
+    .signal-strip span {
+      flex: 1 1 150px;
+      min-width: 0;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(117,173,255,.12);
+      border: 1px solid rgba(17,17,20,.07);
+      color: #48546d;
+      font-size: 12px;
+      font-weight: 780;
+      text-align: center;
+      white-space: normal;
+      animation: stripFloat 4.5s ease-in-out infinite;
+    }
+
+    .signal-strip span:nth-child(2) { animation-delay: .25s; }
+    .signal-strip span:nth-child(3) { animation-delay: .5s; }
+    .signal-strip span:nth-child(4) { animation-delay: .75s; }
+
+    @keyframes stripFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    section {
+      position: relative;
+      width: min(960px, calc(100vw - 34px));
+      margin: 0 auto;
+      padding: 104px 0;
+      scroll-margin-top: 96px;
+    }
+    .kicker {
+      color: #8d70ff;
+      font-size: 13px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    h2 {
+      margin-top: 12px;
+      font-size: clamp(38px, 5.2vw, 72px);
+      line-height: .95;
+    }
+    .copy {
+      max-width: 660px;
+      margin: 20px 0 0;
+      color: #616574;
+      font-size: 19px;
+      line-height: 1.55;
+      font-weight: 560;
+    }
+
+    .build-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 46px;
+    }
+
+    .build-step {
+      min-height: 214px;
+      padding: 24px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.74);
+      border: 1px solid rgba(17,17,20,.09);
+      box-shadow: var(--soft-shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .build-step:before {
+      content: "";
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 22px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(17,17,20,.08);
+    }
+
+    .build-step:after {
+      content: "";
+      position: absolute;
+      left: 24px;
+      bottom: 22px;
+      width: var(--fill, 44%);
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--pink), var(--blue));
+      animation: stepPulse 3.8s ease-in-out infinite;
+    }
+
+    .build-step:nth-child(2) { --fill: 68%; }
+    .build-step:nth-child(3) { --fill: 88%; }
+    .build-step:nth-child(2):after { animation-delay: .4s; }
+    .build-step:nth-child(3):after { animation-delay: .8s; }
+
+    .build-step small {
+      color: #8d70ff;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .build-step h3 {
+      margin: 18px 0 0;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+
+    .build-step p {
+      margin: 14px 0 0;
+      color: #686d7d;
+      font-size: 15px;
+      line-height: 1.45;
+      font-weight: 590;
+    }
+
+    @keyframes stepPulse {
+      0%, 100% { transform: scaleX(.86); transform-origin: left; opacity: .72; }
+      50% { transform: scaleX(1); opacity: 1; }
+    }
+
+    section > .kicker,
+    section > h2,
+    section > .copy,
+    .earth-inner > .kicker,
+    .earth-inner > h2,
+    .earth-inner > .copy {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .avatar-stage {
+      margin-top: 50px;
+      min-height: 570px;
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(260px, .8fr) minmax(340px, 1.2fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .avatar-copy,
+    .avatar-visual {
+      border-radius: 42px;
+      border: 1px solid rgba(17,17,20,.1);
+      background: rgba(255,255,255,.66);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .avatar-copy {
+      padding: 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .mood-name {
+      font-size: clamp(36px, 4.4vw, 56px);
+      line-height: .96;
+      letter-spacing: -0.05em;
+      font-weight: 860;
+    }
+    .mood-desc {
+      margin-top: 20px;
+      color: #656a78;
+      font-size: 18px;
+      line-height: 1.5;
+      font-weight: 560;
+    }
+    .orbit-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .pill {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(117,173,255,.12);
+      border: 1px solid rgba(17,17,20,.08);
+      font-size: 13px;
+      font-weight: 770;
+      color: #46536a;
+    }
+
+    .avatar-visual {
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+      isolation: isolate;
+      background:
+        radial-gradient(circle at 52% 48%, rgba(255,115,173,.18), transparent 22rem),
+        radial-gradient(circle at 42% 58%, rgba(117,173,255,.2), transparent 25rem),
+        rgba(255,255,255,.62);
+    }
+    .avatar-visual:before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 40px;
+      width: 360px;
+      height: 66px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: rgba(49,60,90,.12);
+      filter: blur(12px);
+    }
+    .avatar-img {
+      position: relative;
+      z-index: 3;
+      max-width: min(390px, 88%);
+      max-height: 530px;
+      object-fit: contain;
+      filter: drop-shadow(0 34px 54px rgba(60,70,100,.2));
+      transform-origin: center bottom;
+      transition: opacity 340ms ease, transform 520ms cubic-bezier(.2,.8,.2,1);
+    }
+    .avatar-img.switching { opacity: .18; transform: translateY(14px) scale(.97) rotate(-1deg); }
+    .word-ring {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      --orbit-r: clamp(160px, 25vw, 242px);
+      --orbit-r2: calc(var(--orbit-r) + 14px);
+    }
+    .word-ring span {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(17,17,20,.09);
+      color: #303646;
+      font-size: 14px;
+      font-weight: 790;
+      box-shadow: 0 16px 40px rgba(117,173,255,.14);
+      opacity: 0;
+      animation: haloOrbit 4.2s ease-in-out infinite;
+      white-space: nowrap;
+      backdrop-filter: blur(10px);
+    }
+    .word-ring span:nth-child(1) { --a: -80deg; --b: 80deg; --c: -60deg; --d: 60deg; }
+    .word-ring span:nth-child(2) { --a: -22deg; --b: 22deg; --c: -4deg; --d: 4deg; animation-delay: .2s; }
+    .word-ring span:nth-child(3) { --a: 38deg; --b: -38deg; --c: 56deg; --d: -56deg; animation-delay: .4s; }
+    .word-ring span:nth-child(4) { --a: 112deg; --b: -112deg; --c: 130deg; --d: -130deg; animation-delay: .6s; }
+    .word-ring span:nth-child(5) { --a: 178deg; --b: -178deg; --c: 194deg; --d: -194deg; animation-delay: .8s; }
+    .word-ring span:nth-child(6) { --a: 244deg; --b: -244deg; --c: 264deg; --d: -264deg; animation-delay: 1s; }
+    @keyframes haloOrbit {
+      0% { transform: translate(-50%,-50%) rotate(var(--a)) translateX(var(--orbit-r)) rotate(var(--b)) scale(.92); opacity: 0; }
+      18%, 70% { opacity: 1; }
+      100% { transform: translate(-50%,-50%) rotate(var(--c)) translateX(var(--orbit-r2)) rotate(var(--d)) scale(1); opacity: 0; }
+    }
+
+    .earth-section {
+      width: 100%;
+      max-width: none;
+      padding: 118px 0 128px;
+      margin-top: 20px;
+      background:
+        linear-gradient(180deg, rgba(3,5,10,.2), rgba(3,5,10,.9)),
+        url("/files/runtime-grid-v12.png") center / cover no-repeat,
+        var(--runtime);
+      color: white;
+      overflow: hidden;
+    }
+    .earth-inner { width: min(960px, calc(100vw - 34px)); margin: 0 auto; }
+    .earth-inner .copy { color: rgba(255,255,255,.72); }
+
+    .runtime-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 42px;
+    }
+
+    .runtime-tile {
+      min-height: 118px;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(5,8,16,.62);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 54px rgba(0,0,0,.24);
+    }
+
+    .runtime-tile span {
+      display: block;
+      color: rgba(255,255,255,.48);
+      font-size: 12px;
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .runtime-tile strong {
+      display: block;
+      margin-top: 18px;
+      color: white;
+      font-size: 25px;
+      line-height: .95;
+      letter-spacing: -0.035em;
+    }
+
+    .earth-stage {
+      position: relative;
+      margin-top: 24px;
+      height: 560px;
+      border-radius: 42px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 42px 120px rgba(0,0,0,.36);
+      background: #03050a;
+    }
+
+    .runtime-console {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 4;
+      width: min(360px, calc(100% - 48px));
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.58);
+      box-shadow: 0 28px 70px rgba(0,0,0,.32);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+
+    .console-head {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 16px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    .console-head i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.36);
+    }
+
+    .console-body {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      color: rgba(255,255,255,.76);
+      font-size: 13px;
+      font-family: "SF Mono", ui-monospace, Menlo, monospace;
+    }
+
+    .console-body div {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .console-body b { color: var(--mint); font-weight: 800; }
+    .earth-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 900ms ease, transform 12s ease;
+      transform: scale(1.05);
+    }
+    .earth-bg.day { opacity: 0; }
+    .earth-stage.is-day .earth-bg.night { opacity: 0; }
+    .earth-stage.is-day .earth-bg.day { opacity: 1; }
+    .earth-stage:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.24));
+      pointer-events: none;
+    }
+    .route-svg {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      overflow: visible;
+    }
+    .route-line {
+      fill: none;
+      stroke: #eaf5ff;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 560;
+      stroke-dashoffset: 560;
+      filter: drop-shadow(0 0 9px rgba(234,245,255,.9));
+      animation: draw 1.85s ease-in-out forwards;
+    }
+    .earth-stage.is-day .route-line {
+      stroke: #17213f;
+      filter: drop-shadow(0 0 3px rgba(23,33,63,.35));
+    }
+    @keyframes draw {
+      0% { stroke-dashoffset: 560; opacity: 0; }
+      14%, 84% { opacity: 1; }
+      100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    .earth-status {
+      position: absolute;
+      left: 28px;
+      bottom: 28px;
+      z-index: 3;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.42);
+      border: 1px solid rgba(255,255,255,.14);
+      color: white;
+      backdrop-filter: blur(14px);
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .scene-board {
+      margin-top: 50px;
+      border-radius: 42px;
+      border: 1px solid rgba(17,17,20,.1);
+      background: rgba(255,255,255,.68);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .scene-top {
+      min-height: 82px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 16px 20px 16px 26px;
+      border-bottom: 1px solid rgba(17,17,20,.08);
+    }
+    .scene-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .scene-tab {
+      min-width: 118px;
+      height: 42px;
+      border: 1px solid rgba(17,17,20,.1);
+      border-radius: 999px;
+      background: rgba(255,255,255,.64);
+      color: #6f7482;
+      font-weight: 820;
+      cursor: pointer;
+    }
+    .scene-tab.active {
+      color: white;
+      background: #111114;
+    }
+    .scene-controls { display: flex; gap: 8px; }
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(17,17,20,.12);
+      background: white;
+      color: #111114;
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .scene-window {
+      position: relative;
+      height: 500px;
+      background:
+        radial-gradient(circle at 24% 28%, rgba(255,115,173,.13), transparent 18rem),
+        radial-gradient(circle at 76% 20%, rgba(117,173,255,.18), transparent 22rem);
+      overflow: hidden;
+      contain: layout paint;
+    }
+    .scene-track {
+      position: absolute;
+      inset: 36px;
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 78%;
+      gap: 24px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      contain: layout paint;
+    }
+    .scene-track::-webkit-scrollbar { display: none; }
+    .scene-card {
+      position: relative;
+      scroll-snap-align: center;
+      border-radius: 34px;
+      overflow: hidden;
+      background: #111;
+      box-shadow: 0 28px 86px rgba(44,54,90,.18);
+      filter: brightness(.62) saturate(.82);
+      transform: scale(.94);
+      transition: filter 420ms ease, transform 420ms ease;
+    }
+    .scene-card.active {
+      filter: brightness(1.05) saturate(1.05);
+      transform: scale(1);
+    }
+    .scene-card img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .scene-card.romance-new img {
+      object-fit: contain;
+      object-position: center;
+      background: linear-gradient(180deg, #def2ff, #fff0f7);
+    }
+    .scene-caption {
+      position: absolute;
+      left: 24px;
+      bottom: 22px;
+      max-width: 70%;
+      color: white;
+      text-shadow: 0 3px 18px rgba(0,0,0,.5);
+      font-size: clamp(27px, 3.4vw, 44px);
+      line-height: .98;
+      letter-spacing: -0.045em;
+      font-weight: 850;
+    }
+
+    .scene-suggestion-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 18px;
+      border-top: 1px solid rgba(17,17,20,.08);
+      background: rgba(255,255,255,.48);
+    }
+
+    .scene-token {
+      min-height: 76px;
+      padding: 15px;
+      border-radius: 22px;
+      border: 1px solid rgba(17,17,20,.08);
+      background: rgba(255,255,255,.76);
+      color: #4f5566;
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 660;
+    }
+
+    .scene-token strong {
+      display: block;
+      color: #111114;
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+
+    .arcade-flow {
+      width: 100%;
+      max-width: none;
+      padding: 120px 0 132px;
+      background: #030303;
+      color: white;
+      overflow: hidden;
+    }
+    .flow-inner { width: min(960px, calc(100vw - 34px)); margin: 0 auto; }
+    .flow-title {
+      text-align: center;
+      font-size: clamp(40px, 5vw, 72px);
+      line-height: 1;
+      letter-spacing: -0.055em;
+      font-weight: 830;
+      padding-bottom: 42px;
+      border-bottom: 1px solid rgba(255,255,255,.14);
+    }
+    .flow-tabs {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      min-height: 104px;
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      max-width: 100%;
+      contain: layout paint;
+    }
+    .flow-tabs:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 3px;
+      background: linear-gradient(90deg, #9d59ff, #00d8ff, #d5ff5e);
+      transform-origin: left;
+      transform: scaleX(var(--progress, .12));
+      transition: transform 560ms cubic-bezier(.2,.8,.2,1);
+    }
+    .flow-tabs:after {
+      content: "";
+      position: absolute;
+      left: calc(var(--dot, 12.5%) - 8px);
+      bottom: -8px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 22px rgba(255,255,255,.85);
+      transition: left 560ms cubic-bezier(.2,.8,.2,1);
+    }
+    .flow-tab {
+      border: 0;
+      background: transparent;
+      color: rgba(255,255,255,.38);
+      font-size: clamp(22px, 2.8vw, 37px);
+      letter-spacing: -0.03em;
+      font-weight: 710;
+      cursor: pointer;
+    }
+    .flow-tab.active { color: white; }
+    .flow-content {
+      display: grid;
+      grid-template-columns: minmax(260px, .82fr) minmax(420px, 1.18fr);
+      gap: 40px;
+      align-items: center;
+      padding-top: 70px;
+    }
+    .flow-copy h3 {
+      margin: 0;
+      font-size: clamp(34px, 4vw, 58px);
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      font-weight: 820;
+    }
+    .flow-copy p {
+      margin: 22px 0 0;
+      color: rgba(255,255,255,.7);
+      font-size: 20px;
+      line-height: 1.48;
+      font-weight: 540;
+    }
+    .flow-diagram {
+      min-height: 374px;
+      position: relative;
+      border-radius: 4px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(213,255,94,.22), transparent 20rem),
+        radial-gradient(circle at 20% 18%, rgba(0,216,255,.25), transparent 16rem),
+        radial-gradient(circle at 80% 20%, rgba(157,89,255,.2), transparent 18rem),
+        #050505;
+      border: 1px solid rgba(255,255,255,.13);
+      overflow: hidden;
+    }
+    .flow-diagram:before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background: conic-gradient(from 90deg, rgba(0,216,255,.2), rgba(213,255,94,.22), rgba(157,89,255,.2), rgba(0,216,255,.2));
+      filter: blur(42px);
+      opacity: .72;
+      animation: swirl 8s linear infinite;
+    }
+    @keyframes swirl { to { transform: rotate(360deg); } }
+    .diagram-card {
+      position: absolute;
+      inset: 52px;
+      z-index: 2;
+      background: rgba(0,0,0,.78);
+      border: 1px solid rgba(255,255,255,.14);
+      display: grid;
+      place-items: center;
+    }
+    .diagram-center {
+      position: relative;
+      width: 122px;
+      height: 122px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(213,255,94,.9), rgba(0,216,255,.42));
+      color: #050505;
+      font-size: 44px;
+      font-weight: 920;
+      font-style: italic;
+      box-shadow: 0 0 0 28px rgba(255,255,255,.03), 0 0 0 58px rgba(255,255,255,.025);
+    }
+    .diagram-node {
+      position: absolute;
+      min-width: 140px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.44);
+      color: rgba(255,255,255,.74);
+      font-size: 13px;
+      font-weight: 760;
+    }
+    .diagram-node.one { left: 9%; top: 24%; }
+    .diagram-node.two { right: 8%; top: 24%; }
+    .diagram-node.three { left: 9%; bottom: 20%; }
+    .diagram-node.four { right: 10%; bottom: 20%; }
+    .connector {
+      position: absolute;
+      height: 1px;
+      width: 24%;
+      border-top: 2px dotted rgba(255,255,255,.34);
+      transform-origin: left center;
+    }
+    .connector.a { left: 31%; top: 34%; transform: rotate(18deg); }
+    .connector.b { right: 31%; top: 34%; transform: rotate(162deg); }
+    .connector.c { left: 31%; bottom: 30%; transform: rotate(-18deg); }
+    .connector.d { right: 31%; bottom: 30%; transform: rotate(198deg); }
+
+    .hof {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      width: min(790px, 100%);
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 52px;
+      align-items: stretch;
+    }
+    .celeb-panel,
+    .chat-panel {
+      border-radius: 42px;
+      border: 1px solid rgba(17,17,20,.1);
+      background: rgba(255,255,255,.68);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .celeb-panel {
+      min-height: 268px;
+      padding: 24px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
+    }
+    .celeb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #656a78;
+      font-size: 14px;
+      font-weight: 790;
+    }
+    .celeb-window {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      background: rgba(255,255,255,.5);
+      contain: layout paint;
+    }
+    .celeb-track {
+      display: flex;
+      gap: 14px;
+      padding: 16px;
+      transition: transform 520ms cubic-bezier(.2,.8,.2,1);
+    }
+    .celeb-card {
+      min-width: 256px;
+      min-height: 132px;
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 24px;
+      border: 1px solid rgba(17,17,20,.1);
+      background: rgba(255,255,255,.76);
+      filter: brightness(.72) saturate(.82);
+      transform: scale(.96);
+      transition: filter 320ms ease, transform 320ms ease;
+    }
+    .celeb-card.active {
+      filter: brightness(1.05) saturate(1.06);
+      transform: scale(1);
+      box-shadow: 0 22px 60px rgba(117,173,255,.15);
+    }
+    .celeb-card img {
+      width: 74px;
+      height: 88px;
+      border-radius: 22px;
+      object-fit: cover;
+      object-position: center;
+    }
+    .celeb-card h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: -0.035em;
+    }
+    .traits { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
+    .trait {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(117,173,255,.14);
+      color: #42516d;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .quote {
+      margin-top: 11px;
+      color: #666a78;
+      font-size: 12px;
+      line-height: 1.4;
+      font-weight: 590;
+    }
+    .celeb-controls { display: flex; justify-content: center; gap: 8px; }
+
+    .chat-panel {
+      min-height: 468px;
+      padding: 30px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(255,115,173,.14), transparent 18rem),
+        radial-gradient(circle at 88% 10%, rgba(117,173,255,.18), transparent 19rem),
+        rgba(255,255,255,.68);
+    }
+    .chat-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #606574;
+      font-size: 14px;
+      font-weight: 790;
+    }
+
+    .chat-logo {
+      width: auto;
+      min-width: 50px;
+      height: 34px;
+      display: inline-grid;
+      place-items: center;
+      color: #111114;
+      font-size: 36px;
+      text-shadow: 0 5px 16px rgba(117,173,255,.18);
+    }
+    .live:before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: #ff4f91;
+      box-shadow: 0 0 0 8px rgba(255,79,145,.12);
+    }
+    .chat-feed {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 15px;
+      min-height: 216px;
+      overflow: hidden;
+      padding-top: 22px;
+      padding-bottom: 14px;
+    }
+    .bubble {
+      max-width: 84%;
+      padding: 16px 18px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.84);
+      border: 1px solid rgba(17,17,20,.08);
+      box-shadow: 0 18px 38px rgba(117,173,255,.1);
+      color: #343847;
+      font-size: 16px;
+      line-height: 1.42;
+      font-weight: 590;
+    }
+    .bubble.user {
+      align-self: flex-end;
+      color: white;
+      background: linear-gradient(135deg, #111114, #2c3150);
+    }
+    .typing {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      padding: 12px 14px;
+      width: fit-content;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(17,17,20,.08);
+    }
+    .typing span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #7b8190;
+      animation: dot 900ms ease-in-out infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 140ms; }
+    .typing span:nth-child(3) { animation-delay: 280ms; }
+    @keyframes dot { 0%, 100% { opacity: .3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+    .chat-input {
+      width: min(520px, 100%);
+      margin: 12px auto 0;
+      height: 60px;
+      align-self: start;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(17,17,20,.1);
+      background: rgba(255,255,255,.8);
+      color: #7a7f8d;
+      font-weight: 650;
+    }
+    .chat-input > span:first-child {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .send-dot {
+      margin-left: auto;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: #111114;
+    }
+
+    .final {
+      padding-bottom: 78px;
+      text-align: center;
+    }
+    .final .copy { margin-left: auto; margin-right: auto; }
+    .choice-panel {
+      width: min(960px, calc(100vw - 34px));
+      margin: 0 auto 80px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .option {
+      min-height: 98px;
+      padding: 18px;
+      border-radius: 26px;
+      border: 1px solid rgba(17,17,20,.12);
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 18px 50px rgba(117,173,255,.12);
+      cursor: pointer;
+    }
+    .option strong { display: block; font-size: 16px; margin-bottom: 6px; }
+    .option span { color: #676b7a; font-size: 14px; line-height: 1.35; font-weight: 560; }
+
+    /* V14 visual system overrides */
+
+    .hero {
+      min-height: 100svh;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.58) 72%, #fff 100%),
+        url("/files/v13-hero-blue-sky.png") center top / cover no-repeat;
+    }
+
+    .hero-panel {
+      width: min(900px, 100%);
+      margin-top: 8px;
+      transform: translateY(34px) scale(.98);
+    }
+
+    body.intro-ended .hero-panel {
+      animation: heroV14Rise 950ms cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    @keyframes heroV14Rise {
+      from { opacity: 0; transform: translateY(52px) scale(.97); filter: blur(4px); }
+      to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    .hero h1 {
+      max-width: 920px;
+      color: #06070b;
+      font-size: clamp(58px, 7.2vw, 106px);
+      line-height: .94;
+      text-shadow: none;
+      letter-spacing: 0;
+    }
+
+    .accent-v14 {
+      color: var(--pink);
+      background: linear-gradient(100deg, #f0649a 0%, #f994be 52%, #778cff 112%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero .hero-copy {
+      max-width: 560px;
+      color: #424b5c;
+      font-size: clamp(17px, 1.8vw, 20px);
+      text-shadow: none;
+    }
+
+    .prompt {
+      background: rgba(255,255,255,.82);
+      border-color: rgba(116,143,225,.36);
+      box-shadow: 0 18px 50px rgba(126,128,232,.26), inset 0 0 0 1px rgba(255,255,255,.62);
+      transform: none;
+    }
+
+    .prompt span { color: #5e687a; }
+    .prompt strong {
+      min-width: 118px;
+      color: white;
+      background: linear-gradient(135deg, #ff72a8, #b177f4);
+      box-shadow: 0 12px 28px rgba(245,107,161,.34);
+    }
+
+    .prompt-lab {
+      display: none;
+    }
+
+    .build-step {
+      min-height: 460px;
+      display: grid;
+      grid-template-rows: 180px auto;
+      gap: 20px;
+      padding: 18px;
+    }
+
+    .build-step::before,
+    .build-step::after {
+      display: none;
+    }
+
+    .step-copy { padding: 0 8px 10px; }
+
+    .step-video {
+      position: relative;
+      min-height: 180px;
+      overflow: hidden;
+      border-radius: 24px;
+      border: 1px solid rgba(17,17,20,.08);
+      background: linear-gradient(145deg, rgba(255,255,255,.92), rgba(239,246,255,.8));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 18px 46px rgba(78,92,155,.12);
+      isolation: isolate;
+    }
+
+    .step-video::before {
+      content: "";
+      position: absolute;
+      inset: -28%;
+      background:
+        radial-gradient(circle at 30% 32%, rgba(255,115,173,.28), transparent 18rem),
+        radial-gradient(circle at 72% 62%, rgba(117,173,255,.30), transparent 18rem);
+      animation: videoGlow 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes videoGlow {
+      from { transform: translate3d(-10px, -8px, 0) scale(1); }
+      to { transform: translate3d(14px, 10px, 0) scale(1.08); }
+    }
+
+    .typing-line {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: 24px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      color: #333b4e;
+      font-size: 13px;
+      font-weight: 760;
+      box-shadow: 0 12px 30px rgba(78,92,155,.1);
+      overflow: hidden;
+    }
+
+    .typing-line::after {
+      content: "";
+      width: 8px;
+      height: 18px;
+      margin-left: 5px;
+      background: #ff6fa6;
+      animation: cursorBlink 800ms steps(2, jump-none) infinite;
+    }
+
+    @keyframes cursorBlink { 50% { opacity: 0; } }
+
+    .signal-dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ff70a8;
+      box-shadow: 0 0 0 10px rgba(255,112,168,.11), 0 0 24px rgba(255,112,168,.45);
+      animation: signalDrift 3.8s ease-in-out infinite;
+    }
+
+    .signal-dot.one { left: 26%; bottom: 34%; }
+    .signal-dot.two { right: 24%; bottom: 24%; background: #75adff; animation-delay: .7s; }
+    .signal-dot.three { left: 50%; bottom: 18%; background: #b177f4; animation-delay: 1.1s; }
+
+    @keyframes signalDrift {
+      0%, 100% { transform: translateY(0) scale(.9); opacity: .75; }
+      50% { transform: translateY(-18px) scale(1.12); opacity: 1; }
+    }
+
+    .twin-mini {
+      position: absolute;
+      left: 50%;
+      bottom: 14px;
+      width: 108px;
+      height: 132px;
+      transform: translateX(-50%);
+      border-radius: 999px 999px 30px 30px;
+      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,229,240,.95));
+      box-shadow: 0 24px 48px rgba(78,92,155,.16);
+      animation: twinMini 3.8s ease-in-out infinite;
+    }
+
+    .twin-mini::before {
+      content: "";
+      position: absolute;
+      left: 28px;
+      top: 22px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffc0d8, #7fa7ff);
+    }
+
+    @keyframes twinMini {
+      0%, 100% { transform: translateX(-50%) translateY(0) rotate(-1deg); }
+      50% { transform: translateX(-50%) translateY(-10px) rotate(1deg); }
+    }
+
+    .match-graph {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,112,168,.22), transparent 22%),
+        linear-gradient(90deg, transparent 49%, rgba(117,173,255,.26) 50%, transparent 51%),
+        linear-gradient(0deg, transparent 49%, rgba(255,112,168,.22) 50%, transparent 51%);
+    }
+
+    .match-graph i {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(17,17,20,.08);
+      box-shadow: 0 12px 32px rgba(78,92,155,.16);
+      animation: graphPulse 3.4s ease-in-out infinite;
+    }
+
+    .match-graph i:nth-child(1) { left: 22%; top: 26%; }
+    .match-graph i:nth-child(2) { right: 20%; top: 32%; animation-delay: .5s; }
+    .match-graph i:nth-child(3) { left: 42%; bottom: 22%; animation-delay: 1s; }
+
+    @keyframes graphPulse {
+      0%, 100% { transform: scale(.92); }
+      50% { transform: scale(1.16); }
+    }
+
+    #twin h2 .accent-v14,
+    #twin .mood-name {
+      background: linear-gradient(95deg, #d664a3, #6c8df7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .avatar-copy {
+      background:
+        radial-gradient(circle at 16% 10%, rgba(255,115,173,.16), transparent 16rem),
+        radial-gradient(circle at 88% 14%, rgba(117,173,255,.18), transparent 18rem),
+        rgba(255,255,255,.72);
+    }
+
+    .orbit-pills .pill {
+      position: relative;
+      min-height: 40px;
+      padding: 10px 14px 10px 34px;
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 12px 30px rgba(78,92,155,.1);
+      animation: pillFloat 4.4s ease-in-out infinite;
+    }
+
+    .orbit-pills .pill::before {
+      content: "";
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #ff73ad, #75adff);
+      box-shadow: 0 0 0 7px rgba(255,115,173,.1);
+    }
+
+    .orbit-pills .pill:nth-child(2) { animation-delay: .25s; }
+    .orbit-pills .pill:nth-child(3) { animation-delay: .5s; }
+    .orbit-pills .pill:nth-child(4) { animation-delay: .75s; }
+    .orbit-pills .pill:nth-child(5) { animation-delay: 1s; }
+
+    @keyframes pillFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .personality-stack {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .personality-row {
+      display: grid;
+      grid-template-columns: 98px 1fr 42px;
+      gap: 12px;
+      align-items: center;
+      color: #4c5364;
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .personality-row i {
+      position: relative;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(17,17,20,.07);
+    }
+
+    .personality-row i::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: var(--level, 72%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ff73ad, #75adff);
+      animation: levelBreath 3.8s ease-in-out infinite;
+    }
+
+    @keyframes levelBreath {
+      0%, 100% { transform: scaleX(.88); transform-origin: left; }
+      50% { transform: scaleX(1); }
+    }
+
+    .earth-section {
+      padding: 92px 0 112px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(117,173,255,.26), transparent 28rem),
+        linear-gradient(180deg, #edf6ff 0%, #dfefff 22%, #071529 100%);
+      color: #fff;
+    }
+
+    .earth-inner {
+      width: min(1180px, calc(100vw - 34px));
+    }
+
+    .earth-inner .kicker {
+      color: #ff73ad;
+    }
+
+    .earth-inner h2,
+    .earth-inner .copy {
+      color: #111114;
+      text-shadow: none;
+    }
+
+    .earth-inner .copy {
+      color: #536071;
+    }
+
+    .runtime-strip {
+      display: none;
+    }
+
+    .earth-stage {
+      height: clamp(470px, 52vw, 650px);
+      border-radius: 34px;
+      border-color: rgba(255,255,255,.34);
+      background: #071529;
+      box-shadow: 0 42px 120px rgba(42,80,132,.26);
+    }
+
+    .earth-bg {
+      transform: scale(1.04);
+    }
+
+    .runtime-console,
+    .earth-status {
+      display: none;
+    }
+
+    .route-line {
+      stroke: #ffd980;
+      stroke-width: 2.4;
+      filter: drop-shadow(0 0 11px rgba(255,217,128,.85));
+    }
+
+    .earth-stage.is-day .route-line {
+      stroke: #8fd7ff;
+      filter: drop-shadow(0 0 9px rgba(143,215,255,.75));
+    }
+
+    .china-node {
+      fill: rgba(255,255,255,.95);
+      stroke: rgba(255,115,173,.9);
+      stroke-width: 2;
+      filter: drop-shadow(0 0 9px rgba(255,115,173,.72));
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: nodePulse 2.8s ease-in-out infinite;
+    }
+
+    .earth-stage.is-day .china-node {
+      fill: #eaf7ff;
+      stroke: #8fd7ff;
+      filter: drop-shadow(0 0 8px rgba(143,215,255,.72));
+    }
+
+    @keyframes nodePulse {
+      0%, 100% { opacity: .62; transform: scale(.9); }
+      50% { opacity: 1; transform: scale(1.18); }
+    }
+
+    .arcade-flow {
+      padding: 0;
+      background: #06101f;
+    }
+
+    .runtime-v14 {
+      position: relative;
+      overflow: hidden;
+      padding: 76px 0 72px;
+      color: white;
+      background:
+        radial-gradient(circle at 50% 52%, rgba(245,107,161,.18), transparent 31rem),
+        radial-gradient(circle at 82% 44%, rgba(105,141,255,.14), transparent 28rem),
+        linear-gradient(180deg, #081629 0%, #06101f 100%);
+    }
+
+    .runtime-v14::before {
+      content: "";
+      position: absolute;
+      left: -12%;
+      right: -12%;
+      top: 38%;
+      height: 170px;
+      background: linear-gradient(90deg, transparent, rgba(255,115,173,.35), rgba(176,114,244,.34), rgba(117,173,255,.28), transparent);
+      filter: blur(22px);
+      opacity: .78;
+      animation: runtimeRibbon 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes runtimeRibbon {
+      from { transform: translateX(-2%) translateY(-4px); }
+      to { transform: translateX(2%) translateY(8px); }
+    }
+
+    .runtime-v14-inner {
+      position: relative;
+      z-index: 2;
+      width: min(1240px, calc(100vw - 64px));
+      margin: 0 auto;
+    }
+
+    .runtime-v14-head {
+      display: grid;
+      grid-template-columns: minmax(360px, 1fr) minmax(500px, .95fr);
+      gap: 44px;
+      align-items: start;
+    }
+
+    .runtime-v14 h2 {
+      max-width: 640px;
+      margin-top: 14px;
+      color: white;
+      font-size: clamp(38px, 4.2vw, 62px);
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .runtime-v14 .copy {
+      color: rgba(255,255,255,.72);
+      margin-left: 0;
+      text-align: left;
+    }
+
+    .runtime-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-left: 1px solid rgba(255,255,255,.16);
+    }
+
+    .runtime-stat {
+      min-height: 112px;
+      padding: 8px 26px 0;
+      border-right: 1px solid rgba(255,255,255,.16);
+    }
+
+    .runtime-stat strong {
+      display: block;
+      color: #f69bc5;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 4vw, 58px);
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .runtime-stat span {
+      display: block;
+      margin-top: 14px;
+      color: rgba(255,255,255,.72);
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .runtime-flowline {
+      position: relative;
+      display: grid;
+      grid-template-columns: .88fr 1fr 1.08fr 1fr 1fr;
+      gap: clamp(16px, 2.2vw, 32px);
+      align-items: center;
+      margin-top: 60px;
+      min-height: 340px;
+    }
+
+    .runtime-flowline::before {
+      content: "";
+      position: absolute;
+      left: -6%;
+      right: -6%;
+      top: 44%;
+      height: 58px;
+      background: linear-gradient(90deg, transparent, rgba(255,115,173,.52), rgba(176,114,244,.72), rgba(117,173,255,.54), transparent);
+      filter: blur(11px);
+      opacity: .8;
+      animation: runtimeSignal 3.6s ease-in-out infinite;
+    }
+
+    @keyframes runtimeSignal {
+      0%, 100% { transform: scaleX(.92); opacity: .55; }
+      50% { transform: scaleX(1.03); opacity: 1; }
+    }
+
+    .runtime-node {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 18px;
+      align-content: center;
+      min-height: 310px;
+    }
+
+    .runtime-node h3 {
+      margin: 0;
+      color: white;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(22px, 2vw, 30px);
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .node-orb {
+      width: 112px;
+      height: 112px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.22);
+      background: radial-gradient(circle, rgba(255,115,173,.35), rgba(93,112,220,.22) 52%, rgba(255,255,255,.03));
+      box-shadow: 0 0 0 20px rgba(255,255,255,.025), 0 0 52px rgba(255,115,173,.26);
+      color: #ffd1e4;
+      animation: orbFloat3d 4.4s ease-in-out infinite;
+    }
+
+    .runtime-node:nth-child(2) .node-orb,
+    .runtime-node:nth-child(4) .node-orb,
+    .runtime-node:nth-child(5) .node-orb {
+      background: radial-gradient(circle, rgba(117,173,255,.35), rgba(176,114,244,.2) 52%, rgba(255,255,255,.03));
+    }
+
+    .runtime-node:nth-child(3) .node-orb {
+      width: 174px;
+      height: 174px;
+      color: white;
+      background: radial-gradient(circle, rgba(255,115,173,.82), rgba(255,115,173,.22) 48%, rgba(255,255,255,.04));
+      box-shadow: 0 0 0 18px rgba(255,115,173,.09), 0 0 0 36px rgba(255,115,173,.05), 0 0 90px rgba(255,115,173,.62);
+    }
+
+    @keyframes orbFloat3d {
+      0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+      50% { transform: translateY(-10px) rotateX(8deg) rotateY(-10deg); }
+    }
+
+    .node-orb svg {
+      width: 48px;
+      height: 48px;
+      stroke-width: 1.7;
+    }
+
+    .runtime-node:nth-child(3) .node-orb svg {
+      width: 74px;
+      height: 74px;
+      fill: currentColor;
+      stroke: currentColor;
+    }
+
+    .node-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: rgba(255,255,255,.78);
+      font-size: 15px;
+    }
+
+    .node-list li {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 10px;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .node-list svg {
+      width: 18px;
+      height: 18px;
+      color: #efa4d0;
+    }
+
+    .runtime-trust-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 58px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.14);
+    }
+
+    .runtime-trust {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .runtime-trust .node-orb {
+      width: 70px;
+      height: 70px;
+      margin: 0;
+    }
+
+    .runtime-trust .node-orb svg {
+      width: 32px;
+      height: 32px;
+      color: white;
+    }
+
+    .runtime-trust strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .runtime-trust span {
+      display: block;
+      margin-top: 5px;
+      color: rgba(255,255,255,.68);
+      font-size: 15px;
+    }
+
+    .final {
+      display: none;
+    }
+
+    .choice-panel {
+      display: none;
+    }
+
+    #build,
+    #twin,
+    .earth-section,
+    #scenes,
+    .runtime-v14,
+    #hall,
+    .download-v14 {
+      position: relative;
+      overflow: hidden;
+    }
+
+    #build::before,
+    #twin::before,
+    .earth-section::before,
+    #scenes::before,
+    .runtime-v14::after,
+    #hall::before,
+    .download-v14::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -1px;
+      height: 150px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: .88;
+      background-size: 220% 100%;
+      animation: bridgeShift 9s ease-in-out infinite alternate;
+    }
+
+    #build::before {
+      background-image: linear-gradient(100deg, rgba(255,255,255,.92), rgba(225,244,255,.82), rgba(255,246,251,.72), rgba(255,255,255,0));
+    }
+
+    #twin::before,
+    #scenes::before,
+    #hall::before {
+      background-image: linear-gradient(100deg, rgba(255,255,255,.9), rgba(235,246,255,.78), rgba(255,239,248,.58), rgba(255,255,255,0));
+    }
+
+    .earth-section::before {
+      background-image: linear-gradient(180deg, rgba(255,255,255,.94), rgba(226,241,255,.78), rgba(226,241,255,0));
+    }
+
+    .runtime-v14::after {
+      top: auto;
+      bottom: -1px;
+      height: 170px;
+      background-image: linear-gradient(180deg, rgba(6,16,31,0), rgba(247,251,255,.95));
+    }
+
+    .download-v14::before {
+      background-image: linear-gradient(180deg, rgba(250,252,255,.96), rgba(237,246,255,.82), rgba(6,16,31,0));
+    }
+
+    section > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes bridgeShift {
+      from { background-position: 0% 50%; }
+      to { background-position: 100% 50%; }
+    }
+
+    .download-v14 {
+      width: 100%;
+      margin: 0;
+      padding: 90px 24px 0;
+      background:
+        linear-gradient(180deg, #fbfdff 0%, #edf6ff 30%, #bdd8f3 64%, #536a88 78%, #06101f 90%, #06101f 100%);
+    }
+
+    .download-card {
+      width: min(1360px, calc(100vw - 64px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(520px, 1fr) auto auto auto;
+      gap: 30px;
+      align-items: center;
+      padding: clamp(30px, 4vw, 58px);
+      border-radius: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .download-card > div:first-child {
+      min-width: 0;
+    }
+
+    .download-card h2 {
+      margin: 0;
+      color: #070a12;
+      font-size: clamp(34px, 4.2vw, 62px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .download-card p {
+      margin: 20px 0 0;
+      color: #687083;
+      font-size: clamp(18px, 2vw, 28px);
+      line-height: 1.35;
+      font-weight: 540;
+    }
+
+    .store-badge {
+      min-width: 190px;
+      height: 74px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(17,24,39,.08);
+      border-radius: 16px;
+      background: rgba(255,255,255,.92);
+      color: #0c111c;
+      font-size: 21px;
+      font-weight: 850;
+      box-shadow: 0 14px 34px rgba(63,83,132,.08);
+    }
+
+    .store-badge span {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #4b5565;
+      text-align: center;
+    }
+
+    .qr {
+      width: 120px;
+      height: 120px;
+      padding: 9px;
+      border-radius: 16px;
+      border: 1px solid rgba(17,24,39,.08);
+      background: #fff;
+      box-shadow: 0 14px 34px rgba(63,83,132,.08);
+    }
+
+    .qr-grid {
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(90deg, #111 8px, transparent 8px) 0 0 / 16px 16px,
+        linear-gradient(#111 8px, transparent 8px) 0 0 / 16px 16px,
+        radial-gradient(circle at 20% 20%, #111 0 14px, transparent 15px),
+        radial-gradient(circle at 80% 20%, #111 0 14px, transparent 15px),
+        radial-gradient(circle at 20% 80%, #111 0 14px, transparent 15px),
+        #fff;
+      image-rendering: pixelated;
+    }
+
+    .footer-v14 {
+      width: min(1360px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 56px 56px 28px;
+      border-radius: 0 0 30px 30px;
+      color: white;
+      background:
+        linear-gradient(180deg, rgba(6,16,31,.96), #06101f 38%, #040b16 100%);
+      box-shadow: none;
+    }
+
+    .footer-v14-grid {
+      display: grid;
+      grid-template-columns: 1.45fr repeat(4, 1fr) 1.05fr;
+      gap: 42px;
+      padding-bottom: 44px;
+      border-bottom: 1px solid rgba(255,255,255,.16);
+    }
+
+    .footer-v14-brand {
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 28px;
+      align-items: start;
+      padding-right: 40px;
+      border-right: 1px solid rgba(255,255,255,.18);
+    }
+
+    .footer-v14-brand img {
+      width: 82px;
+      height: 62px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 10px rgba(255,255,255,.18));
+    }
+
+    .footer-v14 strong {
+      display: block;
+      margin-bottom: 18px;
+      color: white;
+      font-size: 20px;
+      font-weight: 850;
+    }
+
+    .footer-v14 p,
+    .footer-v14 a {
+      display: block;
+      margin: 0 0 12px;
+      color: rgba(220,230,255,.68);
+      font-size: 17px;
+      line-height: 1.42;
+      font-weight: 560;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .footer-socials a {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      margin: 0;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.4);
+      color: white;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .footer-bottom-v14 {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding-top: 24px;
+      color: rgba(220,230,255,.66);
+      font-size: 16px;
+      font-weight: 560;
+    }
+
+    .hero h1,
+    section h2,
+    .build-step h3,
+    .mood-name,
+    .runtime-v14 h2,
+    .runtime-node h3,
+    .download-card h2,
+    .celeb-card h3 {
+      letter-spacing: 0;
+    }
+
+    header,
+    section {
+      scroll-margin-top: 116px;
+    }
+
+    html[lang^="zh"] section h2 {
+      font-size: clamp(40px, 5.4vw, 74px);
+      line-height: 1.08;
+    }
+
+    html[lang^="zh"] .hero h1 {
+      font-size: clamp(58px, 7.2vw, 104px);
+      line-height: 1.04;
+    }
+
+    html[lang^="zh"] .download-card {
+      grid-template-columns: minmax(430px, 1fr) auto auto auto;
+    }
+
+    html[lang^="zh"] .download-card h2 {
+      max-width: 620px;
+      font-size: clamp(34px, 3.3vw, 52px);
+      line-height: 1.16;
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
+
+    @media (max-width: 1180px) {
+      .download-card,
+      html[lang^="zh"] .download-card {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 24px;
+      }
+      .download-card > div:first-child,
+      html[lang^="zh"] .download-card > div:first-child {
+        grid-column: 1 / -1;
+        max-width: 760px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .navlinks { display: none; }
+      .prompt { align-items: stretch; flex-direction: column; border-radius: 30px; }
+      .prompt strong { width: 100%; }
+      .prompt-lab-body,
+      .build-steps,
+      .runtime-strip,
+      .scene-suggestion-row {
+        grid-template-columns: 1fr;
+      }
+      .avatar-stage,
+      .flow-content,
+      .hof { grid-template-columns: 1fr; }
+      .runtime-console {
+        position: relative;
+        top: auto;
+        right: auto;
+        width: calc(100% - 28px);
+        margin: 14px;
+      }
+      .earth-stage { height: 560px; }
+      .scene-top { grid-template-columns: 1fr; }
+      .scene-track { grid-auto-columns: 92%; }
+      .flow-tabs { overflow-x: auto; grid-template-columns: repeat(4, minmax(190px, 1fr)); }
+      .choice-panel { grid-template-columns: 1fr; }
+      .sticky-coin { width: 58px; height: 58px; right: 16px; }
+      .coin { width: 58px; height: 58px; }
+      .cupid { right: 46px; top: 92px; width: 110px; height: 110px; }
+      .runtime-v14 { padding: 60px 0 54px; }
+      .runtime-v14-inner {
+        width: min(100% - 28px, 1360px);
+      }
+      .download-v14 {
+        width: auto;
+        padding: 70px 14px 0;
+      }
+      .runtime-v14-head,
+      .runtime-flowline,
+      .runtime-trust-row,
+      .download-card,
+      .footer-v14-grid {
+        grid-template-columns: 1fr;
+      }
+      .runtime-stats {
+        grid-template-columns: 1fr;
+        border-left: 0;
+        gap: 14px;
+      }
+      .runtime-stat {
+        min-height: auto;
+        padding: 18px;
+        border: 1px solid rgba(255,255,255,.13);
+        border-radius: 18px;
+        background: rgba(255,255,255,.04);
+      }
+      .runtime-flowline {
+        min-height: auto;
+        gap: 18px;
+      }
+      .runtime-flowline::before {
+        top: 0;
+        bottom: 0;
+        left: 39px;
+        right: auto;
+        width: 3px;
+        height: auto;
+      }
+      .runtime-node {
+        min-height: auto;
+        justify-items: start;
+        text-align: left;
+        padding-left: 78px;
+      }
+      .runtime-node .node-orb {
+        position: absolute;
+        left: 0;
+        top: 52px;
+      }
+      .node-list li { white-space: normal; }
+      .runtime-trust {
+        min-height: auto;
+      }
+      .download-card {
+        padding: 30px;
+        gap: 18px;
+        border-radius: 0;
+      }
+      .store-badge {
+        width: 100%;
+      }
+      .footer-v14 {
+        width: min(100% - 28px, 1360px);
+        padding: 30px 24px;
+        border-radius: 0 0 24px 24px;
+      }
+      .footer-v14-brand {
+        border-right: 0;
+        padding-right: 0;
+      }
+      .footer-bottom-v14 {
+        flex-direction: column;
+        gap: 12px;
+      }
+      html[lang^="zh"] .download-card {
+        grid-template-columns: 1fr;
+      }
+      html[lang^="zh"] .download-card h2 {
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .topbar {
+        width: calc(100vw - 28px);
+        padding: 8px 10px;
+        gap: 10px;
+        border-radius: 24px;
+      }
+      .brand {
+        gap: 7px;
+        min-width: 0;
+        font-size: 14px;
+      }
+      .brand-mark {
+        width: 54px;
+        height: 42px;
+      }
+      .nav-actions {
+        gap: 6px;
+        margin-left: auto;
+      }
+      .lang-switch {
+        height: 32px;
+        padding: 2px;
+      }
+      .lang-btn {
+        min-width: 28px;
+        height: 26px;
+        font-size: 11px;
+      }
+      .nav-btn.login {
+        display: none;
+      }
+      .nav-btn.start {
+        min-width: auto;
+        padding: 11px 14px;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      .download-card h2 {
+        font-size: 34px;
+      }
+      html[lang^="zh"] .hero h1 {
+        font-size: 52px;
+        line-height: 1.04;
+      }
+      html[lang^="zh"] section h2 {
+        font-size: 38px;
+      }
+      html[lang^="zh"] .download-card h2 {
+        font-size: 32px;
+      }
+      .celeb-panel,
+      .chat-panel {
+        border-radius: 28px;
+      }
+      .celeb-panel {
+        padding: 16px;
+      }
+      .celeb-track {
+        gap: 10px;
+        padding: 12px;
+      }
+      .celeb-card {
+        min-width: min(250px, calc(100vw - 92px));
+        grid-template-columns: 66px 1fr;
+        gap: 12px;
+      }
+      .celeb-card img {
+        width: 64px;
+        height: 78px;
+      }
+      .chat-panel {
+        min-height: 480px;
+        padding: 22px 16px;
+        min-width: 0;
+      }
+      .chat-panel > *,
+      .chat-feed,
+      .chat-input {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .bubble {
+        width: fit-content;
+        max-width: calc(100% - 20px);
+        padding: 14px 15px;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+      .bubble.user {
+        max-width: min(82%, 260px);
+        margin-left: auto;
+      }
+      .chat-input {
+        height: 56px;
+        padding: 9px 10px 9px 15px;
+      }
+    }
+  </style>
+</head>
+<body class="intro-active">
+  <div class="intro" id="introOverlay">
+    <div class="intro-cloud one"></div>
+    <div class="intro-cloud two"></div>
+    <div class="intro-cloud three"></div>
+    <img class="intro-cupid" src="/files/cupid-transparent.png" alt="Cupid launches the Darlink coin" />
+    <div class="intro-trail"></div>
+    <div class="intro-coin" aria-label="Darlink heart coin"><img src="/files/dl-heart-coin-red-transparent-v12.png" alt="" /></div>
+    <div class="intro-title">
+      <small>Designed with intention</small>
+      <strong>From above, to what matters.</strong>
+    </div>
+    <button class="intro-skip" id="introSkip">Skip intro</button>
+  </div>
+  <nav class="topbar">
+    <div class="brand"><div class="brand-mark" aria-label="Darlink DL logo"><img src="/files/dl-script-logo-transparent-v12.png" alt="" /></div> Darlink</div>
+    <div class="navlinks">
+      <a href="#build">Build</a>
+      <a href="#twin">AI Twin</a>
+      <a href="#runtime">Matching Core</a>
+      <a href="#scenes">Scenes</a>
+      <a href="#hall">Hall of Fame</a>
+    </div>
+    <div class="nav-actions">
+      <div class="lang-switch" role="group" aria-label="Language switch">
+        <button class="lang-btn active" type="button" data-lang="en">EN</button>
+        <button class="lang-btn" type="button" data-lang="zhHans">简</button>
+        <button class="lang-btn" type="button" data-lang="zhHant">繁</button>
+      </div>
+      <a class="nav-btn start" href="app.html#login_luminous_identity_english_refined">Get Started</a>
+    </div>
+  </nav>
+
+  <div class="sticky-coin" aria-hidden="true">
+    <div class="coin" id="stickyCoin">
+      <div class="coin-side"><img src="/files/dl-heart-coin-red-transparent-v12.png" alt="" /></div>
+      <div class="coin-side back"><img src="/files/dl-heart-coin-red-transparent-v12.png" alt="" /></div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="cloud one"></div>
+    <div class="cloud two"></div>
+    <div class="cloud three"></div>
+    <div class="hero-panel">
+      <h1>Flip <span class="accent-v14">intent</span><br />into a living match</h1>
+      <p class="hero-copy">Darlink turns study goals, romance intent, and food plans into living AI twins, warmer introductions, and a faster path to people who fit.</p>
+      <a class="prompt" href="app.html#login_luminous_identity_english_refined"><span>Tell Darlink what kind of companion you are looking for today.</span><strong>Get Started</strong></a>
+      <div class="prompt-lab">
+        <div class="prompt-lab-top"><span>Darlink Builder</span><span>Study · Romance · Taste Trail</span></div>
+        <div class="prompt-lab-body">
+          <div class="prompt-line" id="heroPromptLine">Find me a partner who studies late, likes quiet cafes, and wants real accountability.</div>
+          <div class="build-button">Build</div>
+        </div>
+        <div class="signal-strip">
+          <span>AI twin warms the intro</span>
+          <span>Intent becomes a social signal</span>
+          <span>Safety labels stay visible</span>
+          <span>Match rhythm improves after chat</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="build" class="reveal">
+    <div class="kicker">How Darlink builds</div>
+    <h2>Start with a need. Watch the social graph come alive.</h2>
+    <p class="copy">Lovable turns prompts into products; Darlink turns student intent into a living matching layer. Every answer, chat, and post refines the digital human instead of making users fill another cold form.</p>
+    <div class="build-steps">
+      <article class="build-step">
+        <div class="step-video intent-video" aria-label="Intent generation video loop">
+          <div class="typing-line">Describe the companion...</div>
+          <i class="signal-dot one"></i>
+          <i class="signal-dot two"></i>
+          <i class="signal-dot three"></i>
+        </div>
+        <div class="step-copy">
+          <small>01 · Intent</small>
+          <h3>Describe the companion</h3>
+          <p>Study partner, romantic pace, or food trail preference becomes the first signal, not a static profile field.</p>
+        </div>
+      </article>
+      <article class="build-step">
+        <div class="step-video twin-video" aria-label="AI twin generation video loop">
+          <div class="typing-line">Twin warming the introduction...</div>
+          <div class="twin-mini"></div>
+          <i class="signal-dot one"></i>
+          <i class="signal-dot two"></i>
+        </div>
+        <div class="step-copy">
+          <small>02 · Twin</small>
+          <h3>Generate a warmer proxy</h3>
+          <p>The AI twin makes low-pressure introductions, asks better questions, and learns from conversation patterns.</p>
+        </div>
+      </article>
+      <article class="build-step">
+        <div class="step-video match-video" aria-label="Match graph generation video loop">
+          <div class="match-graph"><i></i><i></i><i></i></div>
+          <div class="typing-line">Compatibility graph updating...</div>
+        </div>
+        <div class="step-copy">
+          <small>03 · Match</small>
+          <h3>Refine the graph</h3>
+          <p>Every chat, friend request, and community post updates compatibility without turning the product into a ranking list.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="twin" class="reveal">
+    <div class="kicker">AI twin motion</div>
+    <h2>From intent to a <span class="accent-v14">living social signal.</span></h2>
+    <p class="copy">The AI twin now uses your ten character renders. It changes expression and posture in real time, while intent words orbit and fade to show study, romance, sport, dance, thinking, and social moments.</p>
+    <div class="avatar-stage">
+      <div class="avatar-copy">
+        <div>
+          <div class="mood-name" id="moodName">Warm welcome</div>
+          <div class="mood-desc" id="moodDesc">Your twin starts friendly, then shifts with your goals and conversation signals.</div>
+          <div class="orbit-pills">
+            <span class="pill">Study fit</span>
+            <span class="pill">Romance fit</span>
+            <span class="pill">Taste Trail</span>
+            <span class="pill">Movement</span>
+            <span class="pill">Personality</span>
+          </div>
+          <div class="personality-stack" aria-label="Live personality traits">
+            <div class="personality-row"><span>Warmth</span><i style="--level: 86%"></i><b>86</b></div>
+            <div class="personality-row"><span>Focus</span><i style="--level: 74%"></i><b>74</b></div>
+            <div class="personality-row"><span>Curiosity</span><i style="--level: 91%"></i><b>91</b></div>
+          </div>
+        </div>
+        <div class="copy" style="font-size:15px;margin:0;">Asset-driven preview: the same component can later read the user twin generated by Nuwa Skill.</div>
+      </div>
+      <div class="avatar-visual">
+        <div class="word-ring">
+          <span>thinking</span><span>dancing</span><span>sport</span><span>romance</span><span>study</span><span>taste</span>
+        </div>
+        <img id="avatarImg" class="avatar-img" src="/files/avatar-01.png" alt="Darlink AI twin character state" />
+      </div>
+    </div>
+  </section>
+
+  <section class="earth-section reveal" id="runtime">
+    <div class="earth-inner">
+      <div class="kicker">Matching core</div>
+      <h2>Arcade-like runtime for real social actions.</h2>
+      <p class="copy">Darlink maps student intent across a living surface, routing social signals through time, place, compatibility and safety with a lighter, clearer runtime layer.</p>
+      <div class="earth-stage" id="earthStage">
+        <img class="earth-bg night" src="/files/v14-earth-night.png" alt="Night Earth surface" />
+        <img class="earth-bg day" src="/files/v14-earth-day.png" alt="Day Earth surface" />
+        <svg class="route-svg" id="routeSvg" viewBox="0 0 1000 660" preserveAspectRatio="none"></svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="scenes" class="reveal">
+    <div class="kicker">Three ways</div>
+    <h2>Study, Romance, and Taste Trail.</h2>
+    <p class="copy">The carousel is now controllable. Use the tabs and arrow buttons to move through the images; the active image brightens and the off-stage images dim.</p>
+    <div class="scene-board">
+      <div class="scene-top">
+        <div class="scene-tabs">
+          <button class="scene-tab active" data-scene="study">Study</button>
+          <button class="scene-tab" data-scene="romance">Romance</button>
+          <button class="scene-tab" data-scene="taste">Taste Trail</button>
+        </div>
+        <div class="scene-controls">
+          <button class="icon-btn" id="scenePrev" aria-label="Previous scene">‹</button>
+          <button class="icon-btn" id="sceneNext" aria-label="Next scene">›</button>
+        </div>
+      </div>
+      <div class="scene-window">
+        <div class="scene-track" id="sceneTrack">
+          <article class="scene-card active" data-scene="study"><img src="/files/scene-study-01.png" alt="Study partners high five" /><div class="scene-caption">High-five after focused work</div></article>
+          <article class="scene-card" data-scene="study"><img src="/files/scene-study-02.png" alt="Study partners coffee toast" /><div class="scene-caption">Coffee, notes, and shared momentum</div></article>
+          <article class="scene-card" data-scene="study"><img src="/files/scene-study-03.png" alt="Study partners running" /><div class="scene-caption">Push each other beyond the desk</div></article>
+          <article class="scene-card" data-scene="romance"><img src="/files/scene-romance-01.png" alt="Romance walk" /><div class="scene-caption">A slow walk at sunset</div></article>
+          <article class="scene-card romance-new" data-scene="romance"><img src="/files/scene-romance-new.png" alt="Romance amusement park" /><div class="scene-caption">Playful plans that feel easy</div></article>
+          <article class="scene-card" data-scene="romance"><img src="/files/scene-romance-03.png" alt="Romance picnic" /><div class="scene-caption">Picnic rituals and soft conversation</div></article>
+          <article class="scene-card" data-scene="taste"><img src="/files/scene-taste-01.png" alt="Taste Trail Cantonese food" /><div class="scene-caption">Cantonese plates across the table</div></article>
+          <article class="scene-card" data-scene="taste"><img src="/files/scene-taste-02.png" alt="Taste Trail food selfie" /><div class="scene-caption">Food photos become memories</div></article>
+          <article class="scene-card" data-scene="taste"><img src="/files/scene-taste-03.png" alt="Taste Trail fine dining" /><div class="scene-caption">Michelin joy with a real tablemate</div></article>
+        </div>
+      </div>
+      <div class="scene-suggestion-row">
+        <div class="scene-token"><strong>Study prompt</strong>Find someone who can do two Pomodoro rounds and debrief after class.</div>
+        <div class="scene-token"><strong>Romance prompt</strong>Match by emotional pace before appearance or popularity ranking.</div>
+        <div class="scene-token"><strong>Taste prompt</strong>Turn restaurant cravings into a shared route, not a lonely saved list.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="arcade-flow reveal runtime-v14" id="trust">
+    <div class="runtime-v14-inner">
+      <div class="runtime-v14-head">
+        <div>
+          <div class="kicker" style="text-align:left;margin-left:0;">Darlink Runtime</div>
+          <h2>A real-time system built for real connections.</h2>
+          <p class="copy">Intent signals flow through Darlink Runtime, matching you with people based on compatibility, safety and timing, in real time.</p>
+        </div>
+        <div class="runtime-stats">
+          <div class="runtime-stat"><strong>2.4M+</strong><span>Signals processed every day</span></div>
+          <div class="runtime-stat"><strong>98.7%</strong><span>Safe interactions rate</span></div>
+          <div class="runtime-stat"><strong>120+</strong><span>Universities connected</span></div>
+        </div>
+      </div>
+
+      <div class="runtime-flowline" aria-label="Darlink Runtime flow">
+        <div class="runtime-node">
+          <h3>Intent Signals</h3>
+          <div class="node-orb">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.5 20c.6-3.2 2-5 4-5s3.4 1.8 4 5M12.5 20c.6-3.2 2-5 4-5s3.4 1.8 4 5" stroke="currentColor" stroke-linecap="round" /></svg>
+          </div>
+          <ul class="node-list">
+            <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" /></svg>Profile</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h4l2-5 4 10 2-5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>Behavior</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M7 7h10v10H7zM10 10h4v4h-4z" stroke="currentColor" stroke-width="1.8" /></svg>Interactions</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s6-5.4 6-11a6 6 0 1 0-12 0c0 5.6 6 11 6 11Z" stroke="currentColor" stroke-width="1.8" /><circle cx="12" cy="10" r="2" stroke="currentColor" stroke-width="1.8" /></svg>Context</li>
+          </ul>
+        </div>
+
+        <div class="runtime-node">
+          <h3>Understanding Layer</h3>
+          <div class="node-orb">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 4a4 4 0 0 0-4 4v8a4 4 0 0 0 7 2.65A4 4 0 0 0 19 16V8a4 4 0 0 0-7-2.65A3.98 3.98 0 0 0 9 4Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" /><path d="M12 5.35v13.3M8 9h2M14 9h2M8 15h2M14 15h2" stroke="currentColor" stroke-linecap="round" /></svg>
+          </div>
+          <ul class="node-list">
+            <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>NLP Intent</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 20 8v8l-8 5-8-5V8l8-5Z" stroke="currentColor" stroke-width="1.8" /></svg>Vector Embedding</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 7h4m6 0h4M7 7v10m10-10v10M7 17h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.8" /><circle cx="17" cy="7" r="2" stroke="currentColor" stroke-width="1.8" /><circle cx="7" cy="17" r="2" stroke="currentColor" stroke-width="1.8" /><circle cx="17" cy="17" r="2" stroke="currentColor" stroke-width="1.8" /></svg>Preference Graph</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="5" stroke="currentColor" stroke-width="1.8" /><circle cx="15" cy="12" r="5" stroke="currentColor" stroke-width="1.8" /></svg>Context Fusion</li>
+          </ul>
+        </div>
+
+        <div class="runtime-node">
+          <h3>Match Engine</h3>
+          <div class="node-orb">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.3-4.7-9.4-9.2C.8 7.9 3.2 4 7.2 4c2.1 0 3.7 1.1 4.8 2.7C13.1 5.1 14.7 4 16.8 4c4 0 6.4 3.9 4.6 7.8C19.3 16.3 12 21 12 21Z" /></svg>
+          </div>
+          <ul class="node-list">
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.7A4 4 0 0 1 19 11c0 5.4-7 10-7 10Z" stroke="currentColor" stroke-width="1.8" /></svg>Compatibility Score</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h9M4 17h9M15 7h5M15 17h5M9 12h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /><circle cx="15" cy="7" r="2" stroke="currentColor" stroke-width="1.8" /><circle cx="9" cy="17" r="2" stroke="currentColor" stroke-width="1.8" /><circle cx="9" cy="12" r="2" stroke="currentColor" stroke-width="1.8" /></svg>Dynamic Weighting</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M4 17 9 12l4 4 7-8M15 8h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>Real-time Ranking</li>
+          </ul>
+        </div>
+
+        <div class="runtime-node">
+          <h3>Safety &amp; Trust</h3>
+          <div class="node-orb">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l7 3v5c0 4.4-2.8 8.3-7 10-4.2-1.7-7-5.6-7-10V6l7-3Z" stroke="currentColor" /><path d="m8.7 12 2.1 2.1 4.7-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </div>
+          <ul class="node-list">
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.4-2.8 8.3-7 10-4.2-1.7-7-5.6-7-10V6l7-3Z" stroke="currentColor" stroke-width="1.8" /></svg>Identity Verification</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.8" /><path d="M3 21c.7-4 2.4-6 5-6s4.3 2 5 6M17 11v5M17 20v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>Behavioral Risk</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v11H9l-4 3V6Z" stroke="currentColor" stroke-width="1.8" /><path d="M9 10h6M9 13h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>Content Moderation</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M6 4v16M6 5h11l-2 4 2 4H6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></svg>Block &amp; Report</li>
+          </ul>
+        </div>
+
+        <div class="runtime-node">
+          <h3>Real-time Delivery</h3>
+          <div class="node-orb">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m13 2-8 12h6l-1 8 9-13h-6l1-7Z" stroke="currentColor" stroke-linejoin="round" /></svg>
+          </div>
+          <ul class="node-list">
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></svg>Smart Recommendations</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H8l-3 3V6Z" stroke="currentColor" stroke-width="1.8" /></svg>Live Conversations</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 0 1-14 5M4 12a8 8 0 0 1 14-5M18 3v4h-4M6 21v-4h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>Feedback Loop</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M4 12c2.5-4 5-4 8 0s5.5 4 8 0c-2.5 4-5 4-8 0s-5.5-4-8 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" /></svg>Continuous Learning</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="runtime-trust-row">
+        <div class="runtime-trust"><div class="node-orb"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.4-2.8 8.3-7 10-4.2-1.7-7-5.6-7-10V6l7-3Z" stroke="currentColor" stroke-width="1.8" /><path d="M9 12h6M9 16h6M10 9a2 2 0 1 1 4 0v3h-4V9Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg></div><div><strong>Privacy by design</strong><span>Your data stays yours.</span></div></div>
+        <div class="runtime-trust"><div class="node-orb"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.4-2.8 8.3-7 10-4.2-1.7-7-5.6-7-10V6l7-3Z" stroke="currentColor" stroke-width="1.8" /><path d="m8.7 12 2.1 2.1 4.7-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg></div><div><strong>Transparent &amp; accountable</strong><span>Clear rules. Human oversight.</span></div></div>
+        <div class="runtime-trust"><div class="node-orb"><svg viewBox="0 0 24 24" fill="none"><path d="M7.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.5 20c.6-3.2 2-5 4-5s3.4 1.8 4 5M12.5 20c.6-3.2 2-5 4-5s3.4 1.8 4 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg></div><div><strong>Community first</strong><span>Built with students, for students.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hall" class="reveal">
+    <div class="kicker">Hall of Fame</div>
+    <h2>Conversation templates that feel alive.</h2>
+    <p class="copy">The Hall of Fame now uses selected public-figure templates from your provided portraits. Each is presented as an AI-inspired template, not an official account or real-time statement.</p>
+    <div class="hof">
+      <div class="celeb-panel">
+        <div class="celeb-header"><span>Swipe the inspiration stack</span><span>AI template</span></div>
+        <div class="celeb-window">
+          <div class="celeb-track" id="celebTrack">
+            <article class="celeb-card active" data-person="0"><img src="/files/celeb-jobs.png" alt="Steve Jobs style template" /><div><h3>Steve Jobs</h3><div class="traits"><span class="trait">Taste</span><span class="trait">Focus</span><span class="trait">Story</span></div><div class="quote">"Make it simple enough to feel inevitable."</div></div></article>
+            <article class="celeb-card" data-person="1"><img src="/files/celeb-musk.png" alt="Elon Musk style template" /><div><h3>Elon Musk</h3><div class="traits"><span class="trait">First principles</span><span class="trait">Speed</span></div><div class="quote">"Question the requirement before optimizing it."</div></div></article>
+            <article class="celeb-card" data-person="2"><img src="/files/celeb-zuckerberg.png" alt="Mark Zuckerberg style template" /><div><h3>Mark Zuckerberg</h3><div class="traits"><span class="trait">Network</span><span class="trait">Iteration</span></div><div class="quote">"Build the social loop, then learn from it."</div></div></article>
+            <article class="celeb-card" data-person="3"><img src="/files/celeb-buffett.png" alt="Warren Buffett style template" /><div><h3>Warren Buffett</h3><div class="traits"><span class="trait">Patience</span><span class="trait">Judgment</span></div><div class="quote">"Good choices compound quietly."</div></div></article>
+            <article class="celeb-card" data-person="4"><img src="/files/celeb-ma.png" alt="Jack Ma style template" /><div><h3>Jack Ma</h3><div class="traits"><span class="trait">Resilience</span><span class="trait">Team energy</span></div><div class="quote">"Believe in people before the system is perfect."</div></div></article>
+            <article class="celeb-card" data-person="5"><img src="/files/celeb-gates.png" alt="Bill Gates style template" /><div><h3>Bill Gates</h3><div class="traits"><span class="trait">Systems</span><span class="trait">Learning</span></div><div class="quote">"Measure what matters, then improve it."</div></div></article>
+            <article class="celeb-card" data-person="6"><img src="/files/celeb-bezos.png" alt="Jeff Bezos style template" /><div><h3>Jeff Bezos</h3><div class="traits"><span class="trait">Customer obsession</span><span class="trait">Long-term</span></div><div class="quote">"Start with the person you serve."</div></div></article>
+            <article class="celeb-card" data-person="7"><img src="/files/celeb-huang.png" alt="Jensen Huang style template" /><div><h3>Jensen Huang</h3><div class="traits"><span class="trait">Compute</span><span class="trait">Craft</span></div><div class="quote">"Make the hard thing feel usable."</div></div></article>
+          </div>
+        </div>
+        <div class="celeb-controls">
+          <button class="icon-btn" id="celebUp" aria-label="Previous celebrity">‹</button>
+          <button class="icon-btn" id="celebDown" aria-label="Next celebrity">›</button>
+        </div>
+      </div>
+      <div class="chat-panel">
+        <div class="chat-title"><span class="chat-logo" aria-label="Darlink">DL</span><span id="chatPerson">Steve Jobs</span></div>
+        <div class="chat-feed" id="chatFeed"></div>
+        <div class="chat-input"><span id="inputType">Ask how to find a study partner with the right rhythm...</span><span class="send-dot">↗</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="download-v14" id="download">
+    <div class="download-card">
+      <div>
+        <h2>Your vibe. Your people. Your campus.</h2>
+        <p>Start your Darlink journey today.</p>
+      </div>
+      <a class="store-badge" href="#download"><span>Download on the</span>App Store</a>
+      <a class="store-badge" href="#download"><span>GET IT ON</span>Google Play</a>
+      <div class="qr" aria-label="Darlink QR code"><div class="qr-grid"></div></div>
+    </div>
+
+    <footer class="footer-v14">
+      <div class="footer-v14-grid">
+        <div class="footer-v14-brand">
+          <img src="/files/dl-script-logo-transparent-v12.png" alt="Darlink" />
+          <div>
+            <strong>Darlink</strong>
+            <p>Connecting intent.<br />Building real relationships.</p>
+          </div>
+        </div>
+        <div>
+          <strong>Product</strong>
+          <a href="#twin">AI Twin</a>
+          <a href="#build">How It Works</a>
+          <a href="#trust">Darlink Runtime</a>
+          <a href="#runtime">For Universities</a>
+        </div>
+        <div>
+          <strong>Safety</strong>
+          <a href="#trust">Safety Center</a>
+          <a href="#trust">Privacy</a>
+          <a href="#trust">Community Guidelines</a>
+        </div>
+        <div>
+          <strong>Community</strong>
+          <a href="#scenes">Events</a>
+          <a href="#scenes">Interest Circles</a>
+          <a href="#hall">Blog</a>
+        </div>
+        <div>
+          <strong>About</strong>
+          <a href="#download">About Us</a>
+          <a href="#download">Careers</a>
+          <a href="#download">Contact Us</a>
+        </div>
+        <div>
+          <strong>Follow Us</strong>
+          <div class="footer-socials">
+            <a href="#download" aria-label="Instagram">IG</a>
+            <a href="#download" aria-label="TikTok">TT</a>
+            <a href="#download" aria-label="Threads">TH</a>
+            <a href="#download" aria-label="YouTube">YT</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom-v14">
+        <span>© 2025 Darlink. All rights reserved.</span>
+        <span>Privacy Policy &nbsp; | &nbsp; Terms of Service</span>
+        <span>Built for Chinese &amp; HK University Students</span>
+      </div>
+    </footer>
+  </section>
+
+  <script>
+    const isPublicTunnel = location.hostname.includes('trycloudflare.com');
+    const darlinkAppStartUrl = 'app.html#login_luminous_identity_english_refined';
+    if (isPublicTunnel) {
+      document.body.classList.add('public-tunnel');
+    }
+
+    const introOverlay = document.getElementById('introOverlay');
+    const introSkip = document.getElementById('introSkip');
+    function endIntro() {
+      if (!introOverlay) return;
+      introOverlay.classList.add('hide-now');
+      document.body.classList.remove('intro-active');
+      document.body.classList.add('intro-ended');
+      setTimeout(() => introOverlay.remove(), 700);
+    }
+    setTimeout(endIntro, isPublicTunnel ? 3450 : 5850);
+    if (introSkip) introSkip.addEventListener('click', endIntro);
+
+    document.querySelectorAll('a.nav-btn.start, a.prompt').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.href = darlinkAppStartUrl;
+      });
+    });
+
+    const revealItems = [...document.querySelectorAll('.reveal')];
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .16 });
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    const langButtons = [...document.querySelectorAll('.lang-btn')];
+    const heroPromptLine = document.getElementById('heroPromptLine');
+    const languageCopy = {
+      en: {
+        html: {
+          '.hero h1': 'Flip <span class="accent-v14">intent</span><br />into a living match',
+          '#twin h2': 'From intent to a <span class="accent-v14">living social signal.</span>'
+        },
+        text: {
+          '.nav-btn.start': 'Get Started',
+          '.hero-copy': 'Darlink turns study goals, romance intent, and food plans into living AI twins, warmer introductions, and a faster path to people who fit.',
+          '.prompt span': 'Tell Darlink what kind of companion you are looking for today.',
+          '.prompt strong': 'Get Started',
+          '#build .kicker': 'How Darlink builds',
+          '#build h2': 'Start with a need. Watch the social graph come alive.',
+          '#build > .copy': 'Lovable turns prompts into products; Darlink turns student intent into a living matching layer. Every answer, chat, and post refines the digital human instead of making users fill another cold form.',
+          '#twin .kicker': 'AI twin motion',
+          '#twin h2': 'From intent to a living social signal.',
+          '#twin > .copy': 'The AI twin now uses your ten character renders. It changes expression and posture in real time, while intent words orbit and fade to show study, romance, sport, dance, thinking, and social moments.',
+          '#runtime .kicker': 'Matching core',
+          '#runtime h2': 'Arcade-like runtime for real social actions.',
+          '#runtime > .earth-inner > .copy': 'Darlink maps student intent across a living surface, routing social signals through China-region campus hubs with a lighter, clearer runtime layer.',
+          '#scenes .kicker': 'Three ways',
+          '#scenes h2': 'Study, Romance, and Taste Trail.',
+          '#scenes > .copy': 'The carousel is now controllable. Use the tabs and arrow buttons to move through the images; the active image brightens and the off-stage images dim.',
+          '#trust h2': 'A real-time system built for real connections.',
+          '#trust .copy': 'Intent signals flow through Darlink Runtime, matching you with people based on compatibility, safety and timing, in real time.',
+          '#hall .kicker': 'Hall of Fame',
+          '#hall h2': 'Conversation templates that feel alive.',
+          '#hall > .copy': 'The Hall of Fame now uses selected public-figure templates from your provided portraits. Each is presented as an AI-inspired template, not an official account or real-time statement.',
+          '.download-card h2': 'Your vibe. Your people. Your campus.',
+          '.download-card p': 'Start your Darlink journey today.',
+          '.footer-v14-brand p': 'Connecting intent.\nBuilding real relationships.'
+        },
+        lists: {
+          '.navlinks a': ['Build', 'AI Twin', 'Matching Core', 'Scenes', 'Hall of Fame'],
+          '.build-step small': ['01 · Intent', '02 · Twin', '03 · Match'],
+          '.build-step h3': ['Describe the companion', 'Generate a warmer proxy', 'Refine the graph'],
+          '.build-step p': ['Study partner, romantic pace, or food trail preference becomes the first signal, not a static profile field.', 'The AI twin makes low-pressure introductions, asks better questions, and learns from conversation patterns.', 'Every chat, friend request, and community post updates compatibility without turning the product into a ranking list.'],
+          '.runtime-stat span': ['Signals processed every day', 'Safe interactions rate', 'Universities connected'],
+          '.runtime-node h3': ['Intent Signals', 'Understanding Layer', 'Match Engine', 'Safety & Trust', 'Real-time Delivery'],
+          '.runtime-trust strong': ['Privacy by design', 'Transparent & accountable', 'Community first'],
+          '.runtime-trust span': ['Your data stays yours.', 'Clear rules. Human oversight.', 'Built with students, for students.'],
+          '.footer-v14-grid > div > strong': ['Darlink', 'Product', 'Safety', 'Community', 'About', 'Follow Us'],
+          '.footer-v14-grid > div:not(.footer-v14-brand) a': ['AI Twin', 'How It Works', 'Darlink Runtime', 'For Universities', 'Safety Center', 'Privacy', 'Community Guidelines', 'Events', 'Interest Circles', 'Blog', 'About Us', 'Careers', 'Contact Us'],
+          '.footer-bottom-v14 span': ['© 2025 Darlink. All rights reserved.', 'Privacy Policy  |  Terms of Service', 'Built for Chinese & HK University Students']
+        },
+        heroPrompts: [
+          'Find me a partner who studies late, likes quiet cafes, and wants real accountability.',
+          'Help me meet someone who explores Hong Kong food trails without awkward small talk.',
+          'Match me with a gentle romantic pace, honest conversation, and weekend museum walks.'
+        ]
+      },
+      zhHans: {
+        html: {
+          '.hero h1': '把<span class="accent-v14">意图</span><br />变成真实连接',
+          '#twin h2': '从意图到<span class="accent-v14">鲜活的社交信号。</span>'
+        },
+        text: {
+          '.nav-btn.start': '开始使用',
+          '.hero-copy': 'Darlink 将学习目标、恋爱意图和美食计划转化为会成长的 AI Twin、更温暖的介绍，以及更快遇见合拍同伴的路径。',
+          '.prompt span': '告诉 Darlink 你今天想寻找什么样的同伴。',
+          '.prompt strong': '开始使用',
+          '#build .kicker': 'Darlink 如何生成连接',
+          '#build h2': '从一个需求开始，让社交图谱真正活起来。',
+          '#build > .copy': 'Lovable 把提示词变成产品；Darlink 把学生意图变成持续学习的匹配层。回答、聊天和社区互动都会让数字人不断变得更懂你。',
+          '#twin .kicker': 'AI Twin 动态',
+          '#twin h2': '从意图到鲜活的社交信号。',
+          '#twin > .copy': 'AI Twin 会随着你的目标和对话信号切换表情与姿态，让学习、恋爱、运动、舞蹈、思考和社交状态自然流动。',
+          '#runtime .kicker': '匹配核心',
+          '#runtime h2': '为真实社交行为而生的实时运行层。',
+          '#runtime > .earth-inner > .copy': 'Darlink 在中国区域校园节点之间流动学生意图，把时间、地点、兼容性和安全信号连接成更清晰的匹配路径。',
+          '#scenes .kicker': '三种场景',
+          '#scenes h2': '学习、恋爱与 Taste Trail。',
+          '#scenes > .copy': '轮播可以被直接控制。使用标签和箭头切换图片，当前场景会被强调，其他画面保持轻微弱化。',
+          '#trust h2': '为真实连接构建的实时系统。',
+          '#trust .copy': '意图信号会流经 Darlink Runtime，根据兼容度、安全性和时机实时完成推荐与连接。',
+          '#hall .kicker': '名人堂',
+          '#hall h2': '让对话模板也变得有生命力。',
+          '#hall > .copy': '名人堂使用你提供的人物肖像生成 AI 灵感模板，仅作为风格化对话参考，不代表官方账号或实时声明。',
+          '.download-card h2': '你的气场。你的同伴。你的校园。',
+          '.download-card p': '现在开始你的 Darlink 旅程。',
+          '.footer-v14-brand p': '连接真实意图。\n建立真实关系。'
+        },
+        lists: {
+          '.navlinks a': ['生成流程', 'AI Twin', '匹配核心', '场景', '名人堂'],
+          '.build-step small': ['01 · 意图', '02 · Twin', '03 · 匹配'],
+          '.build-step h3': ['描述你想找的同伴', '生成更温暖的代理', '持续优化图谱'],
+          '.build-step p': ['学习搭子、恋爱节奏或美食路线偏好，会成为第一个真实信号，而不是冷冰冰的资料字段。', 'AI Twin 会降低开场压力，提出更好的问题，并从对话模式中学习。', '每一次聊天、好友请求和社区互动，都会更新兼容性，而不是把人变成排行榜。'],
+          '.runtime-stat span': ['每天处理的信号', '安全互动比例', '已连接高校'],
+          '.runtime-node h3': ['意图信号', '理解层', '匹配引擎', '安全与信任', '实时送达'],
+          '.runtime-trust strong': ['隐私优先', '透明且可追责', '社区优先'],
+          '.runtime-trust span': ['你的数据属于你。', '规则清晰，人类监督。', '由学生共建，也为学生而生。'],
+          '.footer-v14-grid > div > strong': ['Darlink', '产品', '安全', '社区', '关于', '关注我们'],
+          '.footer-v14-grid > div:not(.footer-v14-brand) a': ['AI Twin', '工作方式', 'Darlink Runtime', '面向高校', '安全中心', '隐私', '社区准则', '活动', '兴趣圈', '博客', '关于我们', '招聘', '联系我们'],
+          '.footer-bottom-v14 span': ['© 2025 Darlink. 保留所有权利。', '隐私政策  |  服务条款', '为中国与香港高校学生打造']
+        },
+        heroPrompts: [
+          '帮我找一个能晚间学习、喜欢安静咖啡馆、愿意互相督促的搭子。',
+          '帮我遇见一个能一起探索香港美食路线，又不会尴尬开场的人。',
+          '我想要温柔的恋爱节奏、真诚聊天，以及周末一起逛展的默契。'
+        ]
+      },
+      zhHant: {
+        html: {
+          '.hero h1': '把<span class="accent-v14">意圖</span><br />變成真實連結',
+          '#twin h2': '從意圖到<span class="accent-v14">鮮活的社交信號。</span>'
+        },
+        text: {
+          '.nav-btn.start': '開始使用',
+          '.hero-copy': 'Darlink 將學習目標、戀愛意圖和美食計畫轉化為會成長的 AI Twin、更溫暖的介紹，以及更快遇見合拍同伴的路徑。',
+          '.prompt span': '告訴 Darlink 你今天想尋找什麼樣的同伴。',
+          '.prompt strong': '開始使用',
+          '#build .kicker': 'Darlink 如何生成連結',
+          '#build h2': '從一個需求開始，讓社交圖譜真正活起來。',
+          '#build > .copy': 'Lovable 把提示詞變成產品；Darlink 把學生意圖變成持續學習的匹配層。回答、聊天和社群互動都會讓數位人更懂你。',
+          '#twin .kicker': 'AI Twin 動態',
+          '#twin h2': '從意圖到鮮活的社交信號。',
+          '#twin > .copy': 'AI Twin 會隨著你的目標和對話信號切換表情與姿態，讓學習、戀愛、運動、舞蹈、思考和社交狀態自然流動。',
+          '#runtime .kicker': '匹配核心',
+          '#runtime h2': '為真實社交行為而生的即時運行層。',
+          '#runtime > .earth-inner > .copy': 'Darlink 在中國區域校園節點之間流動學生意圖，把時間、地點、相容性和安全信號連接成更清晰的匹配路徑。',
+          '#scenes .kicker': '三種場景',
+          '#scenes h2': '學習、戀愛與 Taste Trail。',
+          '#scenes > .copy': '輪播可以被直接控制。使用標籤和箭頭切換圖片，當前場景會被強調，其他畫面保持輕微弱化。',
+          '#trust h2': '為真實連結構建的即時系統。',
+          '#trust .copy': '意圖信號會流經 Darlink Runtime，根據相容度、安全性和時機即時完成推薦與連結。',
+          '#hall .kicker': '名人堂',
+          '#hall h2': '讓對話模板也變得有生命力。',
+          '#hall > .copy': '名人堂使用你提供的人物肖像生成 AI 靈感模板，僅作為風格化對話參考，不代表官方帳號或即時聲明。',
+          '.download-card h2': '你的氣場。你的同伴。你的校園。',
+          '.download-card p': '現在開始你的 Darlink 旅程。',
+          '.footer-v14-brand p': '連接真實意圖。\n建立真實關係。'
+        },
+        lists: {
+          '.navlinks a': ['生成流程', 'AI Twin', '匹配核心', '場景', '名人堂'],
+          '.build-step small': ['01 · 意圖', '02 · Twin', '03 · 匹配'],
+          '.build-step h3': ['描述你想找的同伴', '生成更溫暖的代理', '持續優化圖譜'],
+          '.build-step p': ['學習搭子、戀愛節奏或美食路線偏好，會成為第一個真實信號，而不是冰冷的資料欄位。', 'AI Twin 會降低開場壓力，提出更好的問題，並從對話模式中學習。', '每一次聊天、好友請求和社群互動，都會更新相容性，而不是把人變成排行榜。'],
+          '.runtime-stat span': ['每天處理的信號', '安全互動比例', '已連接高校'],
+          '.runtime-node h3': ['意圖信號', '理解層', '匹配引擎', '安全與信任', '即時送達'],
+          '.runtime-trust strong': ['隱私優先', '透明且可追責', '社群優先'],
+          '.runtime-trust span': ['你的資料屬於你。', '規則清晰，人類監督。', '由學生共建，也為學生而生。'],
+          '.footer-v14-grid > div > strong': ['Darlink', '產品', '安全', '社群', '關於', '關注我們'],
+          '.footer-v14-grid > div:not(.footer-v14-brand) a': ['AI Twin', '工作方式', 'Darlink Runtime', '面向高校', '安全中心', '隱私', '社群準則', '活動', '興趣圈', '部落格', '關於我們', '招募', '聯絡我們'],
+          '.footer-bottom-v14 span': ['© 2025 Darlink. 保留所有權利。', '隱私政策  |  服務條款', '為中國與香港高校學生打造']
+        },
+        heroPrompts: [
+          '幫我找一個能晚間學習、喜歡安靜咖啡館、願意互相督促的搭子。',
+          '幫我遇見一個能一起探索香港美食路線，又不會尷尬開場的人。',
+          '我想要溫柔的戀愛節奏、真誠聊天，以及週末一起逛展的默契。'
+        ]
+      }
+    };
+    let currentLang = localStorage.getItem('darlink-lang') || 'en';
+    let heroPrompts = languageCopy[currentLang]?.heroPrompts || languageCopy.en.heroPrompts;
+    let heroPromptIndex = 0;
+    function setText(selector, text) {
+      const el = document.querySelector(selector);
+      if (el) el.textContent = text;
+    }
+    function setHtml(selector, html) {
+      const el = document.querySelector(selector);
+      if (el) el.innerHTML = html;
+    }
+    function setList(selector, values) {
+      document.querySelectorAll(selector).forEach((el, index) => {
+        if (values[index] != null) el.textContent = values[index];
+      });
+    }
+    function applyLanguage(lang) {
+      const copy = languageCopy[lang] || languageCopy.en;
+      currentLang = lang;
+      localStorage.setItem('darlink-lang', lang);
+      document.documentElement.lang = lang === 'en' ? 'en' : lang === 'zhHans' ? 'zh-Hans' : 'zh-Hant';
+      Object.entries(copy.text).forEach(([selector, text]) => setText(selector, text));
+      Object.entries(copy.html).forEach(([selector, html]) => setHtml(selector, html));
+      Object.entries(copy.lists).forEach(([selector, values]) => setList(selector, values));
+      langButtons.forEach((button) => button.classList.toggle('active', button.dataset.lang === lang));
+      heroPrompts = copy.heroPrompts;
+      heroPromptIndex = heroPromptIndex % heroPrompts.length;
+      if (heroPromptLine) heroPromptLine.textContent = heroPrompts[heroPromptIndex];
+      updateLocalizedAvatar();
+      updateLocalizedChat();
+    }
+    langButtons.forEach((button) => button.addEventListener('click', () => applyLanguage(button.dataset.lang)));
+    setInterval(() => {
+      heroPromptIndex = (heroPromptIndex + 1) % heroPrompts.length;
+      heroPromptLine.style.opacity = .15;
+      heroPromptLine.style.transform = 'translateY(8px)';
+      setTimeout(() => {
+        heroPromptLine.textContent = heroPrompts[heroPromptIndex];
+        heroPromptLine.style.opacity = 1;
+        heroPromptLine.style.transform = 'translateY(0)';
+      }, 220);
+    }, 3600);
+
+    const stickyCoin = document.getElementById('stickyCoin');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.body.classList.add('motion-lite');
+    }
+
+    let targetRot = 0;
+    let currentRot = 0;
+    let lastY = scrollY;
+    let coinFrame = 0;
+    let coinIdleFrames = 0;
+    let lastCoinY = scrollY;
+    function coinLoop() {
+      const y = scrollY;
+      const delta = y - lastY;
+      lastY = y;
+      targetRot += delta * 0.9;
+      currentRot += (targetRot - currentRot) * 0.16;
+      const drag = Math.min(12, Math.abs(delta) * .14);
+      const bob = Math.sin(y * .009) * 5 - drag;
+      stickyCoin.style.transform = `translate3d(0, ${bob}px, 0) rotateY(${currentRot}deg) rotateX(${10 + Math.sin(y * .008) * 5}deg)`;
+
+      const isSettled = Math.abs(targetRot - currentRot) < 0.08 && Math.abs(y - lastCoinY) < 0.5;
+      lastCoinY = y;
+      coinIdleFrames = isSettled ? coinIdleFrames + 1 : 0;
+      if (coinIdleFrames < 16) {
+        coinFrame = requestAnimationFrame(coinLoop);
+      } else {
+        coinFrame = 0;
+      }
+    }
+    function requestCoinLoop() {
+      if (!stickyCoin || coinFrame || document.body.classList.contains('motion-lite')) return;
+      coinIdleFrames = 0;
+      coinFrame = requestAnimationFrame(coinLoop);
+    }
+    addEventListener('scroll', requestCoinLoop, { passive: true });
+    requestCoinLoop();
+
+    const avatarStates = [
+      ['avatar-01.png', 'Warm welcome', 'Your twin greets visitors and makes the first step feel less cold.', ['hello', 'open mood', 'soft start', 'profile', 'trust', 'first chat']],
+      ['avatar-02.png', 'Romance signal', 'A softer state for affection, pacing, and emotional compatibility.', ['romance', 'pace', 'warmth', 'chemistry', 'care', 'intent']],
+      ['avatar-03.png', 'Sport energy', 'Movement and shared routines become part of matching.', ['tennis', 'motion', 'routine', 'energy', 'team up', 'healthy']],
+      ['avatar-04.png', 'Thoughtful mode', 'The twin pauses, reflects, and turns answers into personality signals.', ['thinking', 'values', 'signal', 'reflection', 'clarity', 'persona']],
+      ['avatar-05.png', 'Dance mode', 'Playful confidence keeps Darlink from feeling like a form.', ['dance', 'playful', 'rhythm', 'joy', 'spark', 'confidence']],
+      ['avatar-06.png', 'Social proof', 'A polished state for introductions and confident first impressions.', ['intro', 'presence', 'social fit', 'confidence', 'profile', 'match']],
+      ['avatar-07.png', 'Heart signal', 'Warm, direct, and gentle for romance-oriented discovery.', ['heart', 'gentle', 'affection', 'honest', 'soft cue', 'date']],
+      ['avatar-08.png', 'Action mode', 'Momentum for sports, events, and getting out of the room.', ['action', 'football', 'outside', 'momentum', 'plan', 'move']],
+      ['avatar-09.png', 'Deep thinking', 'A calmer state for study partners and serious decision making.', ['study', 'focus', 'logic', 'questions', 'deep work', 'accountable']],
+      ['avatar-10.png', 'Joy burst', 'High-energy moments help the page feel alive.', ['joy', 'celebrate', 'jump', 'energy', 'friendship', 'start']]
+    ];
+    const avatarStateText = {
+      zhHans: [
+        ['温暖欢迎', '你的 Twin 会先用更友好的方式开启对话，让第一步不再冰冷。', ['你好', '开放心情', '轻松开场', '资料', '信任', '首聊']],
+        ['恋爱信号', '更柔和地表达好感、节奏与情绪兼容性。', ['恋爱', '节奏', '温度', '化学反应', '关心', '意图']],
+        ['运动能量', '运动与共同习惯也会成为匹配的一部分。', ['网球', '动态', '日常', '能量', '组队', '健康']],
+        ['思考模式', 'Twin 会暂停、理解，并把回答转化为性格信号。', ['思考', '价值观', '信号', '反思', '清晰', '人格']],
+        ['舞动模式', '轻松自信让 Darlink 不像一张表格。', ['跳舞', '好玩', '节奏', '快乐', '火花', '自信']],
+        ['社交呈现', '用于介绍和第一印象的更精致状态。', ['介绍', '存在感', '社交适配', '自信', '资料', '匹配']],
+        ['心动信号', '更温暖、直接、温柔地服务恋爱发现。', ['心动', '温柔', '好感', '真诚', '软提示', '约会']],
+        ['行动模式', '为运动、活动和走出房间提供行动感。', ['行动', '足球', '出门', '推动', '计划', '移动']],
+        ['深度思考', '更安静的状态，适合学习搭子和认真决策。', ['学习', '专注', '逻辑', '问题', '深度工作', '自律']],
+        ['快乐爆发', '高能瞬间让页面更有生命力。', ['快乐', '庆祝', '跳跃', '能量', '友谊', '开始']]
+      ],
+      zhHant: [
+        ['溫暖歡迎', '你的 Twin 會先用更友好的方式開啟對話，讓第一步不再冰冷。', ['你好', '開放心情', '輕鬆開場', '資料', '信任', '首聊']],
+        ['戀愛信號', '更柔和地表達好感、節奏與情緒相容性。', ['戀愛', '節奏', '溫度', '化學反應', '關心', '意圖']],
+        ['運動能量', '運動與共同習慣也會成為匹配的一部分。', ['網球', '動態', '日常', '能量', '組隊', '健康']],
+        ['思考模式', 'Twin 會暫停、理解，並把回答轉化為性格信號。', ['思考', '價值觀', '信號', '反思', '清晰', '人格']],
+        ['舞動模式', '輕鬆自信讓 Darlink 不像一張表格。', ['跳舞', '好玩', '節奏', '快樂', '火花', '自信']],
+        ['社交呈現', '用於介紹和第一印象的更精緻狀態。', ['介紹', '存在感', '社交適配', '自信', '資料', '匹配']],
+        ['心動信號', '更溫暖、直接、溫柔地服務戀愛發現。', ['心動', '溫柔', '好感', '真誠', '軟提示', '約會']],
+        ['行動模式', '為運動、活動和走出房間提供行動感。', ['行動', '足球', '出門', '推動', '計畫', '移動']],
+        ['深度思考', '更安靜的狀態，適合學習搭子和認真決策。', ['學習', '專注', '邏輯', '問題', '深度工作', '自律']],
+        ['快樂爆發', '高能瞬間讓頁面更有生命力。', ['快樂', '慶祝', '跳躍', '能量', '友誼', '開始']]
+      ]
+    };
+    const avatarImg = document.getElementById('avatarImg');
+    const moodName = document.getElementById('moodName');
+    const moodDesc = document.getElementById('moodDesc');
+    const wordRingItems = [...document.querySelectorAll('.word-ring span')];
+    function setOrbitWords(words) {
+      wordRingItems.forEach((item, index) => {
+        item.textContent = words[index] || '';
+        item.style.animation = 'none';
+        void item.offsetWidth;
+        item.style.animation = '';
+      });
+    }
+    function getAvatarState(index) {
+      const [src, name, desc, words] = avatarStates[index];
+      const localized = avatarStateText[currentLang]?.[index];
+      return localized ? [src, localized[0], localized[1], localized[2]] : [src, name, desc, words];
+    }
+    function updateLocalizedAvatar() {
+      if (!avatarImg || !moodName || !moodDesc) return;
+      const [, name, desc, words] = getAvatarState(avatarIndex || 0);
+      moodName.textContent = name;
+      moodDesc.textContent = desc;
+      setOrbitWords(words);
+    }
+    setOrbitWords(getAvatarState(0)[3]);
+    let avatarIndex = 0;
+    setInterval(() => {
+      avatarIndex = (avatarIndex + 1) % avatarStates.length;
+      avatarImg.classList.add('switching');
+      setTimeout(() => {
+        const [src, name, desc, words] = getAvatarState(avatarIndex);
+        avatarImg.src = `/files/${src}`;
+        moodName.textContent = name;
+        moodDesc.textContent = desc;
+        setOrbitWords(words);
+        avatarImg.classList.remove('switching');
+      }, 360);
+    }, 4200);
+
+    const earthStage = document.getElementById('earthStage');
+    const routeSvg = document.getElementById('routeSvg');
+    const earthStatus = document.getElementById('earthStatus');
+    const runtimeConsole = document.getElementById('runtimeConsole');
+    const runtimeRows = [
+      ['identity', 'verified'],
+      ['scene_scope', 'study + taste'],
+      ['twin_boundary', 'visible'],
+      ['match_log', 'streaming'],
+      ['request_limit', 'healthy'],
+      ['safety_label', 'attached']
+    ];
+    const chinaPoints = {
+      beijing: [632, 258],
+      shanghai: [704, 344],
+      hangzhou: [685, 368],
+      wuhan: [616, 375],
+      chengdu: [526, 394],
+      xian: [565, 330],
+      guangzhou: [640, 455],
+      shenzhen: [654, 474],
+      hongkong: [666, 486],
+      taipei: [728, 466],
+      harbin: [704, 208]
+    };
+    const chinaNodeKeys = Object.keys(chinaPoints);
+    const chinaRoutes = [
+      ['beijing', 'shanghai'],
+      ['shanghai', 'hangzhou'],
+      ['hangzhou', 'wuhan'],
+      ['wuhan', 'chengdu'],
+      ['chengdu', 'xian'],
+      ['xian', 'beijing'],
+      ['wuhan', 'guangzhou'],
+      ['guangzhou', 'shenzhen'],
+      ['shenzhen', 'hongkong'],
+      ['shanghai', 'taipei'],
+      ['beijing', 'harbin'],
+      ['xian', 'shanghai']
+    ];
+    let routeCount = 0;
+    function ensureChinaNodes() {
+      if (!routeSvg || routeSvg.dataset.chinaNodes === 'ready') return;
+      chinaNodeKeys.forEach((key, index) => {
+        const [x, y] = chinaPoints[key];
+        const node = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        node.setAttribute('class', 'china-node');
+        node.setAttribute('cx', x);
+        node.setAttribute('cy', y);
+        node.setAttribute('r', key === 'hongkong' || key === 'shenzhen' ? 4.6 : 5.6);
+        node.style.animationDelay = `${index * 110}ms`;
+        routeSvg.appendChild(node);
+      });
+      routeSvg.dataset.chinaNodes = 'ready';
+    }
+    function fireRoute() {
+      if (!earthStage || !routeSvg) return;
+      ensureChinaNodes();
+      const [fromKey, toKey] = chinaRoutes[routeCount % chinaRoutes.length];
+      const from = chinaPoints[fromKey];
+      const to = chinaPoints[toKey];
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const mx = (from[0] + to[0]) / 2;
+      const my = Math.min(from[1], to[1]) - 34 - (routeCount % 3) * 12;
+      path.setAttribute('class', 'route-line');
+      path.setAttribute('d', `M ${from[0]} ${from[1]} Q ${mx} ${my} ${to[0]} ${to[1]}`);
+      routeSvg.insertBefore(path, routeSvg.firstChild);
+      setTimeout(() => path.remove(), 1900);
+      routeCount += 1;
+      if (routeCount % 10 === 0) {
+        earthStage.classList.toggle('is-day');
+        if (earthStatus) {
+          earthStatus.textContent = earthStage.classList.contains('is-day') ? 'Clear-sky routing: light-blue routing' : 'Night routing: golden routing';
+        }
+      }
+      if (runtimeConsole) {
+        const start = routeCount % runtimeRows.length;
+        runtimeConsole.innerHTML = [0, 1, 2, 3].map((offset) => {
+          const [label, value] = runtimeRows[(start + offset) % runtimeRows.length];
+          return `<div><span>${label}</span><b>${value}</b></div>`;
+        }).join('');
+      }
+    }
+    if (earthStage && routeSvg) {
+      setInterval(fireRoute, 430);
+      for (let i = 0; i < 5; i++) setTimeout(fireRoute, i * 220);
+    }
+
+    const sceneCards = [...document.querySelectorAll('.scene-card')];
+    const sceneTrack = document.getElementById('sceneTrack');
+    const sceneTabs = [...document.querySelectorAll('.scene-tab')];
+    let sceneIndex = 0;
+    function setScene(index) {
+      sceneIndex = (index + sceneCards.length) % sceneCards.length;
+      sceneCards.forEach((card, i) => card.classList.toggle('active', i === sceneIndex));
+      sceneCards[sceneIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const group = sceneCards[sceneIndex].dataset.scene;
+      sceneTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.scene === group));
+    }
+    document.getElementById('scenePrev').onclick = () => setScene(sceneIndex - 1);
+    document.getElementById('sceneNext').onclick = () => setScene(sceneIndex + 1);
+    sceneTabs.forEach(tab => tab.onclick = () => setScene(sceneCards.findIndex(card => card.dataset.scene === tab.dataset.scene)));
+
+    const flowData = [
+      ['Verified entry without killing the mood', 'University email login, clear onboarding consent, and one continuous Get Started path before users create their AI twin.', ['Email verification','Questionnaire gate','Consent state','AI twin creation']],
+      ['Matching that keeps improving', 'Questionnaire answers, chats, and community posts deepen the user profile without making the student repeat themselves.', ['Questionnaire signal','Chat depth','Community pulse','Profile refinement']],
+      ['Safety and template governance', 'Public-figure templates, friend requests, scene intent, and AI twin boundaries stay visible and controllable.', ['Persona labels','Moderation cues','Request limits','Safety logs']],
+      ['Runs with your social stack', 'Study, Romance, and Taste Trail can evolve independently while sharing the same twin, profile, and matching layer.', ['Scene modules','Community feed','Friends graph','Profile layer']]
+    ];
+    const flowTabs = document.getElementById('flowTabs');
+    const flowButtons = [...document.querySelectorAll('.flow-tab')];
+    const flowTitle = document.getElementById('flowTitle');
+    const flowText = document.getElementById('flowText');
+    const nodes = [document.getElementById('nodeOne'), document.getElementById('nodeTwo'), document.getElementById('nodeThree'), document.getElementById('nodeFour')];
+    const hasLegacyFlow = flowTabs && flowButtons.length && flowTitle && flowText && nodes.every(Boolean);
+    let flowIndex = 0;
+    function setFlow(i) {
+      if (!hasLegacyFlow) return;
+      flowIndex = i;
+      const [title, text, nodeText] = flowData[i];
+      flowTitle.textContent = title;
+      flowText.textContent = text;
+      nodes.forEach((node, idx) => node.textContent = nodeText[idx]);
+      flowButtons.forEach((btn, idx) => btn.classList.toggle('active', idx === i));
+      flowTabs.style.setProperty('--dot', `${12.5 + i * 25}%`);
+      flowTabs.style.setProperty('--progress', `${.13 + i * .29}`);
+    }
+    if (hasLegacyFlow) {
+      flowButtons.forEach((btn, i) => btn.onclick = () => setFlow(i));
+      setInterval(() => setFlow((flowIndex + 1) % 4), 3500);
+    }
+
+    const people = ['Steve Jobs','Elon Musk','Mark Zuckerberg','Warren Buffett','Jack Ma','Bill Gates','Jeff Bezos','Jensen Huang'];
+    const chats = [
+      ['I want my profile to feel less generic.', 'Start by removing the obvious. Keep the one detail that makes people feel, "only this person would say that."'],
+      ['How do I choose a serious study partner?', 'Use first principles: what problem are you both actually trying to solve, and can you sustain the same pace?'],
+      ['How should Darlink make friends easier?', 'Design the loop: see signal, start low-pressure chat, learn from response, improve the next match.'],
+      ['What makes a good match last?', 'A good match compounds when both people are kind on ordinary days, not only impressive on special ones.'],
+      ['How do we encourage shy students?', 'Give them a small first step. Confidence often starts when the room feels less judgmental.'],
+      ['What should my AI twin learn first?', 'Learn the patterns that change outcomes: motivation, schedule, values, and how you handle friction.'],
+      ['How do we improve Taste Trail?', 'Start from the tablemate. The best dining feature serves the person before it serves the menu.'],
+      ['How should the AI feel?', 'Powerful technology should disappear into craft. The user should feel capable, not managed.']
+    ];
+    const chatsByLang = {
+      zhHans: [
+        ['我不想让自己的资料看起来很普通。', '先删掉显而易见的东西，只保留那个会让别人觉得“只有这个人才会这么说”的细节。'],
+        ['怎样选择认真可靠的学习搭子？', '用第一性原理看：你们真正要解决的问题是什么，能不能维持同样的节奏。'],
+        ['Darlink 怎样让交朋友更容易？', '设计一个循环：看到信号，低压力开聊，从回应中学习，再改善下一次匹配。'],
+        ['什么样的匹配能走得更久？', '好的关系会在普通日子里复利，而不只是在特别时刻显得耀眼。'],
+        ['怎样鼓励害羞的同学？', '给他们一个很小的第一步。很多自信都始于一个不被评判的房间。'],
+        ['我的 AI Twin 最该先学什么？', '先学习真正影响结果的模式：动机、时间表、价值观，以及你如何处理摩擦。'],
+        ['Taste Trail 应该怎样优化？', '从同桌的人开始。最好的美食功能先服务人，再服务菜单。'],
+        ['AI 应该给人什么感觉？', '强大的技术应该消失在体验里。用户应该感觉更有能力，而不是被管理。']
+      ],
+      zhHant: [
+        ['我不想讓自己的資料看起來很普通。', '先刪掉顯而易見的東西，只保留那個會讓別人覺得「只有這個人才會這麼說」的細節。'],
+        ['怎樣選擇認真可靠的學習搭子？', '用第一性原理看：你們真正要解決的問題是什麼，能不能維持同樣的節奏。'],
+        ['Darlink 怎樣讓交朋友更容易？', '設計一個循環：看到信號，低壓力開聊，從回應中學習，再改善下一次匹配。'],
+        ['什麼樣的匹配能走得更久？', '好的關係會在普通日子裡複利，而不只是在特別時刻顯得耀眼。'],
+        ['怎樣鼓勵害羞的同學？', '給他們一個很小的第一步。很多自信都始於一個不被評判的房間。'],
+        ['我的 AI Twin 最該先學什麼？', '先學習真正影響結果的模式：動機、時間表、價值觀，以及你如何處理摩擦。'],
+        ['Taste Trail 應該怎樣優化？', '從同桌的人開始。最好的美食功能先服務人，再服務菜單。'],
+        ['AI 應該給人什麼感覺？', '強大的技術應該消失在體驗裡。用戶應該感覺更有能力，而不是被管理。']
+      ]
+    };
+    const celebCards = [...document.querySelectorAll('.celeb-card')];
+    const celebTrack = document.getElementById('celebTrack');
+    const chatFeed = document.getElementById('chatFeed');
+    const chatPerson = document.getElementById('chatPerson');
+    const inputType = document.getElementById('inputType');
+    let celebIndex = 0;
+    let typingTimer = null;
+    function getChats() {
+      return chatsByLang[currentLang] || chats;
+    }
+    function updateLocalizedChat() {
+      if (!chatFeed) return;
+      renderChat(celebIndex || 0);
+    }
+    function typeMessage(text, el, done) {
+      let i = 0;
+      el.textContent = '';
+      clearInterval(typingTimer);
+      typingTimer = setInterval(() => {
+        el.textContent = text.slice(0, i++);
+        if (i > text.length) {
+          clearInterval(typingTimer);
+          if (done) done();
+        }
+      }, 24);
+    }
+    function renderChat(index) {
+      const activeChats = getChats();
+      chatFeed.innerHTML = '';
+      chatPerson.textContent = people[index];
+      inputType.textContent = currentLang === 'en'
+        ? `Ask ${people[index]} style template for matching advice...`
+        : currentLang === 'zhHans'
+          ? `向 ${people[index]} 风格模板询问匹配建议...`
+          : `向 ${people[index]} 風格模板詢問匹配建議...`;
+      const user = document.createElement('div');
+      user.className = 'bubble user';
+      user.textContent = activeChats[index][0];
+      const typing = document.createElement('div');
+      typing.className = 'typing';
+      typing.innerHTML = '<span></span><span></span><span></span>';
+      chatFeed.appendChild(user);
+      chatFeed.appendChild(typing);
+      setTimeout(() => {
+        typing.remove();
+        const answer = document.createElement('div');
+        answer.className = 'bubble';
+        chatFeed.appendChild(answer);
+        typeMessage(activeChats[index][1], answer);
+      }, 850);
+    }
+    function setCeleb(index) {
+      celebIndex = (index + celebCards.length) % celebCards.length;
+      celebCards.forEach((card, i) => card.classList.toggle('active', i === celebIndex));
+      celebTrack.style.transform = `translateX(${-celebIndex * 270}px)`;
+      renderChat(celebIndex);
+    }
+    document.getElementById('celebUp').onclick = () => setCeleb(celebIndex - 1);
+    document.getElementById('celebDown').onclick = () => setCeleb(celebIndex + 1);
+    celebCards.forEach((card, i) => card.onclick = () => setCeleb(i));
+    applyLanguage(currentLang);
+  </script>
+</body>
+</html>

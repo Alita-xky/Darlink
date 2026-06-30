@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Darlink - Onboarding Step 2</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#d8e3fb",
+                        "outline": "#7c7480",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#4a454f",
+                        "on-primary-container": "#604283",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#dbb8ff",
+                        "surface": "#f9f9ff",
+                        "outline-variant": "#cdc3d0",
+                        "surface-container-high": "#dee8ff",
+                        "tertiary": "#8a486f",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#005b78",
+                        "inverse-surface": "#263143",
+                        "tertiary-container": "#fcaad6",
+                        "surface-bright": "#f9f9ff",
+                        "surface-tint": "#6f5092",
+                        "tertiary-fixed-dim": "#ffaeda",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#111c2d",
+                        "secondary-fixed": "#c0e8ff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#793a60",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#7ed4fd",
+                        "primary-fixed-dim": "#dbb8ff",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-primary-fixed-variant": "#573878",
+                        "surface-container": "#e7eeff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#cfdaf2",
+                        "surface-container-low": "#f0f3ff",
+                        "on-background": "#111c2d",
+                        "inverse-on-surface": "#ecf1ff",
+                        "secondary-fixed-dim": "#7bd1fa",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "primary-fixed": "#efdbff",
+                        "primary-container": "#d8b4fe",
+                        "on-secondary-fixed": "#001e2b",
+                        "on-primary-fixed": "#29074a",
+                        "primary": "#6f5092",
+                        "tertiary-fixed": "#ffd8ea",
+                        "background": "#f9f9ff",
+                        "secondary": "#006686",
+                        "on-tertiary-fixed": "#3a0329",
+                        "on-tertiary-fixed-variant": "#6f3157",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding-desktop": "40px",
+                        "container-padding-mobile": "20px",
+                        "element-gap": "12px",
+                        "base": "8px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(216, 180, 254, 0.1);
+        }
+        .glass-chip {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .glass-chip:hover, .glass-chip.selected {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: rgba(216, 180, 254, 0.8);
+            box-shadow: 0 0 15px rgba(216, 180, 254, 0.4);
+        }
+        .bg-gradient-ethereal {
+            background: linear-gradient(135deg, #f0f3ff 0%, #dbb8ff 50%, #fcaad6 100%);
+        }
+        .progress-glow {
+            box-shadow: 0 0 10px rgba(216, 180, 254, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-on-surface font-body-md overflow-x-hidden" style="background: linear-gradient(rgb(253, 251, 255), rgb(245, 242, 255));">
+<!-- Top Progress Bar Container -->
+<header class="w-full fixed top-0 left-0 z-50 flex flex-col items-center gap-3 p-container-padding-mobile md:p-container-padding-desktop pointer-events-none"><div class="absolute left-container-padding-mobile md:left-container-padding-desktop top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-auto cursor-pointer text-primary hover:text-primary-container transition-colors">
+<span aria-hidden="true">←</span>
+<span class="font-label-lg text-label-lg">返回</span>
+</div>
+<div class="flex items-center gap-2 pointer-events-auto">
+<span class="material-symbols-outlined text-primary text-sm">person</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">步骤 2/3：基础设置</span>
+</div>
+<div class="w-full max-w-md h-1.5 bg-surface-variant/50 backdrop-blur-sm rounded-full overflow-hidden pointer-events-auto">
+<div class="h-full w-2/3 bg-gradient-to-r from-primary via-tertiary to-secondary rounded-full shadow-[0_0_12px_rgba(216,180,254,0.8)] transition-all duration-1000 ease-out"></div>
+</div>
+</header>
+<!-- Main Layout -->
+<main class="flex flex-col md:flex-row min-h-screen pt-24 md:pt-0">
+<!-- Left Side: AI Companion -->
+<section class="w-full md:w-1/2 flex justify-center items-center relative overflow-hidden h-[40vh] md:h-screen">
+<!-- Background effects -->
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-white/20 z-0"></div>
+<!-- AI Character Image -->
+<img class="object-contain h-full w-full max-w-lg z-10 relative drop-shadow-2xl scale-110 md:scale-100 origin-bottom" data-alt="A full-body 3D render of a cute anime-style AI digital human girl named Xiaoda, wearing a holographic pastel hoodie and sneakers. She is floating gracefully against a soft pink and lilac gradient background with floating 3D heart particles and geometric prisms. The lighting is ethereal, bright, and modern, embodying a luminous romance-tech aesthetic." src="https://lh3.googleusercontent.com/aida/AP1WRLsnsIFJCJv7SFV38Vcha_VZKEgjsOCv-QQo_FxmmvS9gdC0EfKG9MgHbDWksZcYP7JxPcs8hRcuD3bQY4MNL6bZIJwtB5KmI6Ikm0oRzoImnIgrk234MgIrPkBjrfI0MR6JMOD1bfzYqQxTwaKuruXyaqlOV3Le7Uo0bBHUC7E6KIhKNm0ggAIipCFlOBfpnQFXWselIxoFfvVE_M0tF8SMdp_p_O1wIyN3B0kZdN5sKD8N-HIQjy-Y5mA"/>
+</section>
+<!-- Right Side: Interaction Panel -->
+<section class="w-full md:w-1/2 flex flex-col justify-center p-container-padding-mobile md:p-container-padding-desktop z-20 relative">
+<div class="backdrop-blur-xl rounded-3xl p-8 md:p-12 w-full max-w-2xl mx-auto flex flex-col gap-8 relative shadow-xl border border-white/40 bg-white/60"><!-- Chat Messages Area -->
+<div class="flex flex-col gap-6 h-[450px] overflow-y-auto pr-2">
+<!-- Xiaoda Message -->
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">smart_toy</span>
+</div>
+<div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl rounded-tl-none max-w-[85%] shadow-sm border border-white/20">
+<p class="text-on-surface font-body-md">为了更懂你，能用 3 个词形容下你的性格吗？或者聊聊你最感兴趣的领域。</p>
+</div>
+</div>
+<!-- Quick Reply Suggestions -->
+<div class="mt-auto">
+<p class="text-label-sm text-on-surface-variant mb-3 px-2">Suggested Tags:</p>
+<div class="flex flex-wrap gap-2">
+<button class="glass-chip rounded-full px-4 py-1.5 text-label-sm text-on-surface-variant">Calm</button>
+<button class="glass-chip rounded-full px-4 py-1.5 text-label-sm text-on-surface-variant">Humorous</button>
+<button class="glass-chip rounded-full px-4 py-1.5 text-label-sm text-on-surface-variant">Tech</button>
+<button class="glass-chip rounded-full px-4 py-1.5 text-label-sm text-on-surface-variant">Art</button>
+<button class="glass-chip rounded-full px-4 py-1.5 text-label-sm text-on-surface-variant">Music</button>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="mt-4 flex flex-col gap-4">
+<div class="relative flex items-center">
+<input class="w-full bg-white/60 border border-white/40 rounded-full py-4 pl-6 pr-24 focus:ring-2 focus:ring-primary/50 text-on-surface placeholder:text-on-surface-variant/60 shadow-inner" placeholder="Type your answer..." type="text"/>
+<div class="absolute right-2 flex items-center gap-1">
+<button class="p-2 text-primary hover:bg-primary/10 rounded-full transition-colors">
+<span aria-hidden="true" class="font-label-sm text-label-sm font-bold">语音</span>
+</button>
+<button class="bg-primary text-white p-2 rounded-full shadow-lg hover:scale-105 transition-transform">
+<span aria-hidden="true" class="font-label-sm text-label-sm font-bold">发送</span>
+</button>
+</div>
+</div>
+<div class="flex justify-end">
+<button class="bg-primary text-white px-8 py-3 rounded-full font-label-lg flex items-center gap-2 hover:scale-105 transition-all shadow-lg">
+            下一步
+            <span aria-hidden="true">→</span>
+</button>
+</div>
+</div></div>
+</section>
+</main>
+<script>
+        // Simple toggle logic for chips
+        document.querySelectorAll('.glass-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+    </script>
+</body></html>
