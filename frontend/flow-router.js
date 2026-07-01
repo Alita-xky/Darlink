@@ -15,9 +15,9 @@
     romance: "discovery_deep_romance_ai_twins_refined_avatars",
     matching: "matching_luminous_resonance_network_final_polish",
     matchChat: "chat_luminous_intelligence_refined_v3",
-    events: "events_campus_resonance_hub",
     community: "community_campus_pulse_feed",
     hall: "hall_of_fame_legendary_pioneers_gallery",
+    hallChallenge: "hall_fame_liquid_glass_challenge",
     profile: "profile_full_campus_identity_final",
   };
 
@@ -46,13 +46,13 @@
       [PAGE.exploreChat]: "数字人潜力探索",
       [PAGE.xiaodaChat]: "小搭自由聊天",
       [PAGE.study]: "学习搭子发现",
-      [PAGE.culinary]: "饭搭子发现",
+      [PAGE.culinary]: "社交搭子发现",
       [PAGE.romance]: "恋爱对象发现",
       [PAGE.matching]: "共振匹配网络",
       [PAGE.matchChat]: "智能聊天",
-      [PAGE.events]: "校园活动",
       [PAGE.community]: "校园社区",
       [PAGE.hall]: "名人堂",
+      [PAGE.hallChallenge]: "人物盲盒挑战",
       [PAGE.profile]: "个人档案",
     },
     zhHant: {
@@ -65,13 +65,13 @@
       [PAGE.exploreChat]: "數字人潛力探索",
       [PAGE.xiaodaChat]: "小搭自由聊天",
       [PAGE.study]: "學習搭子發現",
-      [PAGE.culinary]: "飯搭子發現",
+      [PAGE.culinary]: "社交搭子發現",
       [PAGE.romance]: "戀愛對象發現",
       [PAGE.matching]: "共振匹配網絡",
       [PAGE.matchChat]: "智能聊天",
-      [PAGE.events]: "校園活動",
       [PAGE.community]: "校園社群",
       [PAGE.hall]: "名人堂",
+      [PAGE.hallChallenge]: "人物盲盒挑戰",
       [PAGE.profile]: "個人檔案",
     },
   };
@@ -100,6 +100,7 @@
 
   function pageFromHash() {
     const raw = decodeURIComponent((window.location.hash || "").replace(/^#/, "")).trim();
+    if (raw === "events_campus_resonance_hub" || raw === "events") return PAGE.home;
     if (PAGES.has(raw)) return raw;
     if (PAGE[raw]) return PAGE[raw];
     return PAGE.login;
@@ -224,7 +225,6 @@
     const aliases = {
       [PAGE.home]: ["discover", "home", "首页", "首頁", "发现", "發現"],
       [PAGE.matching]: ["matches", "match", "匹配"],
-      [PAGE.events]: ["events", "event", "campus resonance events", "活动", "活動", "校园活动", "校園活動"],
       [PAGE.community]: ["community", "社区", "社群", "校园社区", "校園社群"],
       [PAGE.hall]: ["hall of fame", "hall", "名人堂"],
       [PAGE.profile]: ["profile", "my profile", "个人档案", "我的档案", "個人檔案", "我的檔案"],
@@ -240,7 +240,6 @@
 
     if (hasAny(shortLabel, ["hall of fame", "名人堂"]) || shortLabel === "hall") return PAGE.hall;
     if (hasAny(shortLabel, ["community", "社区", "社群"])) return PAGE.community;
-    if (hasAny(shortLabel, ["events", "campus resonance events", "活动", "活動"])) return PAGE.events;
     if (hasAny(shortLabel, ["matches", "match", "匹配"])) return PAGE.matching;
     if (hasAny(shortLabel, ["discover", "home", "首页", "首頁", "发现", "發現"])) return PAGE.home;
     if (hasAny(shortLabel, ["profile", "my profile", "个人档案", "我的档案", "個人檔案", "我的檔案"])) return PAGE.profile;
@@ -252,9 +251,7 @@
     if (page === PAGE.home) {
       if (hasAny(label, ["view detailed insights", "view digital humans", "查看数字人", "查看數字人", "数字人广场", "數字人廣場", "digital human plaza", "digital humans"])) return PAGE.digitalPlaza;
       if (hasAny(label, ["explore potential", "探索潜力", "探索潛力"])) return PAGE.exploreChat;
-      if (hasAny(label, ["study sync", "学习搭子", "學習搭子"])) return PAGE.study;
-      if (hasAny(label, ["culinary match", "饭搭子", "飯搭子"])) return PAGE.culinary;
-      if (hasAny(label, ["deep romance", "恋爱对象", "戀愛對象"])) return PAGE.romance;
+      if (hasAny(label, ["study sync", "学习搭子", "學習搭子", "社交搭子", "深度恋爱", "深度戀愛", "deep romance", "culinary match", "饭搭子", "飯搭子"])) return PAGE.digitalPlaza;
     }
 
     if ([PAGE.exploreChat, PAGE.study, PAGE.culinary, PAGE.romance].includes(page) && hasAny(label, ["ask xiaoda anything", "问小搭", "問小搭", "小搭聊天"])) {
@@ -428,6 +425,25 @@
     localStorage.setItem("darlink-chat-context", JSON.stringify({ type, id, createdAt: Date.now() }));
   }
 
+  function readJson(key, fallback = {}) {
+    try {
+      return JSON.parse(localStorage.getItem(key)) || fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function routeForHallDigitalHuman(id) {
+    if (!id) return null;
+    const unlocked = readJson("darlink-hall-unlocked", {});
+    if (unlocked[id]) {
+      storeChatContext("hall", id);
+      return PAGE.matchChat;
+    }
+    localStorage.setItem("darlink-hall-challenge", JSON.stringify({ id, createdAt: Date.now() }));
+    return PAGE.hallChallenge;
+  }
+
   function previousForBack() {
     while (pageHistory.length) {
       const page = pageHistory.pop();
@@ -436,7 +452,7 @@
     if (currentPage === PAGE.login) return LANDING;
     if (currentPage === PAGE.onboard2) return PAGE.onboard1;
     if (currentPage === PAGE.onboard3) return PAGE.onboard2;
-    if ([PAGE.digitalPlaza, PAGE.exploreChat, PAGE.xiaodaChat, PAGE.study, PAGE.culinary, PAGE.romance, PAGE.matching, PAGE.matchChat, PAGE.events, PAGE.community, PAGE.hall, PAGE.profile].includes(currentPage)) {
+    if ([PAGE.digitalPlaza, PAGE.exploreChat, PAGE.xiaodaChat, PAGE.study, PAGE.culinary, PAGE.romance, PAGE.matching, PAGE.matchChat, PAGE.community, PAGE.hall, PAGE.hallChallenge, PAGE.profile].includes(currentPage)) {
       return previousPage || PAGE.home;
     }
     return PAGE.home;
@@ -457,6 +473,11 @@
     if (explicitChat) {
       storeChatContext(explicitChat.type, explicitChat.id);
       return PAGE.matchChat;
+    }
+
+    const explicitHall = element.closest && element.closest("[data-darlink-hall-id]");
+    if (explicitHall && explicitHall.dataset.darlinkHallId) {
+      return routeForHallDigitalHuman(explicitHall.dataset.darlinkHallId);
     }
 
     if ([PAGE.study, PAGE.culinary, PAGE.romance, PAGE.digitalPlaza].includes(currentPage) && hasAny(label, ["chat with twin", "initiate heart-to-heart", "initiate heart to heart", "open chat", "chat"])) {
@@ -516,8 +537,7 @@
         if (hasAny(localLabel, ["chevron_left", "chevron_right", "‹", "›"])) return null;
         const hallId = hallContextFromElement(element, label);
         if (hallId && hasAny(label, ["chat with me", "arrow_forward", "steve jobs", "elon musk", "jensen huang", "jack ma", "warren buffett", "tim cook", "ray dalio", "peter drucker", "richard feynman", "charlie munger", "reid hoffman", "jeff bezos", "naval ravikant", "marc andreessen", "mark zuckerberg"])) {
-          storeChatContext("hall", hallId);
-          return PAGE.matchChat;
+          return routeForHallDigitalHuman(hallId);
         }
         break;
       }
@@ -587,7 +607,6 @@
   }
 
   frame.addEventListener("load", () => {
-    frame.classList.remove("is-loading");
     bindFrameClicks();
     if (window.DarlinkEnhancer && frame.contentDocument) {
       window.DarlinkEnhancer.enhanceFrame(frame.contentDocument, currentPage, {
@@ -595,6 +614,7 @@
         page: PAGE,
       });
     }
+    window.requestAnimationFrame(() => frame.classList.remove("is-loading"));
   });
 
   if (profileHotspot) {

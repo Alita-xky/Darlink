@@ -13,6 +13,9 @@
     chat2: "darlink-chat-step-2",
     chat3: "darlink-chat-step-3",
     chatContext: "darlink-chat-context",
+    registration: "darlink-registration-session",
+    hallUnlocked: "darlink-hall-unlocked",
+    hallChallenge: "darlink-hall-challenge",
   };
 
   const DARLINK_TEST_AUTH_CODE = "202606";
@@ -232,6 +235,113 @@
     }
   };
 
+  const HALL_CHALLENGES = {
+    "steve-jobs": [
+      ["Steve Jobs 在 1976 年共同创办了哪家公司？", ["Apple", "Microsoft", "Intel"], "Apple"],
+      ["Jobs 离开 Apple 后创办、后来被 Apple 收购的公司是？", ["NeXT", "Oracle", "Compaq"], "NeXT"],
+      ["他曾长期参与并推动哪家动画公司的发展？", ["Pixar", "DreamWorks", "Netflix"], "Pixar"],
+      ["iPhone 首次发布是在？", ["2007", "1999", "2015"], "2007"],
+      ["Jobs 最常被关联的产品理念是？", ["技术与人文交叉", "只做低价硬件", "完全放弃设计"], "技术与人文交叉"],
+      ["他重返 Apple 后，哪类产品成为消费电子转折点？", ["iPod / iPhone", "大型机", "传真机"], "iPod / iPhone"],
+    ],
+    "elon-musk": [
+      ["Elon Musk 领导的火箭公司是？", ["SpaceX", "Blue Origin", "Boeing"], "SpaceX"],
+      ["他长期担任 CEO 的电动汽车公司是？", ["Tesla", "Ford", "Toyota"], "Tesla"],
+      ["Musk 早期参与并最终并入 PayPal 的公司是？", ["X.com", "Yahoo", "AOL"], "X.com"],
+      ["SpaceX 著名的可回收火箭系列是？", ["Falcon", "Apollo", "Atlas"], "Falcon"],
+      ["Musk 常强调的思维方式是？", ["第一性原理", "完全照搬竞品", "只看短期潮流"], "第一性原理"],
+      ["他的项目常围绕哪类主题？", ["能源、交通、太空", "传统纸媒", "线下零售"], "能源、交通、太空"],
+    ],
+    "jensen-huang": [
+      ["Jensen Huang 是哪家公司的共同创始人兼 CEO？", ["NVIDIA", "AMD", "Qualcomm"], "NVIDIA"],
+      ["NVIDIA 最知名的核心硬件品类是？", ["GPU", "打印机", "路由器"], "GPU"],
+      ["GPU 在近年 AI 发展中主要提供什么能力？", ["并行计算", "纸张扫描", "机械存储"], "并行计算"],
+      ["Jensen Huang 常穿的标志性服装是？", ["黑色皮夹克", "白色实验服", "燕尾服"], "黑色皮夹克"],
+      ["NVIDIA 最初的重要市场之一是？", ["图形与游戏", "餐饮配送", "房地产"], "图形与游戏"],
+      ["他与哪类技术浪潮高度相关？", ["加速计算与生成式 AI", "胶片冲印", "蒸汽机械"], "加速计算与生成式 AI"],
+    ],
+    "jack-ma": [
+      ["Jack Ma 创办的代表性公司是？", ["Alibaba", "Tencent", "Baidu"], "Alibaba"],
+      ["他早年从事过什么职业？", ["英语教师", "职业篮球运动员", "飞行员"], "英语教师"],
+      ["阿里巴巴最初的重要业务方向是？", ["电子商务", "汽车制造", "石油开采"], "电子商务"],
+      ["淘宝和天猫属于哪类业务生态？", ["线上交易平台", "航空系统", "矿业平台"], "线上交易平台"],
+      ["Jack Ma 常被关联的创业关键词是？", ["中小企业与信任", "只服务大型军工", "拒绝互联网"], "中小企业与信任"],
+      ["阿里巴巴总部所在城市是？", ["杭州", "北京", "深圳"], "杭州"],
+    ],
+    "ray-dalio": [
+      ["Ray Dalio 创办的投资机构是？", ["Bridgewater Associates", "BlackRock", "Sequoia"], "Bridgewater Associates"],
+      ["他的知名著作是？", ["Principles", "The Lean Startup", "Zero to One"], "Principles"],
+      ["Dalio 常强调的组织文化是？", ["极度透明", "完全保密且不反馈", "拒绝数据"], "极度透明"],
+      ["Bridgewater 的核心领域是？", ["宏观投资", "餐饮连锁", "游戏开发"], "宏观投资"],
+      ["Dalio 的方法论常围绕什么展开？", ["原则和决策系统", "随机直觉", "短期情绪"], "原则和决策系统"],
+      ["他常提醒人们如何看待错误？", ["把错误转成学习机制", "永远隐藏错误", "只责怪别人"], "把错误转成学习机制"],
+    ],
+    "peter-drucker": [
+      ["Peter Drucker 被广泛称为？", ["现代管理学之父", "量子物理学之父", "动画电影之父"], "现代管理学之父"],
+      ["他重点研究的领域是？", ["管理与组织", "深海潜水", "流行音乐"], "管理与组织"],
+      ["Drucker 常被关联的管理概念是？", ["目标管理", "无目标管理", "只看运气"], "目标管理"],
+      ["他强调组织应关注什么？", ["贡献与结果", "表面忙碌", "无意义流程"], "贡献与结果"],
+      ["Drucker 的思想常用于哪类场景？", ["企业与非营利组织管理", "天气预报", "烹饪配方"], "企业与非营利组织管理"],
+      ["他的管理观更重视？", ["有效性", "形式主义", "盲目扩张"], "有效性"],
+    ],
+    "richard-feynman": [
+      ["Richard Feynman 获得诺贝尔奖的领域是？", ["物理学", "文学", "经济学"], "物理学"],
+      ["他的重要贡献与哪一理论相关？", ["量子电动力学", "板块构造学", "古典诗学"], "量子电动力学"],
+      ["Feynman 著名的教学风格是？", ["用简单语言解释复杂概念", "故意让概念更晦涩", "只背公式"], "用简单语言解释复杂概念"],
+      ["他参与过哪个二战时期科研项目？", ["曼哈顿计划", "阿波罗登月计划", "人类基因组计划"], "曼哈顿计划"],
+      ["Feynman diagrams 用于帮助理解什么？", ["粒子相互作用", "股票 K 线", "城市地图"], "粒子相互作用"],
+      ["他常被代表的精神是？", ["好奇心与怀疑精神", "拒绝提问", "反对实验"], "好奇心与怀疑精神"],
+    ],
+    "charlie-munger": [
+      ["Charlie Munger 长期担任哪家公司的副董事长？", ["Berkshire Hathaway", "Apple", "NVIDIA"], "Berkshire Hathaway"],
+      ["他最常被关联的搭档是？", ["Warren Buffett", "Bill Gates", "Larry Page"], "Warren Buffett"],
+      ["Munger 著名的思维方式是？", ["多元思维模型", "只用单一视角", "拒绝学习"], "多元思维模型"],
+      ["他的投资风格强调？", ["长期理性判断", "短线噪音", "盲目跟风"], "长期理性判断"],
+      ["Munger 常提醒人们先做什么？", ["避免愚蠢错误", "追逐每个热点", "忽略风险"], "避免愚蠢错误"],
+      ["他与 Buffett 的投资哲学常强调？", ["优质企业与耐心", "频繁冲动交易", "只看传闻"], "优质企业与耐心"],
+    ],
+    "reid-hoffman": [
+      ["Reid Hoffman 共同创办的职业社交平台是？", ["LinkedIn", "Instagram", "TikTok"], "LinkedIn"],
+      ["LinkedIn 的核心网络是？", ["职业关系网络", "短视频娱乐网络", "外卖网络"], "职业关系网络"],
+      ["Hoffman 也是哪类机构的重要投资人？", ["风险投资", "传统采矿", "航空维修"], "风险投资"],
+      ["他常讨论的创业概念是？", ["闪电式扩张", "永远不增长", "拒绝网络效应"], "闪电式扩张"],
+      ["Hoffman 的思想常围绕什么？", ["网络效应", "孤立产品", "线下票据"], "网络效应"],
+      ["LinkedIn 后来被哪家公司收购？", ["Microsoft", "Meta", "IBM"], "Microsoft"],
+    ],
+    "jeff-bezos": [
+      ["Jeff Bezos 创办的公司是？", ["Amazon", "eBay", "Walmart"], "Amazon"],
+      ["Amazon 最初以什么品类起步？", ["网上书店", "电动汽车", "电影制片厂"], "网上书店"],
+      ["Bezos 也创办了哪家太空公司？", ["Blue Origin", "SpaceX", "Rocket Lab"], "Blue Origin"],
+      ["他常强调的经营理念是？", ["客户至上", "忽视用户", "只看内部喜好"], "客户至上"],
+      ["Amazon Web Services 的简称是？", ["AWS", "ABC", "AOL"], "AWS"],
+      ["Bezos 的产品方法常使用什么起点？", ["从客户需求倒推", "从口号倒推", "从办公室装修倒推"], "从客户需求倒推"],
+    ],
+    "naval-ravikant": [
+      ["Naval Ravikant 共同创办的平台是？", ["AngelList", "LinkedIn", "Pinterest"], "AngelList"],
+      ["AngelList 主要服务哪类生态？", ["创业公司与投资", "外卖配送", "传统影视"], "创业公司与投资"],
+      ["Naval 常讨论的关键词是？", ["杠杆与财富", "盲目忙碌", "拒绝学习"], "杠杆与财富"],
+      ["他常强调哪类杠杆？", ["代码、媒体、资本", "只靠体力重复", "纸质表格"], "代码、媒体、资本"],
+      ["Naval 的内容常围绕什么？", ["个人判断和长期主义", "短期冲动", "无意义竞争"], "个人判断和长期主义"],
+      ["他常被视为哪类角色？", ["创业者与天使投资人", "职业厨师", "职业运动裁判"], "创业者与天使投资人"],
+    ],
+    "marc-andreessen": [
+      ["Marc Andreessen 共同开发的早期网页浏览器是？", ["Mosaic", "Chrome", "Safari"], "Mosaic"],
+      ["他共同创办的浏览器公司是？", ["Netscape", "Opera", "Mozilla Foundation"], "Netscape"],
+      ["Andreessen Horowitz 常被简称为？", ["a16z", "AWS", "YC"], "a16z"],
+      ["他著名观点之一是？", ["Software is eating the world", "Hardware is disappearing forever", "The internet is a toy"], "Software is eating the world"],
+      ["a16z 属于哪类机构？", ["风险投资", "大学食堂", "航空公司"], "风险投资"],
+      ["Andreessen 的经历与哪一浪潮高度相关？", ["互联网与软件创业", "传统造纸", "煤炭运输"], "互联网与软件创业"],
+    ],
+    "mark-zuckerberg": [
+      ["Mark Zuckerberg 共同创办的平台最初名为？", ["Facebook", "Friendster", "MySpace"], "Facebook"],
+      ["Facebook 后来的母公司名称是？", ["Meta", "Alphabet", "ByteDance"], "Meta"],
+      ["Facebook 最初从哪类场景扩展？", ["大学校园社交", "航空订票", "线下超市"], "大学校园社交"],
+      ["Meta 旗下的重要通讯产品之一是？", ["WhatsApp", "Slack", "Zoom"], "WhatsApp"],
+      ["Zuckerberg 长期关注的主题包括？", ["社交图谱与连接", "石油钻探", "快递分拣"], "社交图谱与连接"],
+      ["Meta 近年重点投入的方向之一是？", ["AI 与沉浸式计算", "胶片冲印", "传统印刷"], "AI 与沉浸式计算"],
+    ],
+  };
+
   const MODULE_CHAT_PROFILES = {
     "study-astra": {
       name: "Astra Chen",
@@ -266,7 +376,7 @@
     "culinary-leo": {
       name: "Leo Zhang",
       initials: "LZ",
-      subtitle: "Culinary Match • Ramen Hunter • 98% Taste Match",
+      subtitle: "Social Companion • Ramen Hunter • 98% Taste Match",
       colors: ["#f59e0b", "#8a486f"],
       opener: "Your late-night food signal is very clear: comfort food, honest conversation, and no over-planned itinerary.",
       userLine: "That sounds like a good food walk. Where would you start?",
@@ -276,7 +386,7 @@
     "culinary-sarah": {
       name: "Sarah Lin",
       initials: "SL",
-      subtitle: "Culinary Match • Matcha Notes • 92% Taste Match",
+      subtitle: "Social Companion • Matcha Notes • 92% Taste Match",
       colors: ["#2f855a", "#7ed4fd"],
       opener: "You both seem to prefer food plans that are calm, cozy, and easy to leave open-ended.",
       userLine: "I like that. Low pressure matters.",
@@ -286,7 +396,7 @@
     "culinary-marcus": {
       name: "Marcus Park",
       initials: "MP",
-      subtitle: "Culinary Match • Pizza Debate • 88% Taste Match",
+      subtitle: "Social Companion • Pizza Debate • 88% Taste Match",
       colors: ["#ef4444", "#fcaad6"],
       opener: "Your food profile has playful debate energy. A best-slice argument could break the ice fast.",
       userLine: "That is fun. I like food opinions that are not too serious.",
@@ -296,7 +406,7 @@
     "culinary-elena": {
       name: "Elena Wu",
       initials: "EW",
-      subtitle: "Culinary Match • Pastry Study Buddy • 85% Taste Match",
+      subtitle: "Social Companion • Pastry Study Buddy • 85% Taste Match",
       colors: ["#d97706", "#d8b4fe"],
       opener: "You both use small treats as a way to make study pressure feel manageable.",
       userLine: "That is very true. A pastry break can reset everything.",
@@ -410,11 +520,12 @@
       thinking: "Xiaoda is thinking",
       required: "This one is required so Xiaoda can build your base identity. Please answer it first.",
       skip: "Skip",
+      previous: "Previous",
       next1: "Continue to persona chat",
       next2: "Continue to path choice",
       generate: "Generate my profile",
       generating: "Xiaoda is generating your profile...",
-      chooseIntent: "Tell Xiaoda which path you want to begin with: Study Sync, Culinary Match, or Deep Romance.",
+      chooseIntent: "Tell Xiaoda which path you want to begin with: Study Sync, Social Companion, or Deep Romance.",
       modalKicker: "Xiaoda profile analysis",
       close: "Close",
       modalTitle: "Your foundational persona has been generated",
@@ -432,7 +543,7 @@
         "New Connection": "New digital twin",
         "View Detailed Insights": "View Digital Humans",
         "Study Sync": "Study Sync",
-        "Culinary Match": "Culinary Match",
+        "Culinary Match": "Social Companion",
         "Deep Romance": "Deep Romance",
       },
       staticMap: {},
@@ -466,11 +577,12 @@
       thinking: "小搭正在思考",
       required: "这一题是必答项，小搭需要它来建立你的基础身份，请先回答。",
       skip: "跳过",
+      previous: "上一步",
       next1: "进入人物画像对话",
       next2: "进入路径选择",
       generate: "生成我的画像",
       generating: "小搭正在为您生成画像...",
-      chooseIntent: "告诉小搭你想先从学习搭子、饭搭子 / 玩搭子，还是恋爱对象开始。",
+      chooseIntent: "告诉小搭你想先从学习搭子、社交搭子，还是深度恋爱开始。",
       modalKicker: "小搭画像分析",
       close: "关闭",
       modalTitle: "你的基础人物画像已经生成",
@@ -490,13 +602,12 @@
         "Explore Potential": "探索潜力",
         "Adjust Vibe": "调整状态",
         "Study Sync": "学习搭子",
-        "Culinary Match": "饭搭子",
-        "Deep Romance": "恋爱对象",
+        "Culinary Match": "社交搭子",
+        "Deep Romance": "深度恋爱",
       },
       staticMap: {
         "Discover": "发现",
         "Matches": "匹配",
-        "Events": "活动",
         "Community": "社区",
         "Hall of Fame": "名人堂",
         "Hall of fame": "名人堂",
@@ -561,7 +672,7 @@
         "Connect with highly-attuned AI study partners. Find your perfect intellectual match for deep focus, shared research, and elevated academic growth in our luminous learning environment.": "连接高度同频的智能学习搭子，在发光的学习环境中找到适合深度专注、共同研究和学术成长的伙伴。",
         "Chat with Twin": "和数字人聊天",
         "Chat": "聊天",
-        "Culinary Match: Flavorful Connections": "饭搭子：味觉连接",
+        "Culinary Match: Flavorful Connections": "社交搭子：轻松连接",
         "New Feature": "新功能",
         "All Tastes": "全部口味",
         "Late Night Bites": "深夜小吃",
@@ -703,11 +814,12 @@
       thinking: "小搭正在思考",
       required: "這一題是必答項，小搭需要它來建立你的基礎身份，請先回答。",
       skip: "跳過",
+      previous: "上一步",
       next1: "進入人物畫像對話",
       next2: "進入路徑選擇",
       generate: "生成我的畫像",
       generating: "小搭正在為您生成畫像...",
-      chooseIntent: "告訴小搭你想先從學習搭子、飯搭子 / 玩搭子，還是戀愛對象開始。",
+      chooseIntent: "告訴小搭你想先從學習搭子、社交搭子，還是深度戀愛開始。",
       modalKicker: "小搭畫像分析",
       close: "關閉",
       modalTitle: "你的基礎人物畫像已經生成",
@@ -727,13 +839,12 @@
         "Explore Potential": "探索潛力",
         "Adjust Vibe": "調整狀態",
         "Study Sync": "學習搭子",
-        "Culinary Match": "飯搭子",
-        "Deep Romance": "戀愛對象",
+        "Culinary Match": "社交搭子",
+        "Deep Romance": "深度戀愛",
       },
       staticMap: {
         "Discover": "發現",
         "Matches": "匹配",
-        "Events": "活動",
         "Community": "社群",
         "Hall of Fame": "名人堂",
         "Hall of fame": "名人堂",
@@ -797,7 +908,7 @@
         "Connect with highly-attuned AI study partners. Find your perfect intellectual match for deep focus, shared research, and elevated academic growth in our luminous learning environment.": "連接高度同頻的智能學習搭子，在發光的學習環境中找到適合深度專注、共同研究和學術成長的夥伴。",
         "Chat with Twin": "和數字人聊天",
         "Chat": "聊天",
-        "Culinary Match: Flavorful Connections": "飯搭子：味覺連接",
+        "Culinary Match: Flavorful Connections": "社交搭子：輕鬆連接",
         "New Feature": "新功能",
         "All Tastes": "全部口味",
         "Late Night Bites": "深夜小吃",
@@ -932,7 +1043,7 @@
       memory: "Tell me one experience that shaped how you make friends or trust people.",
       comfort: "When you are stressed, what kind of response from another person comforts you?",
       disagree: "When you disagree with someone, how do you usually express it?",
-      intent: "Which path should Xiaoda open first: Study Sync, Culinary Match, or Deep Romance?",
+      intent: "Which path should Xiaoda open first: Study Sync, Social Companion, or Deep Romance?",
     },
     zhHans: {
       nickname: "你希望别人怎么称呼你？可以是昵称。",
@@ -953,7 +1064,7 @@
       memory: "讲一个影响你交朋友或信任他人的经历。",
       comfort: "你压力大的时候，别人怎样回应会让你觉得被安慰？",
       disagree: "你和别人意见不同时，通常会怎样表达？",
-      intent: "你希望小搭先开启哪条路径：学习搭子、饭搭子 / 玩搭子，还是恋爱对象？",
+      intent: "你希望小搭先开启哪条路径：学习搭子、社交搭子，还是深度恋爱？",
     },
     zhHant: {
       nickname: "你希望別人怎麼稱呼你？可以是暱稱。",
@@ -974,7 +1085,7 @@
       memory: "講一個影響你交朋友或信任他人的經歷。",
       comfort: "你壓力大的時候，別人怎樣回應會讓你覺得被安慰？",
       disagree: "你和別人意見不同時，通常會怎樣表達？",
-      intent: "你希望小搭先開啟哪條路徑：學習搭子、飯搭子 / 玩搭子，還是戀愛對象？",
+      intent: "你希望小搭先開啟哪條路徑：學習搭子、社交搭子，還是深度戀愛？",
     },
   };
 
@@ -989,6 +1100,12 @@
 
   function tr() {
     return TEXT[lang()] || TEXT.en;
+  }
+
+  function localizedSnippet(value) {
+    if (lang() === "en") return value;
+    const t = tr();
+    return (t.staticMap && t.staticMap[value]) || (t.homeMap && t.homeMap[value]) || value;
   }
 
   function qText(id) {
@@ -1007,8 +1124,33 @@
     localStorage.setItem(key, JSON.stringify(value));
   }
 
+  function resetOnboardingSessionForRegistration(email = "") {
+    [
+      STORAGE.questionnaire,
+      STORAGE.persona,
+      STORAGE.intent,
+      STORAGE.profile,
+      STORAGE.profileDismissed,
+      STORAGE.chat1,
+      STORAGE.chat2,
+      STORAGE.chat3,
+      STORAGE.chatContext,
+    ].forEach((key) => localStorage.removeItem(key));
+    write(STORAGE.registration, { email, lang: lang(), createdAt: Date.now() });
+  }
+
   function normalize(value) {
     return String(value || "").trim();
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    })[char]);
   }
 
   function testAuthEnabled() {
@@ -1258,7 +1400,7 @@
     if (lang() === "en") return profile;
     const isHant = lang() === "zhHant";
     const moduleLabel = profile.id?.startsWith("culinary")
-      ? (isHant ? "飯搭子" : "饭搭子")
+      ? (isHant ? "社交搭子" : "社交搭子")
       : profile.id?.startsWith("romance")
         ? (isHant ? "深度戀愛" : "深度恋爱")
         : profile.id?.startsWith("study")
@@ -1352,7 +1494,7 @@
   function parseIntent(text) {
     const value = normalize(text).toLowerCase();
     if (/study|学习|學習|academic|自习|自習/.test(value)) return "study";
-    if (/culinary|food|饭|飯|玩|social|朋友|搭子/.test(value)) return "social";
+    if (/culinary|food|饭|飯|玩|social|社交|朋友|搭子/.test(value)) return "social";
     if (/romance|love|恋|戀|date|relationship/.test(value)) return "romance";
     return "";
   }
@@ -1479,6 +1621,7 @@
         write(STORAGE.auth, createTestSession(payload.email));
         if (payload.remember) write(STORAGE.remembered, { email: payload.email, password: payload.password });
         else localStorage.removeItem(STORAGE.remembered);
+        resetOnboardingSessionForRegistration(payload.email);
         setStatus(testAuthCopy("ok"), "success");
         window.setTimeout(() => api.navigate(api.page.onboard1), 450);
         return;
@@ -1493,6 +1636,7 @@
       write(STORAGE.auth, res.session);
       if (payload.remember) write(STORAGE.remembered, { email: payload.email, password: payload.password });
       else localStorage.removeItem(STORAGE.remembered);
+      resetOnboardingSessionForRegistration(payload.email);
       setStatus(t.loginOk, "success");
       window.setTimeout(() => api.navigate(api.page.onboard1), 450);
     };
@@ -1546,7 +1690,10 @@
               <button type="button" class="darlink-icon-btn primary" data-action="send" aria-label="${t.send}">${interactionIcon("send")}</button>
             </div>
             <div class="darlink-chat-actions">
-              <button type="button" class="darlink-secondary-btn" data-action="skip">${t.skip}</button>
+              <div class="darlink-chat-action-left">
+                <button type="button" class="darlink-secondary-btn" data-action="previous" ${(phase === 1 && state.index === 0) ? "disabled" : ""}>${icon("arrow_back")} ${t.previous}</button>
+                <button type="button" class="darlink-secondary-btn" data-action="skip">${t.skip}</button>
+              </div>
               <button type="button" class="darlink-primary-btn" data-action="next" ${state.complete ? "" : "disabled"}>${phase === 1 ? t.next1 : phase === 2 ? t.next2 : t.generate} ${icon("arrow_forward")}</button>
             </div>
             <div class="darlink-analysis-status" role="status"></div>
@@ -1557,6 +1704,7 @@
 
     const input = doc.querySelector("#darlinkChatInput");
     const sendButton = doc.querySelector("[data-action='send']");
+    const previousButton = doc.querySelector("[data-action='previous']");
     const nextButton = doc.querySelector("[data-action='next']");
     const status = doc.querySelector(".darlink-analysis-status");
     let sending = false;
@@ -1573,13 +1721,18 @@
       if (!current || state.complete) {
         quick.innerHTML = "";
       } else if (phase === 3) {
-        quick.innerHTML = ["Study Sync", "Culinary Match", "Deep Romance"].map((item) => `<button type="button" class="darlink-chip" data-quick="${item}">${item}</button>`).join("");
+        quick.innerHTML = [
+          copy("Study Sync", "学习搭子", "學習搭子"),
+          copy("Social Companion", "社交搭子", "社交搭子"),
+          copy("Deep Romance", "深度恋爱", "深度戀愛"),
+        ].map((item) => `<button type="button" class="darlink-chip" data-quick="${item}">${item}</button>`).join("");
       } else if (current.optional) {
         quick.innerHTML = `<button type="button" class="darlink-chip" data-quick="${t.skip}">${t.skip}</button>`;
       } else {
         quick.innerHTML = "";
       }
       nextButton.disabled = !state.complete;
+      previousButton.disabled = phase === 1 && state.index === 0;
     };
 
     const pushTyping = () => {
@@ -1647,7 +1800,7 @@
         state.index += 1;
         if (!questions[state.index]) state.complete = true;
       } else if (!state.complete) {
-        state.messages.push({ from: "xiaoda", text: lang() === "en" ? "I heard you, but I still need one clear path: Study Sync, Culinary Match, or Deep Romance." : lang() === "zhHant" ? "我聽懂了，但還需要你明確選一條：學習搭子、飯搭子 / 玩搭子，或戀愛對象。" : "我听懂了，但还需要你明确选一条：学习搭子、饭搭子 / 玩搭子，或恋爱对象。" });
+        state.messages.push({ from: "xiaoda", text: lang() === "en" ? "I heard you, but I still need one clear path: Study Sync, Social Companion, or Deep Romance." : lang() === "zhHant" ? "我聽懂了，但還需要你明確選一條：學習搭子、社交搭子，或深度戀愛。" : "我听懂了，但还需要你明确选一条：学习搭子、社交搭子，或深度恋爱。" });
       }
       state.messages.push({ from: "xiaoda", text: res.reply });
       if (state.complete) {
@@ -1673,6 +1826,29 @@
     });
     doc.querySelector("[data-action='skip']").addEventListener("click", () => submit(t.skip));
     doc.querySelector("[data-action='voice']").addEventListener("click", () => startSpeech(doc));
+    previousButton.addEventListener("click", () => {
+      if (sending) return;
+      if (state.index > 0) {
+        state.index -= 1;
+        state.complete = false;
+        const previousQuestion = questions[state.index];
+        input.value = state.answers[previousQuestion.id] || "";
+        state.messages.push({
+          from: "xiaoda",
+          text: copy(
+            `Let's review the previous question: ${qText(previousQuestion.id)}`,
+            `我们回到上一题：${qText(previousQuestion.id)}`,
+            `我們回到上一題：${qText(previousQuestion.id)}`
+          ),
+        });
+        persist();
+        render();
+        input.focus();
+        return;
+      }
+      if (phase === 2) api.navigate(api.page.onboard1, { immediate: true });
+      if (phase === 3) api.navigate(api.page.onboard2, { immediate: true });
+    });
     nextButton.addEventListener("click", async () => {
       if (phase === 1) api.navigate(api.page.onboard2);
       else if (phase === 2) api.navigate(api.page.onboard3);
@@ -1712,39 +1888,185 @@
     window.setTimeout(() => api.navigate(api.page.home, { replace: true, immediate: true }), 700);
   }
 
-  function enhanceHome(doc) {
-    injectStyle(doc, sharedCss() + profileModalCss() + digitalPlazaCss());
-    localizeStatic(doc, "home");
-    enhanceDigitalPlaza(doc);
-    doc.defaultView.setTimeout(() => localizeStatic(doc, "home"), 0);
-    const profile = read(STORAGE.profile);
-    const dismissed = read(STORAGE.profileDismissed, false);
-    if (!profile || dismissed || doc.querySelector(".darlink-profile-modal")) return;
-    const t = tr();
-    const modal = doc.createElement("div");
-    modal.className = "darlink-profile-modal";
-    modal.innerHTML = `
-      <div class="darlink-profile-dialog">
-        <button type="button" class="darlink-profile-close" aria-label="${t.close}">${icon("close")}</button>
-        <div class="darlink-profile-head">
-          <span>${t.modalKicker}</span>
-          <h2>${t.modalTitle}</h2>
-          <p>${t.modalBody}</p>
+  function plazaCategoryForId(id) {
+    if (id.startsWith("study")) return "study";
+    if (id.startsWith("romance")) return "romance";
+    if (id.startsWith("culinary") || id.startsWith("plaza")) return "social";
+    return "all";
+  }
+
+  function categoryLabel(category) {
+    const labels = {
+      all: copy("All", "全部", "全部"),
+      study: copy("Study Sync", "学习搭子", "學習搭子"),
+      social: copy("Social Companion", "社交搭子", "社交搭子"),
+      romance: copy("Deep Romance", "深度恋爱", "深度戀愛"),
+      hall: copy("Mystery Icons", "人物盲盒", "人物盲盒"),
+    };
+    return labels[category] || labels.all;
+  }
+
+  function plazaCardItems() {
+    const regular = PLAZA_DIGITAL_HUMANS.map(([id, name, title, body, tags]) => {
+      const profile = MODULE_CHAT_PROFILES[id] || MODULE_CHAT_PROFILES["plaza-aria"];
+      return {
+        id,
+        type: "module",
+        category: plazaCategoryForId(id),
+        name,
+        title: localizedSnippet(title),
+        body: localizedSnippet(body),
+        tags: tags.map((tag) => localizedSnippet(tag)),
+        initials: profile.initials,
+        colors: profile.colors,
+      };
+    });
+    const hall = Object.entries(HALL_CHAT_PROFILES).map(([id, profile]) => ({
+      id,
+      type: "hall",
+      category: "hall",
+      name: profile.name,
+      title: copy("Hidden digital human", "隐藏款数字人", "隱藏款數字人"),
+      body: copy("A mystery mentor hidden inside the plaza. Click to see whether this figure has been unlocked.", "藏在广场里的隐藏款人物数字人。点击后才会知道是否已解锁。", "藏在廣場裡的隱藏款人物數字人。點擊後才會知道是否已解鎖。"),
+      tags: [categoryLabel("hall"), copy("Challenge", "挑战", "挑戰")],
+      initials: profile.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase(),
+      colors: ["#111827", "#6f5092"],
+      background: profile.background,
+    }));
+    return [...regular, ...hall];
+  }
+
+  function homeLeaderboardItems() {
+    return [
+      { id: "plaza-sarah", type: "module", name: "Sarah J. Twin", meta: copy("warm openers", "温和开场", "溫和開場"), score: "98.8" },
+      { id: "steve-jobs", type: "hall", name: "Steve Jobs", meta: copy("hidden icon", "隐藏款人物", "隱藏款人物"), score: "97.6" },
+      { id: "study-astra", type: "module", name: "Astra Chen Twin", meta: copy("study focus", "学习专注", "學習專注"), score: "96.9" },
+      { id: "jensen-huang", type: "hall", name: "Jensen Huang", meta: copy("AI mentor", "AI 导师", "AI 導師"), score: "96.1" },
+      { id: "romance-elias", type: "module", name: "Elias Vance Twin", meta: copy("gentle resonance", "温柔共振", "溫柔共振"), score: "95.4" },
+      { id: "culinary-leo", type: "module", name: "Leo Zhang Twin", meta: copy("social routes", "社交路线", "社交路線"), score: "94.8" },
+      { id: "ray-dalio", type: "hall", name: "Ray Dalio", meta: copy("principles", "原则挑战", "原則挑戰"), score: "94.2" },
+      { id: "plaza-maya", type: "module", name: "Maya K. Twin", meta: copy("visual thinking", "视觉思考", "視覺思考"), score: "93.7" },
+      { id: "richard-feynman", type: "hall", name: "Richard Feynman", meta: copy("curiosity", "好奇心", "好奇心"), score: "93.0" },
+      { id: "romance-lyra", type: "module", name: "Lyra Chen Twin", meta: copy("dream resonance", "梦想共振", "夢想共振"), score: "92.5" },
+    ];
+  }
+
+  function renderHomeTopbar(activeKey = "discover") {
+    const items = [
+      ["discover", copy("Discover", "发现", "發現")],
+      ["matches", copy("Matches", "匹配", "匹配")],
+      ["community", copy("Community", "社区", "社群")],
+      ["hall", copy("Hall of Fame", "名人堂", "名人堂")],
+    ];
+    return `<nav class="darlink-standard-topbar">
+      <div class="darlink-standard-topbar-inner">
+        <a class="darlink-standard-brand" href="#">Darlink</a>
+        <div class="darlink-standard-tabs" aria-label="${copy("Primary navigation", "主导航", "主導覽")}">
+          ${items.map(([key, label]) => `<a href="#" class="${key === activeKey ? "is-active" : ""}">${label}</a>`).join("")}
         </div>
-        <div class="darlink-profile-card-rail">
-          ${(profile.cards || []).map((card) => `<article class="darlink-profile-card">
-            <span>${card.label}</span>
-            <h3>${card.title}</h3>
-            <p>${card.body}</p>
-            <div>${(card.tags || []).map((tag) => `<em>${tag}</em>`).join("")}</div>
-          </article>`).join("")}
+        <div class="darlink-standard-actions">
+          <button type="button" class="darlink-standard-search" data-darlink-search-disabled="true" data-darlink-local-control="true" aria-label="${copy("Search disabled for prototype", "搜索暂未开放", "搜尋暫未開放")}">${materialIconSvg("search")}</button>
+          <button type="button" class="darlink-standard-avatar" aria-label="${copy("Profile", "个人档案", "個人檔案")}"><img src="/files/v13-ai-twin-crop.png" alt="${copy("User profile avatar", "用户头像", "用戶頭像")}"></button>
         </div>
       </div>
+    </nav>`;
+  }
+
+  function enhanceHome(doc, api) {
+    injectStyle(doc, sharedCss() + homeDiscoveryCss());
+    const profile = read(STORAGE.profile, {});
+    const profileCards = Array.isArray(profile.cards) ? profile.cards : [];
+    const leaderItems = homeLeaderboardItems();
+    const plazaItems = plazaCardItems();
+    doc.body.className = "darlink-home-discovery-body darlink-page-polished darlink-page-home-luminous-dashboard-refined-v4";
+    doc.body.innerHTML = `
+      ${renderHomeTopbar("discover")}
+      <main class="darlink-home-shell">
+        <section class="darlink-home-hero">
+          <div>
+            <span>${copy("Discovery", "发现", "發現")}</span>
+            <h1>${copy("Explore living digital humans around you.", "探索你身边正在生长的数字人。", "探索你身邊正在生長的數字人。")}</h1>
+            <p>${copy("The plaza now gathers study partners, social companions, deep-romance twins, and hidden icon mentors in one stable space.", "数字人广场现在统一承载学习搭子、社交搭子、深度恋爱和隐藏款人物数字人。", "數字人廣場現在統一承載學習搭子、社交搭子、深度戀愛和隱藏款人物數字人。")}</p>
+          </div>
+        </section>
+        <section class="darlink-home-ranking">
+          <div class="darlink-ranking-head">
+            <div>
+              <span>${copy("Live Ranking", "数字人人气榜", "數字人人氣榜")}</span>
+              <h2>${copy("Top 10 most popular digital humans", "最有人气的 10 位数字人", "最有人氣的 10 位數字人")}</h2>
+            </div>
+            <button type="button" data-action="toggle-ranking" data-darlink-local-control="true" aria-expanded="false">${copy("Show all", "展开全部", "展開全部")}</button>
+          </div>
+          <div class="darlink-ranking-list">
+            ${leaderItems.map((item, index) => `<button type="button" class="darlink-ranking-row ${index > 2 ? "darlink-ranking-extra" : ""}" ${item.type === "hall" ? `data-darlink-hall-id="${item.id}"` : `data-darlink-chat-id="${item.id}" data-darlink-chat-type="module"`}>
+              <strong>${index + 1}</strong>
+              <span>${item.name}<em>${item.meta}</em></span>
+              <b>${item.score}</b>
+            </button>`).join("")}
+          </div>
+        </section>
+        <section class="darlink-home-grid">
+          <section class="darlink-home-plaza">
+            <div class="darlink-section-head">
+              <div>
+                <span>${copy("Digital Human Plaza", "数字人广场", "數字人廣場")}</span>
+                <h2>${copy("All digital humans live here.", "所有数字人都在这里。", "所有數字人都在這裡。")}</h2>
+              </div>
+              <div class="darlink-plaza-filters" aria-label="${copy("Digital human filters", "数字人标签筛选", "數字人標籤篩選")}">
+                ${["all", "study", "social", "romance", "hall"].map((key) => `<button type="button" class="${key === "all" ? "is-active" : ""}" data-filter="${key}" data-darlink-local-control="true">${categoryLabel(key)}</button>`).join("")}
+              </div>
+            </div>
+            <div class="darlink-home-plaza-scroll">
+              ${plazaItems.map((item) => `<article class="darlink-home-twin-card ${item.type === "hall" ? "is-hidden-icon" : ""}" data-category="${item.category}" ${item.type === "hall" ? `data-darlink-hall-id="${item.id}"` : `data-darlink-chat-id="${item.id}" data-darlink-chat-type="module"`}>
+                <div class="darlink-home-avatar" style="--from:${item.colors[0]};--to:${item.colors[1]}">${item.background ? `<img src="${item.background}" alt="${item.name} portrait">` : item.initials}</div>
+                <div>
+                  <h3>${item.name}</h3>
+                  <p class="darlink-home-role">${item.title}</p>
+                  <p>${item.body}</p>
+                </div>
+                <div class="darlink-home-tags">${item.tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
+                <button type="button" ${item.type === "hall" ? `data-darlink-hall-id="${item.id}"` : `data-darlink-chat-id="${item.id}" data-darlink-chat-type="module"`}>
+                  ${item.type === "hall" ? copy("Open mystery", "开启盲盒", "開啟盲盒") : copy("Chat with Twin", "和数字人聊天", "和數字人聊天")}
+                  ${materialIconSvg(item.type === "hall" ? "auto_awesome" : "chat_bubble")}
+                </button>
+              </article>`).join("")}
+            </div>
+          </section>
+          <aside class="darlink-my-twin">
+            <div class="darlink-my-twin-orb">${icon("auto_awesome")}</div>
+            <span>${copy("My Digital Human", "我的数字人", "我的數字人")}</span>
+            <h2>${copy("Your twin is still learning your rhythm.", "你的数字人还在学习你的节奏。", "你的數字人還在學習你的節奏。")}</h2>
+            <p>${profileCards[0]?.body || copy("Xiaoda will keep refining your voice, social boundaries, and matching signals as you chat.", "小搭会随着你的聊天继续完善你的表达方式、社交边界和匹配信号。", "小搭會隨著你的聊天繼續完善你的表達方式、社交邊界和匹配信號。")}</p>
+            <div class="darlink-my-profile-cards">
+              ${profileCards.slice(0, 3).map((card) => `<article><strong>${card.title}</strong><em>${(card.tags || []).slice(0, 2).join(" · ")}</em></article>`).join("") || `<article><strong>${copy("Warm signal", "温暖信号", "溫暖信號")}</strong><em>${copy("Ready to refine", "等待完善", "等待完善")}</em></article>`}
+            </div>
+            <button type="button" class="darlink-refine-btn" data-darlink-flow-target="${api.page.exploreChat}">
+              ${copy("Strengthen my digital human", "加强完善我的数字人", "加強完善我的數字人")}
+              ${materialIconSvg("arrow_forward")}
+            </button>
+          </aside>
+        </section>
+      </main>
     `;
-    doc.body.appendChild(modal);
-    modal.querySelector(".darlink-profile-close").addEventListener("click", () => {
-      write(STORAGE.profileDismissed, true);
-      modal.remove();
+
+    const rankingButton = doc.querySelector("[data-action='toggle-ranking']");
+    const rankingList = doc.querySelector(".darlink-ranking-list");
+    rankingButton?.addEventListener("click", (event) => {
+      event.preventDefault();
+      const expanded = rankingList.classList.toggle("is-expanded");
+      rankingButton.setAttribute("aria-expanded", String(expanded));
+      rankingButton.textContent = expanded ? copy("Collapse", "收起", "收起") : copy("Show all", "展开全部", "展開全部");
+    });
+
+    doc.querySelector(".darlink-plaza-filters")?.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter]");
+      if (!button) return;
+      event.preventDefault();
+      const filter = button.dataset.filter;
+      doc.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("is-active", item === button));
+      doc.querySelectorAll(".darlink-home-twin-card").forEach((card) => {
+        card.hidden = filter !== "all" && card.dataset.category !== filter;
+      });
     });
   }
 
@@ -1929,42 +2251,50 @@
   }
 
   function enhanceDigitalPlazaPage(doc) {
-    injectStyle(doc, sharedCss() + digitalPlazaPageCss());
-    const main = doc.querySelector("main");
-    if (!main || main.dataset.darlinkPlazaExpanded === "true") return;
-    main.dataset.darlinkPlazaExpanded = "true";
-    main.className = "darlink-plaza-main";
-    main.innerHTML = `
-      <section class="darlink-plaza-hero">
-        <div>
-          <p>${copy("Digital Human Plaza", "数字人广场", "數字人廣場")}</p>
-          <h1>${copy("A living plaza for every user-owned digital human.", "为每位用户数字人准备的持续生长广场。", "為每位用戶數字人準備的持續生長廣場。")}</h1>
-          <span>${copy("New twins can keep joining below without shifting the page shell.", "新的数字人会持续加入下方滚动空间，页面主体保持稳定。", "新的數字人會持續加入下方滾動空間，頁面主體保持穩定。")}</span>
-        </div>
-        <aside>
-          <strong>128</strong>
-          <em>${copy("active digital humans", "活跃数字人", "活躍數字人")}</em>
-        </aside>
-      </section>
-      <section class="darlink-plaza-scroll" aria-label="Digital human cards">
-        ${PLAZA_DIGITAL_HUMANS.map(([id, name, title, body, tags]) => {
-          const profile = MODULE_CHAT_PROFILES[id] || MODULE_CHAT_PROFILES["plaza-aria"];
-          return `<article class="darlink-plaza-person" data-darlink-chat-id="${id}" data-darlink-chat-type="module">
-            <div class="darlink-plaza-avatar" style="--from:${profile.colors[0]};--to:${profile.colors[1]}">${profile.initials}</div>
+    injectStyle(doc, sharedCss() + homeDiscoveryCss());
+    const items = plazaCardItems();
+    doc.body.className = "darlink-home-discovery-body darlink-page-polished darlink-page-digital-human-plaza-resonance";
+    doc.body.innerHTML = `
+      ${renderHomeTopbar("discover")}
+      <main class="darlink-home-shell">
+        <section class="darlink-home-plaza">
+          <div class="darlink-section-head">
             <div>
-              <h3>${name}</h3>
-              <p class="darlink-plaza-role">${title}</p>
-              <p>${body}</p>
-              <div class="darlink-plaza-tags">${tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
+              <span>${copy("Digital Human Plaza", "数字人广场", "數字人廣場")}</span>
+              <h2>${copy("A stable scroll space for every digital human.", "为所有数字人准备的稳定下滑空间。", "為所有數字人準備的穩定下滑空間。")}</h2>
             </div>
-            <button type="button" data-darlink-chat-id="${id}" data-darlink-chat-type="module">
-              ${copy("Chat with Twin", "和数字人聊天", "和數字人聊天")}
-              ${materialIconSvg("chat_bubble")}
-            </button>
-          </article>`;
-        }).join("")}
-      </section>
+            <div class="darlink-plaza-filters" aria-label="${copy("Digital human filters", "数字人标签筛选", "數字人標籤篩選")}">
+              ${["all", "study", "social", "romance", "hall"].map((key) => `<button type="button" class="${key === "all" ? "is-active" : ""}" data-filter="${key}" data-darlink-local-control="true">${categoryLabel(key)}</button>`).join("")}
+            </div>
+          </div>
+          <div class="darlink-home-plaza-scroll">
+            ${items.map((item) => `<article class="darlink-home-twin-card ${item.type === "hall" ? "is-hidden-icon" : ""}" data-category="${item.category}" ${item.type === "hall" ? `data-darlink-hall-id="${item.id}"` : `data-darlink-chat-id="${item.id}" data-darlink-chat-type="module"`}>
+              <div class="darlink-home-avatar" style="--from:${item.colors[0]};--to:${item.colors[1]}">${item.background ? `<img src="${item.background}" alt="${item.name} portrait">` : item.initials}</div>
+              <div>
+                <h3>${item.name}</h3>
+                <p class="darlink-home-role">${item.title}</p>
+                <p>${item.body}</p>
+              </div>
+              <div class="darlink-home-tags">${item.tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
+              <button type="button" ${item.type === "hall" ? `data-darlink-hall-id="${item.id}"` : `data-darlink-chat-id="${item.id}" data-darlink-chat-type="module"`}>
+                ${item.type === "hall" ? copy("Open mystery", "开启盲盒", "開啟盲盒") : copy("Chat with Twin", "和数字人聊天", "和數字人聊天")}
+                ${materialIconSvg(item.type === "hall" ? "auto_awesome" : "chat_bubble")}
+              </button>
+            </article>`).join("")}
+          </div>
+        </section>
+      </main>
     `;
+    doc.querySelector(".darlink-plaza-filters")?.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter]");
+      if (!button) return;
+      event.preventDefault();
+      const filter = button.dataset.filter;
+      doc.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("is-active", item === button));
+      doc.querySelectorAll(".darlink-home-twin-card").forEach((card) => {
+        card.hidden = filter !== "all" && card.dataset.category !== filter;
+      });
+    });
   }
 
   function enhanceMatching(doc) {
@@ -1989,12 +2319,6 @@
         window.setTimeout(() => refreshButton.classList.remove("is-refreshing"), 760);
       });
     }
-  }
-
-  function enhanceEventsPage(doc) {
-    appendStyle(doc, "page-specific-polish", pageSpecificPolishCss());
-    normalizeStandardTopBar(doc, "events");
-    replaceTextSnippets(doc, pageSnippetTranslations("events_campus_resonance_hub"));
   }
 
   function enhanceCommunityPage(doc) {
@@ -2072,7 +2396,7 @@
       const value = normalize(input.value);
       if (!value) return;
       input.value = "";
-      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message user">${value}</div><div class="darlink-free-message ai thinking">${copy("Xiaoda is thinking", "小搭正在思考", "小搭正在思考")}<span></span><span></span><span></span></div>`);
+      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message user">${escapeHtml(value)}</div><div class="darlink-free-message ai thinking">${copy("Xiaoda is thinking", "小搭正在思考", "小搭正在思考")}<span></span><span></span><span></span></div>`);
       messages.scrollTop = messages.scrollHeight;
       const res = await postJSON("/api/ai/chat", {
         lang: lang(),
@@ -2083,7 +2407,7 @@
         recent_messages: [],
       });
       messages.querySelector(".thinking")?.remove();
-      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message ai">${res.ok && res.reply ? res.reply : aiErrorMessage(res)}</div>`);
+      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message ai">${escapeHtml(res.ok && res.reply ? res.reply : aiErrorMessage(res))}</div>`);
       messages.scrollTop = messages.scrollHeight;
     });
   }
@@ -2130,6 +2454,92 @@
 
     const input = doc.querySelector("input[placeholder='Type a message...']");
     if (input) input.placeholder = copy(`Message ${profile.name}...`, `给 ${profile.name} 发消息...`, `給 ${profile.name} 發消息...`);
+    const chatMessages = doc.querySelector("#chat-messages");
+    const inputWrap = input?.closest(".glass-input");
+    const buttons = inputWrap ? Array.from(inputWrap.querySelectorAll("button")) : [];
+    const sendButton = buttons[buttons.length - 1] || null;
+    let sending = false;
+
+    const scrollMessages = () => {
+      if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+    const setSending = (active) => {
+      sending = active;
+      if (sendButton) sendButton.disabled = active;
+      if (input) input.disabled = active;
+      inputWrap?.classList.toggle("is-sending", active);
+    };
+    const collectRecentMessages = () => {
+      if (!chatMessages) return [];
+      return Array.from(chatMessages.querySelectorAll(".glass-bubble-ai p, .glass-bubble-user p"))
+        .filter((node) => !node.closest(".thinking"))
+        .slice(-10)
+        .map((node) => ({
+          role: node.closest(".glass-bubble-user") ? "user" : "assistant",
+          content: normalize(node.textContent),
+        }))
+        .filter((item) => item.content);
+    };
+    const appendMessage = (role, text, thinking = false) => {
+      if (!chatMessages) return null;
+      const textHtml = thinking
+        ? `${escapeHtml(text)}<span></span><span></span><span></span>`
+        : escapeHtml(text);
+      const html = role === "user"
+        ? `<div class="flex items-end gap-3 max-w-[80%] ml-auto justify-end darlink-context-message user">
+            <div class="glass-bubble-user rounded-2xl rounded-br-sm p-4 font-body-md text-body-md shadow-md"><p>${textHtml}</p></div>
+          </div>`
+        : `<div class="flex items-end gap-3 max-w-[80%] darlink-context-message ai${thinking ? " thinking" : ""}">
+            <div class="w-8 h-8 rounded-full overflow-hidden shrink-0 shadow-sm border border-white/40"><img alt="${escapeHtml(profile.name)} Avatar Small" class="w-full h-full object-cover" src="${escapeHtml(profile.avatar)}"></div>
+            <div class="glass-bubble-ai rounded-2xl rounded-bl-sm p-4 text-on-surface font-body-md text-body-md"><p>${textHtml}</p></div>
+          </div>`;
+      chatMessages.insertAdjacentHTML("beforeend", html);
+      scrollMessages();
+      return chatMessages.lastElementChild;
+    };
+    const submitMessage = async () => {
+      const value = normalize(input?.value);
+      if (!value || sending) return;
+      input.value = "";
+      appendMessage("user", value);
+      const thinkingNode = appendMessage("assistant", copy(`${profile.name} is thinking`, `${profile.name} 正在思考`, `${profile.name} 正在思考`), true);
+      setSending(true);
+      const res = await postJSON("/api/ai/contextual-chat", {
+        lang: lang(),
+        profile_name: profile.name,
+        profile_type: profile.type,
+        profile_subtitle: profile.subtitle,
+        profile_context: [
+          `id: ${profile.id || ""}`,
+          `opener: ${profile.opener || ""}`,
+          `followup: ${profile.followup || ""}`,
+          `suggestion: ${profile.suggestion || ""}`,
+        ].join("\n"),
+        message: value,
+        recent_messages: collectRecentMessages(),
+      });
+      thinkingNode?.remove();
+      appendMessage("assistant", res.ok && res.reply ? res.reply : aiErrorMessage(res));
+      setSending(false);
+      input?.focus();
+    };
+
+    sendButton?.addEventListener("click", (event) => {
+      event.preventDefault();
+      submitMessage();
+    });
+    input?.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        submitMessage();
+      }
+    });
+    doc.querySelector(".darlink-suggestion-card button")?.addEventListener("click", () => {
+      if (!input) return;
+      input.value = profile.suggestion;
+      input.focus();
+    });
+    scrollMessages();
   }
 
   function enhanceHallOfFame(doc) {
@@ -2207,6 +2617,129 @@
     toggle.setAttribute("aria-expanded", "false");
   }
 
+  function enhanceHallChallenge(doc, api) {
+    const challenge = read(STORAGE.hallChallenge, {});
+    const id = challenge.id && HALL_CHAT_PROFILES[challenge.id] ? challenge.id : "steve-jobs";
+    const profile = HALL_CHAT_PROFILES[id];
+    const questions = HALL_CHALLENGES[id] || HALL_CHALLENGES["steve-jobs"];
+    injectStyle(doc, hallChallengeCss());
+    doc.title = `Darlink - ${profile.name} Challenge`;
+    doc.body.className = "darlink-hall-challenge-body darlink-page-polished darlink-page-hall-fame-liquid-glass-challenge";
+    doc.body.innerHTML = `
+      <main class="darlink-challenge-scene">
+        <section class="darlink-liquid-stage">
+          <div class="darlink-liquid-sky"></div>
+          <div class="darlink-liquid-water"><span></span><span></span><span></span></div>
+          <div class="darlink-digital-player">
+            <div class="darlink-player-aura"></div>
+            <div class="darlink-player-avatar">${materialIconSvg("person")}</div>
+            <strong>${copy("You as a digital human", "你作为数字人", "你作為數字人")}</strong>
+          </div>
+        </section>
+        <aside class="darlink-challenge-panel">
+          <span>${copy("Mystery Icon Challenge", "人物盲盒挑战", "人物盲盒挑戰")}</span>
+          <h1>${profile.name}</h1>
+          <p>${copy("Answer 6 questions correctly to unlock this hidden digital human. The challenge returns only once for each figure.", "答对 6 道题即可解锁这位隐藏款数字人。每位名人只需要通关一次。", "答對 6 道題即可解鎖這位隱藏款數字人。每位名人只需要通關一次。")}</p>
+          <article class="darlink-rising-question" id="darlinkChallengeCard"></article>
+          <div class="darlink-challenge-progress"><strong id="darlinkChallengeStep">1/6</strong><em id="darlinkChallengeScore">0 ${copy("correct", "题正确", "題正確")}</em></div>
+          <button type="button" class="darlink-challenge-exit" data-darlink-local-control="true">${copy("Back to plaza", "返回广场", "返回廣場")}</button>
+        </aside>
+      </main>
+    `;
+
+    let index = 0;
+    let correct = 0;
+    const card = doc.querySelector("#darlinkChallengeCard");
+    const step = doc.querySelector("#darlinkChallengeStep");
+    const score = doc.querySelector("#darlinkChallengeScore");
+    const renderQuestion = () => {
+      const current = questions[index];
+      step.textContent = `${Math.min(index + 1, questions.length)}/${questions.length}`;
+      score.textContent = `${correct} ${copy("correct", "题正确", "題正確")}`;
+      card.classList.remove("is-correct", "is-wrong", "is-complete");
+      card.innerHTML = `
+        <span>${copy("Question", "问题", "問題")} ${index + 1}</span>
+        <h2>${current[0]}</h2>
+        <div class="darlink-challenge-options">
+          ${current[1].map((option) => `<button type="button" data-answer="${option}" data-darlink-local-control="true">${option}</button>`).join("")}
+        </div>
+        <p class="darlink-challenge-feedback"></p>
+      `;
+      card.querySelectorAll("[data-answer]").forEach((button) => {
+        button.dataset.answerBound = "true";
+        const submitAnswer = (event) => {
+          if (event.type === "keydown" && !["Enter", " "].includes(event.key)) return;
+          event.preventDefault();
+          event.stopPropagation();
+          answerChallenge(button);
+        };
+        button.addEventListener("click", submitAnswer);
+        button.addEventListener("pointerup", submitAnswer);
+        button.addEventListener("mouseup", submitAnswer);
+        button.addEventListener("keydown", submitAnswer);
+      });
+    };
+    const complete = () => {
+      const unlocked = read(STORAGE.hallUnlocked, {});
+      unlocked[id] = { unlockedAt: Date.now(), score: correct };
+      write(STORAGE.hallUnlocked, unlocked);
+      storeChatContext("hall", id);
+      step.textContent = `${questions.length}/${questions.length}`;
+      score.textContent = `${correct} ${copy("correct", "题正确", "題正確")}`;
+      card.classList.add("is-complete");
+      card.innerHTML = `
+        <span>${copy("Unlocked", "已解锁", "已解鎖")}</span>
+        <h2>${copy("Challenge complete.", "挑战通关。", "挑戰通關。")}</h2>
+        <p>${copy("This hidden digital human is now available for direct conversation.", "这位隐藏款数字人已解锁，下次点击可直接聊天。", "這位隱藏款數字人已解鎖，下次點擊可直接聊天。")}</p>
+        <button type="button" class="darlink-challenge-chat" data-darlink-local-control="true">${copy("Start chatting", "开始聊天", "開始聊天")} ${materialIconSvg("chat_bubble")}</button>
+      `;
+      card.querySelector(".darlink-challenge-chat").addEventListener("click", () => api.navigate(api.page.matchChat, { immediate: true }));
+    };
+
+    const answerChallenge = (button) => {
+      if (!button || button.disabled || card.dataset.answering === "true") return;
+      card.dataset.answering = "true";
+      const current = questions[index];
+      const isCorrect = button.dataset.answer === current[2];
+      card.querySelectorAll("[data-answer]").forEach((item) => {
+        item.disabled = true;
+        item.classList.toggle("is-selected", item === button);
+        item.classList.toggle("is-answer", item.dataset.answer === current[2]);
+      });
+      if (isCorrect) correct += 1;
+      card.classList.add(isCorrect ? "is-correct" : "is-wrong");
+      const feedback = card.querySelector(".darlink-challenge-feedback");
+      feedback.textContent = isCorrect
+        ? copy("Correct. The water unlocks the next memory.", "回答正确，水面升起下一段记忆。", "回答正確，水面升起下一段記憶。")
+        : copy("Not quite. Try again before the question sinks back.", "还差一点，请重新作答，这一题答对后才会继续。", "還差一點，請重新作答，這一題答對後才會繼續。");
+      window.setTimeout(() => {
+        if (!isCorrect) {
+          delete card.dataset.answering;
+          card.classList.remove("is-wrong");
+          card.querySelectorAll("[data-answer]").forEach((item) => {
+            item.disabled = false;
+            item.classList.remove("is-selected", "is-answer");
+          });
+          feedback.textContent = "";
+          return;
+        }
+        index += 1;
+        delete card.dataset.answering;
+        if (index >= questions.length) complete();
+        else renderQuestion();
+      }, 900);
+    };
+    card.addEventListener("click", (event) => {
+      const button = event.target.closest && event.target.closest("[data-answer]");
+      if (!button) return;
+      event.preventDefault();
+      event.stopPropagation();
+      answerChallenge(button);
+    });
+    doc.querySelector(".darlink-challenge-exit").addEventListener("click", () => api.navigate(api.page.home, { immediate: true }));
+    renderQuestion();
+  }
+
   function addModuleBackControl(doc, page, api) {
     const pagesWithBack = new Set([
       api.page.digitalPlaza,
@@ -2217,9 +2750,9 @@
       api.page.romance,
       api.page.matching,
       api.page.matchChat,
-      api.page.events,
       api.page.community,
       api.page.hall,
+      api.page.hallChallenge,
       api.page.profile,
     ]);
     if (!pagesWithBack.has(page) || doc.querySelector(".darlink-module-back")) return;
@@ -2301,17 +2834,6 @@
   function watchMaterialIconFallbacks(doc) {
     if (!doc || !doc.body || doc.body.dataset.darlinkIconObserver === "true") return;
     doc.body.dataset.darlinkIconObserver = "true";
-    let pending = false;
-    const schedule = () => {
-      if (pending) return;
-      pending = true;
-      doc.defaultView.requestAnimationFrame(() => {
-        pending = false;
-        replaceMaterialIconFallbacks(doc);
-      });
-    };
-    const observer = new doc.defaultView.MutationObserver(schedule);
-    observer.observe(doc.body, { childList: true, subtree: true });
   }
 
   function startSpeech(doc) {
@@ -2363,7 +2885,7 @@
 
   function progressHeader(label, step) {
     return `<header class="darlink-progress">
-      <div><span>${icon("person")}</span><strong>${label}</strong><em>${step}/3</em></div>
+      <div><strong>${label}</strong><em>${step}/3</em></div>
       <div class="darlink-progress-track"><span style="width:${(step / 3) * 100}%"></span></div>
     </header>`;
   }
@@ -2412,13 +2934,29 @@
       @keyframes darlinkFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
       .darlink-chat-panel{overflow:auto;border-radius:34px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.68);box-shadow:0 24px 70px rgba(31,42,68,.08);padding:28px;backdrop-filter:blur(24px)}.darlink-panel-title span{color:#8a486f;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:900}.darlink-panel-title h1{font-size:34px;line-height:1.04;margin:8px 0 8px}.darlink-panel-title p{margin:0 0 18px;color:#4a454f}
       .darlink-chat-window{height:48vh;min-height:330px;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:26px;background:rgba(255,255,255,.38);border:1px solid rgba(255,255,255,.68);scroll-behavior:smooth}.darlink-message{max-width:82%;border-radius:22px;padding:13px 16px;line-height:1.55;font-size:15px;animation:darlinkMessageIn .26s cubic-bezier(.16,1,.3,1)}.darlink-message.xiaoda{align-self:flex-start;background:rgba(255,255,255,.78);color:#111c2d;border-top-left-radius:6px;box-shadow:0 10px 30px rgba(111,80,146,.08)}.darlink-message.user{align-self:flex-end;background:linear-gradient(135deg,#6f5092,#006686);color:white;border-top-right-radius:6px}.darlink-message.thinking span{display:inline-block;width:5px;height:5px;margin-left:4px;border-radius:50%;background:#8a486f;animation:darlinkDot 900ms infinite}.darlink-message.thinking span:nth-child(2){animation-delay:120ms}.darlink-message.thinking span:nth-child(3){animation-delay:240ms}@keyframes darlinkDot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}@keyframes darlinkMessageIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
-      .darlink-quick-replies{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.darlink-chat-input-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:end}.darlink-chat-actions{display:flex;justify-content:space-between;gap:12px;margin-top:14px}.darlink-analysis-status{min-height:24px;color:#ba1a1a;font-weight:800;font-size:13px;margin:8px 0}.darlink-analysis-status[data-tone='success']{color:#005b78}.darlink-analysis-status[data-tone='info']{color:#604283}
+      .darlink-quick-replies{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.darlink-chat-input-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:end}.darlink-chat-actions{display:flex;justify-content:space-between;gap:12px;margin-top:14px}.darlink-chat-action-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.darlink-analysis-status{min-height:24px;color:#ba1a1a;font-weight:800;font-size:13px;margin:8px 0}.darlink-analysis-status[data-tone='success']{color:#005b78}.darlink-analysis-status[data-tone='info']{color:#604283}
       @media(max-width:900px){.darlink-onboarding-body{overflow:auto}.darlink-onboarding-shell{height:auto;min-height:100vh}.darlink-onboarding-stage{grid-template-columns:1fr}.darlink-xiaoda-panel{min-height:520px}}
     `;
   }
 
   function digitalPlazaCss() {
     return `.darlink-digital-plaza-card{min-height:520px}.darlink-plaza-avatars{display:flex;align-items:center;margin-top:18px}.darlink-plaza-avatars span{width:46px;height:46px;margin-right:-10px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#fff,#efd8ff 45%,#d6f2ff);border:1px solid rgba(255,255,255,.78);box-shadow:0 12px 28px rgba(111,80,146,.14);color:#604283;font-weight:900}.darlink-plaza-new-twin{margin-top:24px;padding:18px;border-radius:24px;background:linear-gradient(135deg,rgba(255,255,255,.62),rgba(239,248,255,.54));border:1px solid rgba(255,255,255,.72);display:flex;align-items:center;gap:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}`;
+  }
+
+  function homeDiscoveryCss() {
+    return `
+      .darlink-home-discovery-body{min-height:100vh;margin:0;background:linear-gradient(135deg,#f9fbff 0%,#f7f1ff 48%,#eef9ff 100%);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#111c2d;overflow-x:hidden}
+      .darlink-home-shell{width:min(1480px,calc(100vw - 48px));margin:0 auto;padding:34px 0 54px;display:flex;flex-direction:column;gap:22px}
+      .darlink-home-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:22px}.darlink-home-hero span,.darlink-ranking-head span,.darlink-section-head span,.darlink-my-twin>span{display:block;color:#8a486f;font-size:12px;font-weight:950;letter-spacing:.12em;text-transform:uppercase}.darlink-home-hero h1{max-width:760px;margin:8px 0 10px;font-size:clamp(34px,5vw,64px);line-height:1.02}.darlink-home-hero p{max-width:760px;margin:0;color:#4a454f;line-height:1.7}
+      .darlink-home-ranking,.darlink-home-plaza,.darlink-my-twin{border:1px solid rgba(255,255,255,.74);background:rgba(255,255,255,.58);box-shadow:0 24px 70px rgba(31,42,68,.09);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+      .darlink-home-ranking{border-radius:28px;padding:18px}.darlink-ranking-head{display:flex;align-items:center;justify-content:space-between;gap:16px}.darlink-ranking-head h2{margin:4px 0 0;font-size:22px}.darlink-ranking-head button{border:1px solid rgba(111,80,146,.18);border-radius:999px;background:rgba(255,255,255,.66);color:#604283;padding:10px 14px;font-weight:900;cursor:pointer}
+      .darlink-ranking-list{margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-height:74px;overflow:hidden;transition:max-height .26s ease}.darlink-ranking-list.is-expanded{max-height:230px;overflow-y:auto;grid-template-columns:repeat(5,minmax(180px,1fr));padding-right:4px}.darlink-ranking-row{min-height:64px;border:1px solid rgba(111,80,146,.12);border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(239,248,255,.62));display:flex;align-items:center;gap:12px;padding:10px 12px;text-align:left;color:#111c2d;cursor:pointer}.darlink-ranking-row strong{display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#6f5092,#006686);color:white}.darlink-ranking-row span{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;font-weight:900}.darlink-ranking-row em{font-style:normal;color:#4a454f;font-size:12px;font-weight:760}.darlink-ranking-row b{color:#8a486f}
+      .darlink-home-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(320px,.72fr);gap:22px;align-items:start}.darlink-home-plaza,.darlink-my-twin{border-radius:30px;padding:22px}.darlink-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px}.darlink-section-head h2{margin:4px 0 0;font-size:28px}.darlink-plaza-filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.darlink-plaza-filters button{border:1px solid rgba(111,80,146,.16);border-radius:999px;background:rgba(255,255,255,.62);color:#604283;padding:9px 12px;font-size:12px;font-weight:900;cursor:pointer}.darlink-plaza-filters button.is-active{background:linear-gradient(135deg,#6f5092,#006686);color:white;box-shadow:0 12px 26px rgba(111,80,146,.22)}
+      .darlink-home-plaza-scroll{height:min(68vh,760px);min-height:560px;overflow-y:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding-right:4px;scroll-behavior:smooth}.darlink-home-twin-card{min-height:300px;border:1px solid rgba(255,255,255,.78);border-radius:24px;background:rgba(255,255,255,.72);box-shadow:0 16px 42px rgba(111,80,146,.1);padding:18px;display:flex;flex-direction:column;gap:13px;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}.darlink-home-twin-card:hover{transform:translateY(-3px);box-shadow:0 22px 48px rgba(111,80,146,.16)}.darlink-home-twin-card.is-hidden-icon{border-color:rgba(252,170,214,.92);box-shadow:0 0 0 2px rgba(252,170,214,.28),0 22px 54px rgba(138,72,111,.16);background:linear-gradient(145deg,rgba(255,255,255,.78),rgba(239,219,255,.58))}
+      .darlink-home-avatar{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,var(--from),var(--to));display:grid;place-items:center;color:white;font-size:22px;font-weight:950;overflow:hidden;box-shadow:0 16px 34px rgba(111,80,146,.2)}.darlink-home-avatar img{width:100%;height:100%;object-fit:cover}.darlink-home-twin-card h3{margin:0;font-size:21px}.darlink-home-twin-card p{margin:0;color:#4a454f;line-height:1.56;font-size:13px}.darlink-home-role{color:#604283!important;font-weight:900}.darlink-home-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}.darlink-home-tags span{border-radius:999px;background:#efdbff;color:#604283;padding:6px 9px;font-size:11px;font-weight:850}.darlink-home-twin-card>button{border:0;border-radius:16px;background:linear-gradient(135deg,#6f5092,#006686);color:white;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;cursor:pointer}
+      .darlink-my-twin{position:sticky;top:102px;display:flex;flex-direction:column;gap:16px}.darlink-my-twin-orb{width:86px;height:86px;border-radius:28px;background:radial-gradient(circle at 28% 22%,#fff,transparent 34%),linear-gradient(135deg,#6f5092,#7ed4fd);color:white;display:grid;place-items:center;font-size:30px;box-shadow:0 20px 44px rgba(111,80,146,.22)}.darlink-my-twin h2{margin:0;font-size:30px;line-height:1.1}.darlink-my-twin p{margin:0;color:#4a454f;line-height:1.68}.darlink-my-profile-cards{display:flex;flex-direction:column;gap:9px}.darlink-my-profile-cards article{border-radius:18px;background:rgba(255,255,255,.64);border:1px solid rgba(111,80,146,.1);padding:12px}.darlink-my-profile-cards strong{display:block;color:#111c2d}.darlink-my-profile-cards em{font-style:normal;color:#8a486f;font-size:12px;font-weight:850}.darlink-refine-btn{margin-top:4px;border:0;border-radius:999px;background:linear-gradient(135deg,#8a486f,#006686);color:white;min-height:52px;padding:0 18px;font-weight:950;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;box-shadow:0 18px 40px rgba(138,72,111,.22)}
+      @media(max-width:1180px){.darlink-home-grid{grid-template-columns:1fr}.darlink-my-twin{position:relative;top:auto}.darlink-home-plaza-scroll{grid-template-columns:repeat(2,minmax(0,1fr))}.darlink-ranking-list,.darlink-ranking-list.is-expanded{grid-template-columns:1fr 1fr;max-height:260px}}@media(max-width:700px){.darlink-home-shell{width:calc(100vw - 28px);padding-top:22px}.darlink-section-head,.darlink-ranking-head{align-items:flex-start;flex-direction:column}.darlink-home-plaza-scroll{height:auto;min-height:0;grid-template-columns:1fr}.darlink-ranking-list,.darlink-ranking-list.is-expanded{grid-template-columns:1fr}.darlink-home-hero h1{font-size:34px}}
+    `;
   }
 
   function exploreChatCss() {
@@ -2513,6 +3051,15 @@
       body.darlink-contextual-chat.darlink-hall-chat .glass-bubble-ai p,body.darlink-contextual-chat.darlink-hall-chat .darlink-suggestion-card p,body.darlink-contextual-chat.darlink-hall-chat .darlink-suggestion-card span{color:rgba(248,251,255,.92)!important}
       body.darlink-contextual-chat #chat-messages{scroll-behavior:smooth}
       body.darlink-contextual-chat .glass-bubble-ai,body.darlink-contextual-chat .darlink-suggestion-card,body.darlink-contextual-chat .glass-input{background:rgba(255,255,255,.72)!important;border:1px solid rgba(255,255,255,.76)!important;backdrop-filter:blur(24px)}
+      body.darlink-contextual-chat .darlink-context-message{animation:darlinkContextMessageIn .22s ease}
+      body.darlink-contextual-chat .darlink-context-message.thinking span{display:inline-block;width:5px;height:5px;margin-left:4px;border-radius:999px;background:#8a486f;animation:darlinkContextDot 900ms infinite}
+      body.darlink-contextual-chat .darlink-context-message.thinking span:nth-child(2){animation-delay:120ms}
+      body.darlink-contextual-chat .darlink-context-message.thinking span:nth-child(3){animation-delay:240ms}
+      body.darlink-contextual-chat .glass-input.is-sending{opacity:.86}
+      body.darlink-contextual-chat .glass-input button:disabled{opacity:.55;cursor:wait}
+      body.darlink-contextual-chat .glass-input input:disabled{cursor:wait}
+      @keyframes darlinkContextMessageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+      @keyframes darlinkContextDot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
     `;
   }
 
@@ -2537,12 +3084,28 @@
     `;
   }
 
+  function hallChallengeCss() {
+    return `
+      .darlink-hall-challenge-body{min-height:100vh;margin:0;overflow:hidden;background:#050814;color:#f8fbff;font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+      .darlink-challenge-scene{height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:26px;padding:28px;isolation:isolate}
+      .darlink-liquid-stage{position:relative;overflow:hidden;border-radius:32px;background:radial-gradient(circle at 50% 18%,rgba(126,212,253,.22),transparent 34%),linear-gradient(180deg,#070b18 0%,#081020 58%,#040713 100%);border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 100px rgba(0,0,0,.42);perspective:1100px}
+      .darlink-liquid-sky{position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(216,180,254,.2),transparent 30%),radial-gradient(circle at 78% 18%,rgba(252,170,214,.16),transparent 26%);filter:saturate(1.15)}
+      .darlink-liquid-water{position:absolute;left:-8%;right:-8%;bottom:-12%;height:44%;transform:rotateX(64deg);transform-origin:center bottom;border-radius:50% 50% 0 0;background:linear-gradient(135deg,rgba(126,212,253,.32),rgba(216,180,254,.22),rgba(255,255,255,.08));box-shadow:inset 0 0 70px rgba(255,255,255,.2),0 -16px 80px rgba(126,212,253,.2);overflow:hidden}
+      .darlink-liquid-water span{position:absolute;inset:12%;border-radius:50%;border:1px solid rgba(255,255,255,.18);animation:darlinkRipple 4.6s ease-in-out infinite}.darlink-liquid-water span:nth-child(2){inset:24%;animation-delay:.8s}.darlink-liquid-water span:nth-child(3){inset:36%;animation-delay:1.5s}@keyframes darlinkRipple{0%,100%{transform:scale(.9);opacity:.35}50%{transform:scale(1.12);opacity:.8}}
+      .darlink-digital-player{position:absolute;left:50%;bottom:30%;transform:translateX(-50%) translateZ(60px);display:flex;flex-direction:column;align-items:center;gap:10px;z-index:3}.darlink-player-aura{position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(216,180,254,.34),transparent 62%);filter:blur(16px);z-index:-1}.darlink-player-avatar{width:104px;height:148px;border-radius:44px 44px 30px 30px;background:linear-gradient(160deg,rgba(255,255,255,.86),rgba(126,212,253,.2) 45%,rgba(111,80,146,.42));display:grid;place-items:center;color:white;font-size:46px;box-shadow:0 24px 70px rgba(126,212,253,.28),inset 0 1px 0 rgba(255,255,255,.48);backdrop-filter:blur(18px)}.darlink-digital-player strong{border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);padding:8px 12px;font-size:12px;color:rgba(248,251,255,.86)}
+      .darlink-rising-question{position:absolute;left:50%;top:11%;z-index:4;width:min(720px,72%);min-height:330px;transform:translateX(-50%);border-radius:30px;background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.22);box-shadow:0 28px 90px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.26);backdrop-filter:blur(28px);padding:28px;animation:darlinkRise .42s cubic-bezier(.16,1,.3,1)}@keyframes darlinkRise{from{opacity:0;transform:translateX(-50%) translateY(60px) scale(.96)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+      .darlink-challenge-panel .darlink-rising-question{position:relative;left:auto;top:auto;width:100%;min-height:300px;transform:none;padding:20px;animation:none}
+      .darlink-rising-question>span,.darlink-challenge-panel>span{color:#7ed4fd;text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:950}.darlink-rising-question h2{font-size:clamp(24px,3vw,40px);line-height:1.12;margin:10px 0 22px;color:#fff}.darlink-challenge-options{display:grid;gap:12px}.darlink-challenge-options button{border:1px solid rgba(255,255,255,.18);border-radius:18px;background:rgba(255,255,255,.1);color:white;padding:14px 16px;text-align:left;font-weight:900;cursor:pointer;transition:.18s ease}.darlink-challenge-options button:hover{transform:translateY(-1px);background:rgba(255,255,255,.16)}.darlink-challenge-options button.is-selected{border-color:#fcaad6}.darlink-challenge-options button.is-answer{background:rgba(16,185,129,.22);border-color:rgba(16,185,129,.72)}.darlink-challenge-feedback{min-height:24px;margin:14px 0 0;color:rgba(248,251,255,.82);font-weight:850}.darlink-rising-question.is-wrong{box-shadow:0 28px 90px rgba(185,28,28,.24),inset 0 1px 0 rgba(255,255,255,.26)}.darlink-rising-question.is-correct{box-shadow:0 28px 90px rgba(16,185,129,.24),inset 0 1px 0 rgba(255,255,255,.26)}
+      .darlink-challenge-panel{border-radius:30px;border:1px solid rgba(255,255,255,.14);background:rgba(8,13,28,.72);box-shadow:0 24px 90px rgba(0,0,0,.28);backdrop-filter:blur(26px);padding:26px;display:flex;flex-direction:column;gap:16px}.darlink-challenge-panel h1{font-size:42px;line-height:1;margin:0}.darlink-challenge-panel p{color:rgba(248,251,255,.72);line-height:1.7;margin:0}.darlink-challenge-progress{display:flex;align-items:center;justify-content:space-between;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:14px}.darlink-challenge-progress strong{font-size:28px}.darlink-challenge-progress em{font-style:normal;color:#fcaad6;font-weight:900}.darlink-challenge-exit,.darlink-challenge-chat{margin-top:auto;border:0;border-radius:999px;background:linear-gradient(135deg,#6f5092,#006686);color:white;min-height:50px;padding:0 18px;font-weight:950;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}.darlink-rising-question.is-complete{display:flex;flex-direction:column;justify-content:center}.darlink-rising-question.is-complete p{color:rgba(248,251,255,.78);line-height:1.7}
+      @media(max-width:960px){.darlink-hall-challenge-body{overflow:auto}.darlink-challenge-scene{height:auto;min-height:100vh;grid-template-columns:1fr;padding:16px;gap:14px}.darlink-liquid-stage{min-height:720px;order:0}.darlink-challenge-panel{order:1}.darlink-rising-question{width:calc(100% - 32px);top:72px;min-height:320px}.darlink-digital-player{bottom:18%}}
+    `;
+  }
+
   function globalFrameCss() {
     return `
       html{font-family:"Plus Jakarta Sans",system-ui,sans-serif}
       body.darlink-page-polished>nav:first-of-type:not(.darlink-unpolished-nav),body.darlink-page-polished>header.fixed{min-height:76px}
       body.darlink-page-polished button[data-darlink-search-disabled='true']{cursor:default;pointer-events:none;opacity:.78}
-      body.darlink-page-polished a[href*="app-companion-430619"]{pointer-events:none}
       body.darlink-page-polished .darlink-material-svg{width:1em;height:1em;display:block}
       .darlink-icon-normalized .darlink-material-svg{width:1.1em;height:1.1em}
       .darlink-standard-topbar{position:sticky;top:0;z-index:90;width:100%;background:rgba(255,255,255,.58);border-bottom:1px solid rgba(255,255,255,.52);box-shadow:0 10px 36px rgba(31,42,68,.08);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px)}
@@ -2568,6 +3131,7 @@
     appendStyle(doc, "global-frame-polish", globalFrameCss());
     doc.documentElement.lang = lang() === "en" ? "en" : lang() === "zhHans" ? "zh-Hans" : "zh-Hant";
     doc.body.classList.add("darlink-page-polished", `darlink-page-${page.replace(/[^a-z0-9]+/gi, "-")}`);
+    removeDeprecatedNavigationAndLegacyLinks(doc);
     doc.querySelectorAll("button").forEach((button) => {
       const text = normalize(button.textContent).toLowerCase();
       const hasSearch = text === "search" || button.querySelector("[data-icon='search'], .material-symbols-outlined");
@@ -2601,6 +3165,14 @@
     });
   }
 
+  function removeDeprecatedNavigationAndLegacyLinks(doc) {
+    Array.from(doc.querySelectorAll("nav a, nav li, nav button, header a, header li, header button")).forEach((node) => {
+      const text = normalize(node.textContent).toLowerCase();
+      const isOnlyEvents = ["events", "event", "活动", "活動", "校园活动", "校園活動"].includes(text);
+      if (isOnlyEvents) node.remove();
+    });
+  }
+
   function normalizeInteractiveIconButtons(doc) {
     const controls = [
       { labels: ["发送", "發送", "send", "snd"], icon: "send", label: copy("Send", "发送", "發送") },
@@ -2629,7 +3201,6 @@
     const items = [
       ["discover", copy("Discover", "发现", "發現")],
       ["matches", copy("Matches", "匹配", "匹配")],
-      ["events", copy("Events", "活动", "活動")],
       ["community", copy("Community", "社区", "社群")],
       ["hall", copy("Hall of Fame", "名人堂", "名人堂")],
     ];
@@ -2686,28 +3257,6 @@
       "Both profiles exhibit high affinity for minimalist digital art and brutalist architecture.": zh("双方画像都对极简数字艺术和粗野主义建筑有很高亲和度。", "雙方畫像都對極簡數字藝術和粗野主義建築有很高親和度。"),
       "Strong mutual interest in speculative sci-fi and historical non-fiction.": zh("双方都对推想科幻和历史纪实类阅读有强烈兴趣。", "雙方都對推想科幻和歷史紀實類閱讀有強烈興趣。"),
     };
-    if (page === "events_campus_resonance_hub") {
-      return {
-        ...common,
-        "Campus Resonance Events": zh("校园共振活动", "校園共振活動"),
-        "Discover curated experiences designed to spark connection. Our AI analyzes campus energy to match you with events that resonate with your vibe.": zh("发现为连接而策划的校园体验。小搭会分析校园能量，为你匹配与你状态共振的活动。", "發現為連接而策劃的校園體驗。小搭會分析校園能量，為你匹配與你狀態共振的活動。"),
-        "Explore Vibes": zh("探索氛围", "探索氛圍"),
-        "All Events": zh("全部活动", "全部活動"),
-        "Recommended for You": zh("为你推荐", "為你推薦"),
-        "Midnight Coding Marathon": zh("午夜编程马拉松", "午夜編程馬拉松"),
-        "Oct 12, 10 PM": zh("10 月 12 日 22:00", "10 月 12 日 22:00"),
-        "Innovation Hub": zh("创新中心", "創新中心"),
-        "Collaborate on late-night projects with low-fi beats and unlimited coffee. High resonance with your study habits.": zh("伴着低保真音乐和无限咖啡一起完成深夜项目，与你的学习习惯高度共振。", "伴著低保真音樂和無限咖啡一起完成深夜項目，與你的學習習慣高度共振。"),
-        "Join Event": zh("加入活动", "加入活動"),
-        "Sunset Campus Walk": zh("日落校园漫步", "日落校園漫步"),
-        "Oct 14, 6 PM": zh("10 月 14 日 18:00", "10 月 14 日 18:00"),
-        "Quad Gardens": zh("四方庭园", "四方庭園"),
-        "A guided stroll through the botanical gardens just as the bioluminescent flora activates. Perfect for a low-pressure first meeting.": zh("在生物荧光植物亮起时一起漫步植物园，很适合低压力初次见面。", "在生物螢光植物亮起時一起漫步植物園，很適合低壓力初次見面。"),
-        "Interested": zh("感兴趣", "感興趣"),
-        "95% Fit": zh("95% 契合", "95% 契合"),
-        "88% Match": zh("88% 匹配", "88% 匹配"),
-      };
-    }
     if (page === "community_campus_pulse_feed") {
       return {
         ...common,
@@ -2885,9 +3434,9 @@
       if ([api.page.study, api.page.culinary, api.page.romance].includes(page)) enhanceDiscoveryModule(doc, page);
       if (page === api.page.matching) enhanceMatching(doc, api);
       if (page === api.page.matchChat) enhanceContextualChat(doc);
-      if (page === api.page.events) enhanceEventsPage(doc);
       if (page === api.page.community) enhanceCommunityPage(doc);
       if (page === api.page.hall) enhanceHallOfFame(doc);
+      if (page === api.page.hallChallenge) enhanceHallChallenge(doc, api);
       if (page === api.page.profile) enhanceProfile(doc);
       if (![api.page.login, api.page.onboard1, api.page.onboard2, api.page.onboard3, api.page.home].includes(page)) localizeStatic(doc, page);
       normalizeInteractiveIconButtons(doc);
