@@ -16,8 +16,7 @@
     matching: "matching_luminous_resonance_network_final_polish",
     matchChat: "chat_luminous_intelligence_refined_v3",
     community: "community_campus_pulse_feed",
-    hall: "hall_of_fame_legendary_pioneers_gallery",
-    hallChallenge: "hall_fame_liquid_glass_challenge",
+    celebrityChallenge: "celebrity_mystery_liquid_glass_challenge",
     profile: "profile_full_campus_identity_final",
   };
 
@@ -51,8 +50,7 @@
       [PAGE.matching]: "共振匹配网络",
       [PAGE.matchChat]: "智能聊天",
       [PAGE.community]: "校园社区",
-      [PAGE.hall]: "名人堂",
-      [PAGE.hallChallenge]: "人物盲盒挑战",
+      [PAGE.celebrityChallenge]: "人物盲盒挑战",
       [PAGE.profile]: "个人档案",
     },
     zhHant: {
@@ -70,8 +68,7 @@
       [PAGE.matching]: "共振匹配網絡",
       [PAGE.matchChat]: "智能聊天",
       [PAGE.community]: "校園社群",
-      [PAGE.hall]: "名人堂",
-      [PAGE.hallChallenge]: "人物盲盒挑戰",
+      [PAGE.celebrityChallenge]: "人物盲盒挑戰",
       [PAGE.profile]: "個人檔案",
     },
   };
@@ -101,6 +98,8 @@
   function pageFromHash() {
     const raw = decodeURIComponent((window.location.hash || "").replace(/^#/, "")).trim();
     if (raw === "events_campus_resonance_hub" || raw === "events") return PAGE.home;
+    if (raw === "hall_of_fame_legendary_pioneers_gallery" || raw === "hall") return PAGE.home;
+    if (raw === "hall_fame_liquid_glass_challenge") return PAGE.celebrityChallenge;
     if (PAGES.has(raw)) return raw;
     if (PAGE[raw]) return PAGE[raw];
     return PAGE.login;
@@ -226,7 +225,6 @@
       [PAGE.home]: ["discover", "home", "首页", "首頁", "发现", "發現"],
       [PAGE.matching]: ["matches", "match", "匹配"],
       [PAGE.community]: ["community", "社区", "社群", "校园社区", "校園社群"],
-      [PAGE.hall]: ["hall of fame", "hall", "名人堂"],
       [PAGE.profile]: ["profile", "my profile", "个人档案", "我的档案", "個人檔案", "我的檔案"],
     };
     return Object.entries(aliases).find(([, values]) => values.includes(cleaned))?.[0] || null;
@@ -238,7 +236,6 @@
     const exactRoute = exactNavRoute(shortLabel);
     if (exactRoute) return exactRoute;
 
-    if (hasAny(shortLabel, ["hall of fame", "名人堂"]) || shortLabel === "hall") return PAGE.hall;
     if (hasAny(shortLabel, ["community", "社区", "社群"])) return PAGE.community;
     if (hasAny(shortLabel, ["matches", "match", "匹配"])) return PAGE.matching;
     if (hasAny(shortLabel, ["discover", "home", "首页", "首頁", "发现", "發現"])) return PAGE.home;
@@ -394,27 +391,23 @@
     return null;
   }
 
-  function hallContextFromElement(element, label) {
-    const explicit = element.closest && element.closest("[data-darlink-hall-id]");
-    if (explicit && explicit.dataset.darlinkHallId) return explicit.dataset.darlinkHallId;
+  function celebrityContextFromElement(element, label) {
+    const explicit = element.closest && element.closest("[data-darlink-celebrity-id]");
+    if (explicit && explicit.dataset.darlinkCelebrityId) return explicit.dataset.darlinkCelebrityId;
     const combined = `${directText(element)} ${label}`;
     const pairs = [
-      ["steve jobs", "steve-jobs"],
+      ["jackie chan", "jackie-chan"],
+      ["big brother action", "jackie-chan"],
       ["elon musk", "elon-musk"],
-      ["jensen huang", "jensen-huang"],
-      ["jack ma", "jack-ma"],
-      ["warren buffett", "charlie-munger"],
-      ["tim cook", "steve-jobs"],
-      ["ray dalio", "ray-dalio"],
-      ["peter drucker", "peter-drucker"],
-      ["richard feynman", "richard-feynman"],
-      ["charlie munger", "charlie-munger"],
-      ["reid hoffman", "reid-hoffman"],
-      ["jeff bezos", "jeff-bezos"],
-      ["naval ravikant", "naval-ravikant"],
-      ["marc andreessen", "marc-andreessen"],
-      ["mark zuckerberg", "mark-zuckerberg"],
-      ["chat with me", "steve-jobs"],
+      ["mars meme ceo", "elon-musk"],
+      ["shing-tung yau", "shing-tung-yau"],
+      ["math emperor", "shing-tung-yau"],
+      ["人物盲盒 #1", "jackie-chan"],
+      ["人物盲盒 #2", "shing-tung-yau"],
+      ["人物盲盒 #3", "elon-musk"],
+      ["mystery icon #1", "jackie-chan"],
+      ["mystery icon #2", "shing-tung-yau"],
+      ["mystery icon #3", "elon-musk"],
     ];
     const found = pairs.find(([needle]) => combined.includes(needle));
     return found ? found[1] : "";
@@ -433,15 +426,15 @@
     }
   }
 
-  function routeForHallDigitalHuman(id) {
+  function routeForCelebrityDigitalHuman(id) {
     if (!id) return null;
-    const unlocked = readJson("darlink-hall-unlocked", {});
+    const unlocked = readJson("darlink-celebrity-unlocked", {});
     if (unlocked[id]) {
-      storeChatContext("hall", id);
+      storeChatContext("celebrity", id);
       return PAGE.matchChat;
     }
-    localStorage.setItem("darlink-hall-challenge", JSON.stringify({ id, createdAt: Date.now() }));
-    return PAGE.hallChallenge;
+    localStorage.setItem("darlink-celebrity-challenge", JSON.stringify({ id, createdAt: Date.now() }));
+    return PAGE.celebrityChallenge;
   }
 
   function previousForBack() {
@@ -452,7 +445,7 @@
     if (currentPage === PAGE.login) return LANDING;
     if (currentPage === PAGE.onboard2) return PAGE.onboard1;
     if (currentPage === PAGE.onboard3) return PAGE.onboard2;
-    if ([PAGE.digitalPlaza, PAGE.exploreChat, PAGE.xiaodaChat, PAGE.study, PAGE.culinary, PAGE.romance, PAGE.matching, PAGE.matchChat, PAGE.community, PAGE.hall, PAGE.hallChallenge, PAGE.profile].includes(currentPage)) {
+    if ([PAGE.digitalPlaza, PAGE.exploreChat, PAGE.xiaodaChat, PAGE.study, PAGE.culinary, PAGE.romance, PAGE.matching, PAGE.matchChat, PAGE.community, PAGE.celebrityChallenge, PAGE.profile].includes(currentPage)) {
       return previousPage || PAGE.home;
     }
     return PAGE.home;
@@ -475,9 +468,9 @@
       return PAGE.matchChat;
     }
 
-    const explicitHall = element.closest && element.closest("[data-darlink-hall-id]");
-    if (explicitHall && explicitHall.dataset.darlinkHallId) {
-      return routeForHallDigitalHuman(explicitHall.dataset.darlinkHallId);
+    const explicitCelebrity = element.closest && element.closest("[data-darlink-celebrity-id]");
+    if (explicitCelebrity && explicitCelebrity.dataset.darlinkCelebrityId) {
+      return routeForCelebrityDigitalHuman(explicitCelebrity.dataset.darlinkCelebrityId);
     }
 
     if ([PAGE.study, PAGE.culinary, PAGE.romance, PAGE.digitalPlaza].includes(currentPage) && hasAny(label, ["chat with twin", "initiate heart-to-heart", "initiate heart to heart", "open chat", "chat"])) {
@@ -532,15 +525,6 @@
           return PAGE.matchChat;
         }
         break;
-
-      case PAGE.hall: {
-        if (hasAny(localLabel, ["chevron_left", "chevron_right", "‹", "›"])) return null;
-        const hallId = hallContextFromElement(element, label);
-        if (hallId && hasAny(label, ["chat with me", "arrow_forward", "steve jobs", "elon musk", "jensen huang", "jack ma", "warren buffett", "tim cook", "ray dalio", "peter drucker", "richard feynman", "charlie munger", "reid hoffman", "jeff bezos", "naval ravikant", "marc andreessen", "mark zuckerberg"])) {
-          return routeForHallDigitalHuman(hallId);
-        }
-        break;
-      }
 
       case PAGE.exploreChat:
       case PAGE.xiaodaChat:
