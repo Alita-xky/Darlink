@@ -20,7 +20,7 @@
     avatarDraft: "darlink-avatar-draft",
   };
 
-  const DARLINK_TEST_AUTH_CODE = "202606";
+  const DARLINK_TEST_AUTH_CODE = "000000";
   const DARLINK_TEST_AUTH_EMAIL = "qa@connect.hku.hk";
   const DARLINK_TEST_AUTH_PASSWORD = "darlink2026";
 
@@ -993,17 +993,17 @@
   }
 
   function testAuthEnabled() {
-    const host = window.location.hostname;
     const params = new URLSearchParams(window.location.search);
-    return params.get("auth") === "test" || ["", "localhost", "127.0.0.1"].includes(host);
+    if (params.get("auth") === "real") return false;
+    return true;
   }
 
   function testAuthCopy(kind) {
     const copies = {
       notice: {
-        en: `Temporary test mode: use ${DARLINK_TEST_AUTH_EMAIL}, code ${DARLINK_TEST_AUTH_CODE}, password ${DARLINK_TEST_AUTH_PASSWORD}.`,
-        zhHant: `臨時測試模式：可使用 ${DARLINK_TEST_AUTH_EMAIL}，驗證碼 ${DARLINK_TEST_AUTH_CODE}，密碼 ${DARLINK_TEST_AUTH_PASSWORD}。`,
-        zhHans: `临时测试模式：可使用 ${DARLINK_TEST_AUTH_EMAIL}，验证码 ${DARLINK_TEST_AUTH_CODE}，密码 ${DARLINK_TEST_AUTH_PASSWORD}。`,
+        en: `Temporary test mode is active: use ${DARLINK_TEST_AUTH_EMAIL}, code ${DARLINK_TEST_AUTH_CODE}, password ${DARLINK_TEST_AUTH_PASSWORD}. Add ?auth=real only when the mail server is ready.`,
+        zhHant: `臨時測試模式已啟用：可使用 ${DARLINK_TEST_AUTH_EMAIL}，驗證碼 ${DARLINK_TEST_AUTH_CODE}，密碼 ${DARLINK_TEST_AUTH_PASSWORD}。郵件伺服器準備好後再使用 ?auth=real。`,
+        zhHans: `临时测试模式已启用：可使用 ${DARLINK_TEST_AUTH_EMAIL}，验证码 ${DARLINK_TEST_AUTH_CODE}，密码 ${DARLINK_TEST_AUTH_PASSWORD}。邮件服务器准备好后再使用 ?auth=real。`,
       },
       code: {
         en: `Test code filled: ${DARLINK_TEST_AUTH_CODE}`,
@@ -1484,7 +1484,7 @@
         <div class="darlink-auth-row">
           <div>
             <label class="darlink-auth-label">${t.code}</label>
-            <input class="input-glass darlink-auth-input" name="code" placeholder="000000" inputmode="numeric" value="${useTestAuth ? DARLINK_TEST_AUTH_CODE : ""}">
+            <input class="input-glass darlink-auth-input" name="code" aria-label="${t.code}" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" placeholder="${DARLINK_TEST_AUTH_CODE}" inputmode="numeric" type="text" value="${useTestAuth ? DARLINK_TEST_AUTH_CODE : ""}">
           </div>
           <button class="darlink-secondary-btn" type="button" data-action="request-code">${t.sendCode}</button>
         </div>
@@ -1509,6 +1509,13 @@
       status.dataset.tone = tone;
       status.textContent = message;
     };
+    form.code.addEventListener("input", () => {
+      form.code.value = form.code.value.replace(/\D/g, "").slice(0, 6);
+      if (status.dataset.tone === "error") setStatus("", "info");
+    });
+    form.email.addEventListener("input", () => {
+      if (status.dataset.tone === "error") setStatus("", "info");
+    });
     card.querySelector("[data-action='request-code']").addEventListener("click", async () => {
       const email = normalize(form.email.value);
       if (!email || !email.includes("@")) {
@@ -1569,7 +1576,8 @@
       setStatus(t.loginChecking);
       const res = await postJSON("/api/auth/verify", payload);
       if (!res.ok) {
-        setStatus(res.error || "Verification failed.", "error");
+        const fallback = lang() === "en" ? "Verification failed. In temporary mode, use code 000000." : lang() === "zhHant" ? "驗證失敗。臨時測試模式請使用驗證碼 000000。" : "验证失败。临时测试模式请使用验证码 000000。";
+        setStatus(res.error || fallback, "error");
         submittingAuth = false;
         return;
       }

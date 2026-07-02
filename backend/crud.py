@@ -16,6 +16,26 @@ def create_email_verification(email: str) -> str:
         db.close()
 
 
+def get_or_create_user_token(email: str) -> str:
+    db = SessionLocal()
+    try:
+        existing = db.query(User).filter_by(email=email).first()
+        if existing:
+            return existing.user_token
+
+        user_token = str(uuid.uuid4())
+        user = User(user_token=user_token, email=email, verified=True)
+        db.add(user)
+        db.commit()
+        return user_token
+    except IntegrityError:
+        db.rollback()
+        existing = db.query(User).filter_by(email=email).first()
+        return existing.user_token if existing else None
+    finally:
+        db.close()
+
+
 def confirm_token_create_user(token: str):
     db = SessionLocal()
     try:
