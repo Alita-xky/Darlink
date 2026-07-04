@@ -19,15 +19,15 @@
     celebrityChallenge: "darlink-celebrity-challenge",
     plazaSeed: "darlink-plaza-seed",
     plazaFeed: "darlink-plaza-feed",
+    plazaClicks: "darlink-plaza-clicks",
     avatarDraft: "darlink-avatar-draft",
     pathProfiles: "darlink-path-profiles",
     pathEditTarget: "darlink-path-edit-target",
     profileEditMode: "darlink-profile-edit-mode",
+    selfChatSession: "darlink-self-chat-session",
   };
 
   const DARLINK_TEST_AUTH_CODE = "000000";
-  const DARLINK_TEST_AUTH_EMAIL = "qa@connect.hku.hk";
-  const DARLINK_TEST_AUTH_PASSWORD = "darlink2026";
 
   const MATCH_CHAT_PROFILES = {
     elena: {
@@ -143,7 +143,7 @@
       initials: "SY",
       colors: ["#111827", "#7ed4fd"],
       mysteryTitle: copy("Hidden geometry icon", "隐藏几何盲盒", "隱藏幾何盲盒"),
-      mysteryTags: ["数学皇帝", "华为手表", "丘赛", "几何宇宙"],
+      mysteryTags: ["几何直觉", "华为手表", "丘赛", "几何宇宙"],
       opener: "Is there a study question that keeps you awake and won't let go?",
       userLine: "",
       followup: "",
@@ -176,7 +176,7 @@
       ["这位人物最核心的学术领域是？", ["数学与几何", "动作电影", "电动汽车"], "数学与几何"],
       ["他获得过哪项数学界顶级荣誉？", ["菲尔兹奖", "奥斯卡最佳男主角", "格莱美奖"], "菲尔兹奖"],
       ["互联网上常见的梗标签之一是？", ["华为手表", "火星车钥匙", "成家班"], "华为手表"],
-      ["以他命名、面向华人中学生的数学赛事常被称为？", ["丘成桐中学科学奖/丘赛", "X.com 杯", "功夫杯"], "丘成桐中学科学奖/丘赛"],
+      ["以他命名、面向华人中学生的数学赛事常被称为？", ["丘*桐中学科学奖/丘赛", "X.com 杯", "功夫杯"], "丘*桐中学科学奖/丘赛"],
       ["“卡拉比-丘空间”最常和哪类理论讨论相关？", ["几何与弦理论", "粤语动作片", "社交媒体收购"], "几何与弦理论"],
     ],
     "elon-musk": [
@@ -187,6 +187,42 @@
       ["哪个梗最贴近他的公众形象？", ["火星移民", "华为手表", "醉拳"], "火星移民"],
     ],
   };
+
+  function celebrityPublicName(id) {
+    const map = {
+      "jackie-chan": copy("J* · Action Box", "成* · 动作盲盒", "成* · 動作盲盒"),
+      "shing-tung-yau": copy("Y* Yau · Geometry Box", "丘*桐 · 几何盲盒", "丘*桐 · 幾何盲盒"),
+      "elon-musk": copy("M* K · Mars Box", "马*克 · 火星盲盒", "馬*克 · 火星盲盒"),
+    };
+    return map[id] || copy("Mystery Icon", "人物盲盒", "人物盲盒");
+  }
+
+  function isCelebrityUnlocked(id) {
+    return Boolean(read(STORAGE.celebrityUnlocked, {})[id]);
+  }
+
+  function celebrityCardMeta(id, lockedMeta) {
+    if (!isCelebrityUnlocked(id)) return lockedMeta;
+    return copy("Mystery icon unlocked", "人物盲盒已解锁", "人物盲盒已解鎖");
+  }
+
+  function buildCelebrityPlazaItem(id, profile, mysteryIndex) {
+    const unlocked = isCelebrityUnlocked(id);
+    return {
+      id,
+      type: "celebrity",
+      category: "celebrity",
+      unlocked,
+      name: unlocked
+        ? celebrityPublicName(id)
+        : copy(`Mystery Icon #${mysteryIndex}`, `人物盲盒 #${mysteryIndex}`, `人物盲盒 #${mysteryIndex}`),
+      title: unlocked ? copy("Unlocked mystery icon", "已解锁的人物盲盒", "已解鎖的人物盲盒") : profile.mysteryTitle,
+      body: "",
+      tags: unlocked ? (profile.mysteryTags || []).slice(0, 4) : [],
+      initials: unlocked ? profile.initials : "??",
+      colors: profile.colors || ["#111827", "#6f5092"],
+    };
+  }
 
   const MODULE_CHAT_PROFILES = {
     "study-astra": {
@@ -352,14 +388,15 @@
       sentCode: "Verification email sent. Check your inbox and enter the 6-digit code.",
       loginChecking: "Verifying identity...",
       loginOk: "Verified. Opening Xiaoda onboarding.",
-      step1: "Step 1/3 · Foundation chat",
+      step1: "Step 1/3 · Foundation questionnaire",
       step2: "Step 2/3 · Persona distillation",
       step3: "Step 3/3 · First social path",
       xiaoda: "Xiaoda",
       input: "Type your answer. Press Enter to send...",
       send: "Send",
       voiceLabel: "Voice input",
-      panelFoundation: "Foundation Chat",
+      panelFoundation: "Foundation questionnaire",
+      formCaption: "Fill in your basics once — no chat needed.",
       panelPersona: "Persona Distillation",
       panelPath: "Path Choice",
       voiceUnsupported: "This browser does not support speech recognition. Please type instead.",
@@ -367,7 +404,7 @@
       required: "This one is required so Xiaoda can build your base identity. Please answer it first.",
       skip: "Skip",
       previous: "Previous",
-      next1: "Continue to persona chat",
+      next1: "Continue to persona distillation",
       next2: "Continue to path choice",
       generate: "Generate my profile",
       generating: "Xiaoda is generating your profile...",
@@ -409,14 +446,15 @@
       sentCode: "验证邮件已发送，请查看邮箱并填写 6 位验证码。",
       loginChecking: "正在验证身份...",
       loginOk: "验证成功，正在进入小搭引导。",
-      step1: "步骤 1/3 · 基础信息对话",
+      step1: "步骤 1/3 · 基础信息问卷",
       step2: "步骤 2/3 · 人物画像蒸馏",
       step3: "步骤 3/3 · 第一条社交路径",
       xiaoda: "小搭",
       input: "输入你的回答，按回车发送...",
       send: "发送",
       voiceLabel: "语音输入",
-      panelFoundation: "基础信息对话",
+      panelFoundation: "基础信息问卷",
+      formCaption: "一次性填写基础信息，比逐题对话更快。",
       panelPersona: "人物画像蒸馏",
       panelPath: "路径选择",
       voiceUnsupported: "当前浏览器暂不支持语音识别，请用文字输入。",
@@ -424,7 +462,7 @@
       required: "这一题是必答项，小搭需要它来建立你的基础身份，请先回答。",
       skip: "跳过",
       previous: "上一步",
-      next1: "进入人物画像对话",
+      next1: "进入人物画像蒸馏",
       next2: "进入路径选择",
       generate: "生成我的画像",
       generating: "小搭正在为您生成画像...",
@@ -645,14 +683,15 @@
       sentCode: "驗證郵件已發送，請查看郵箱並填寫 6 位驗證碼。",
       loginChecking: "正在驗證身份...",
       loginOk: "驗證成功，正在進入小搭引導。",
-      step1: "步驟 1/3 · 基礎資訊對話",
+      step1: "步驟 1/3 · 基礎資訊問卷",
       step2: "步驟 2/3 · 人物畫像蒸餾",
       step3: "步驟 3/3 · 第一條社交路徑",
       xiaoda: "小搭",
       input: "輸入你的回答，按回車發送...",
       send: "發送",
       voiceLabel: "語音輸入",
-      panelFoundation: "基礎資訊對話",
+      panelFoundation: "基礎資訊問卷",
+      formCaption: "一次性填寫基礎資訊，比逐題對話更快。",
       panelPersona: "人物畫像蒸餾",
       panelPath: "路徑選擇",
       voiceUnsupported: "目前瀏覽器暫不支援語音識別，請用文字輸入。",
@@ -660,7 +699,7 @@
       required: "這一題是必答項，小搭需要它來建立你的基礎身份，請先回答。",
       skip: "跳過",
       previous: "上一步",
-      next1: "進入人物畫像對話",
+      next1: "進入人物畫像蒸餾",
       next2: "進入路徑選擇",
       generate: "生成我的畫像",
       generating: "小搭正在為您生成畫像...",
@@ -883,7 +922,7 @@
       summaryConfirm: "I will summarize what I know so far. Does it feel accurate?",
       joke: "Send me a joke, meme style, or one sentence that represents your humor.",
       catchphrase: "What phrase do you often say when you are relaxed?",
-      personality: "If you know your MBTI, zodiac, or another personality label, share it only as a reference.",
+      personality: "What's your MBTI type? (Optional — skip if you don't know.)",
       memory: "Tell me one experience that shaped how you make friends or trust people.",
       comfort: "When you are stressed, what kind of response from another person comforts you?",
       disagree: "When you disagree with someone, how do you usually express it?",
@@ -904,7 +943,7 @@
       summaryConfirm: "我先总结一下目前对你的理解，你觉得准确吗？",
       joke: "发我一个能代表你幽默感的梗、玩笑或一句话。",
       catchphrase: "你放松的时候常说的一句话是什么？",
-      personality: "如果你知道 MBTI、星座或其他性格标签，可以只作为参考告诉我。",
+      personality: "你的 MBTI 是什么？（选填，不知道可跳过）",
       memory: "讲一个影响你交朋友或信任他人的经历。",
       comfort: "你压力大的时候，别人怎样回应会让你觉得被安慰？",
       disagree: "你和别人意见不同时，通常会怎样表达？",
@@ -925,13 +964,23 @@
       summaryConfirm: "我先總結一下目前對你的理解，你覺得準確嗎？",
       joke: "發我一個能代表你幽默感的梗、玩笑或一句話。",
       catchphrase: "你放鬆的時候常說的一句話是什麼？",
-      personality: "如果你知道 MBTI、星座或其他性格標籤，可以只作為參考告訴我。",
+      personality: "你的 MBTI 是什麼？（選填，不知道可跳過）",
       memory: "講一個影響你交朋友或信任他人的經歷。",
       comfort: "你壓力大的時候，別人怎樣回應會讓你覺得被安慰？",
       disagree: "你和別人意見不同時，通常會怎樣表達？",
       intent: "你希望小搭先開啟哪條路徑：學習搭子、社交搭子，還是深度戀愛？",
     },
   };
+
+  function onboardingCfg() {
+    return window.DARLINK_ONBOARDING || {};
+  }
+
+  function onboardingOptions(key) {
+    const options = onboardingCfg().options?.[key];
+    if (!options) return null;
+    return options[lang()] || options.zhHans || options.en || [];
+  }
 
   function lang() {
     const forced = new URLSearchParams(window.location.search).get("lang");
@@ -1004,7 +1053,9 @@
   }
 
   function tr() {
-    return TEXT[lang()] || TEXT.en;
+    const base = TEXT[lang()] || TEXT.en;
+    const ui = onboardingCfg().ui?.[lang()];
+    return ui ? { ...base, ...ui } : base;
   }
 
   function localizedSnippet(value) {
@@ -1014,7 +1065,57 @@
   }
 
   function qText(id) {
+    const fromCfg = onboardingCfg().questionText?.[lang()]?.[id];
+    if (fromCfg) return fromCfg;
+    const fromStudy = onboardingCfg().studyQuestionText?.[lang()]?.[id];
+    if (fromStudy) return fromStudy;
+    const fromSocial = onboardingCfg().socialQuestionText?.[lang()]?.[id];
+    if (fromSocial) return fromSocial;
     return (QUESTION_TEXT[lang()] || QUESTION_TEXT.en)[id] || id;
+  }
+
+  function questionTextVariants(id) {
+    return Object.keys(QUESTION_TEXT).map((code) => QUESTION_TEXT[code][id]).filter(Boolean);
+  }
+
+  function matchQuestionIdFromText(text) {
+    const stripped = String(text || "").replace(/^小搭[:：]\s*|^Xiaoda:\s*/i, "").trim();
+    for (const id of Object.keys(QUESTION_TEXT.en)) {
+      for (const variant of questionTextVariants(id)) {
+        if (stripped === variant || String(text || "").includes(variant)) return id;
+      }
+    }
+    return "";
+  }
+
+  function migrateChatStateForLang(state, phase) {
+    const t = tr();
+    const xiaodaPrefix = `${t.xiaoda}: `;
+    const messages = (state.messages || []).map((msg) => {
+      if (msg.from === "system") {
+        if (/skip|跳过|跳過/i.test(msg.text || "")) {
+          return { ...msg, text: copy("Skipped optional question", "已跳过此题", "已跳過此題") };
+        }
+        if (/stopped|停止/i.test(msg.text || "")) {
+          return { ...msg, text: copy("Generation stopped.", "已停止生成。", "已停止生成。") };
+        }
+        return msg;
+      }
+      if (msg.from !== "xiaoda") return msg;
+      const qid = matchQuestionIdFromText(msg.text);
+      if (qid) {
+        const usesPrefix = /^小搭[:：]|^Xiaoda:/i.test(msg.text || "");
+        return { ...msg, text: usesPrefix ? `${xiaodaPrefix}${qText(qid)}` : qText(qid) };
+      }
+      if (phase === 3 && /chooseIntent|路径|路徑|Study Partner|Social Companion|Romance Partner|学习伙伴|社交搭子|恋爱对象|學習夥伴|戀愛對象/i.test(msg.text || "")) {
+        return { ...msg, text: `${xiaodaPrefix}${t.chooseIntent}` };
+      }
+      if (phase === 2 && /summary|总结|總結|step one|第一步|accurate|准确|準確/i.test(msg.text || "")) {
+        return { ...msg, text: phaseOneSummaryFallback() };
+      }
+      return msg;
+    });
+    return { ...state, lang: lang(), messages };
   }
 
   function read(key, fallback = null) {
@@ -1100,20 +1201,52 @@
   }
 
 
-  function migrateLegacyProgress(email) {
+  function canMigrateLegacyProgressTo(email) {
     const key = normalizeEmail(email);
-    if (!key || getUserProgress(email)) return;
-    if (read(STORAGE.profile, null)) persistUserProgress(email);
+    if (!key || getUserProgress(email)) return false;
+    if (!read(STORAGE.profile, null)) return false;
+    if (Object.keys(userProgressStore()).length > 0) return false;
+    const regEmail = normalizeEmail(read(STORAGE.registration, {})?.email || "");
+    return !regEmail || regEmail === key;
+  }
+
+  function migrateLegacyProgress(email) {
+    if (!canMigrateLegacyProgressTo(email)) return;
+    persistUserProgress(email);
+  }
+
+  function persistCurrentUserProgressBeforeSwitch(nextEmail) {
+    const current = currentUserEmail();
+    if (!current) return;
+    if (normalizeEmail(current) === normalizeEmail(nextEmail)) return;
+    persistUserProgress(current);
   }
 
   function prepareLoginForEmail(email) {
-    migrateLegacyProgress(email);
-    if (hasCompletedOnboarding(email)) {
-      restoreOnboardingProgress(getUserProgress(email));
-      return "home";
+    const saved = getUserProgress(email);
+    if (saved) {
+      if (hasCompletedOnboarding(email)) {
+        restoreOnboardingProgress(saved);
+        return "home";
+      }
+      resetOnboardingSessionForRegistration(email);
+      return "onboard1";
+    }
+    if (canMigrateLegacyProgressTo(email)) {
+      persistUserProgress(email);
+      if (hasCompletedOnboarding(email)) {
+        restoreOnboardingProgress(getUserProgress(email));
+        return "home";
+      }
     }
     resetOnboardingSessionForRegistration(email);
     return "onboard1";
+  }
+
+  function logoutUser() {
+    const email = currentUserEmail();
+    if (email) persistUserProgress(email);
+    localStorage.removeItem(STORAGE.auth);
   }
 
   function loginSuccessCopy(destination) {
@@ -1280,18 +1413,66 @@
     })[char]);
   }
 
+  function sanitizeXiaodaText(text = "") {
+    return String(text || "")
+      .replace(/\r\n/g, "\n")
+      .replace(/[\uFF0A\uFF0B]/g, "*")
+      .replace(/```[\s\S]*?```/g, (block) => block.replace(/```\w*\n?/g, "").trim())
+      .replace(/\*\*([^*\n]+?)\*\*/g, "$1")
+      .replace(/__([^_\n]+?)__/g, "$1")
+      .replace(/^#{1,3}\s+/gm, "")
+      .replace(/^[-*]\s+/gm, "")
+      .replace(/\*\*/g, "")
+      .replace(/偷偷帮你画了张?小像/g, "根据你填的信息，我先整理了一下对你的印象")
+      .replace(/偷偷幫你畫了張?小像/g, "根據你填的資訊，我先整理了一下對你的印象")
+      .replace(/偷偷/g, "")
+      .replace(/小像/g, "印象")
+      .replace(/偷看/g, "了解")
+      .replace(/收进档案/g, "记下来")
+      .replace(/收進檔案/g, "記下來")
+      .replace(/幽默频道/g, "幽默感")
+      .replace(/幽默頻道/g, "幽默感")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+  }
+
+  function formatChatMessage(text = "", from = "xiaoda") {
+    const raw = sanitizeXiaodaText(text);
+    if (from === "xiaoda thinking") return raw;
+    if (from === "system") return `<div class="darlink-message-body is-system">${escapeHtml(raw)}</div>`;
+    if (from === "user") return `<div class="darlink-message-body">${escapeHtml(raw).replace(/\n/g, "<br>")}</div>`;
+    let safe = escapeHtml(raw);
+    safe = safe
+      .replace(/\*\*([^*\n]+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/__(.+?)__/g, "<strong>$1</strong>")
+      .replace(/(^|[^*])\*([^*\n]+?)\*(?=[^*]|$)/g, "$1<em>$2</em>")
+      .replace(/`([^`\n]+)`/g, "<code>$1</code>")
+      .replace(/^#{1,3}\s+(.+)$/gm, "<strong>$1</strong>")
+      .replace(/^[-*]\s+(.+)$/gm, "• $1")
+      .replace(/\*\*/g, "")
+      .replace(/\n{2,}/g, "</p><p>")
+      .replace(/\n/g, "<br>");
+    return `<div class="darlink-message-body"><p>${safe}</p></div>`;
+  }
+
   function testAuthEnabled() {
-    // 已切换到真实认证：验证码由后端随机生成 + 邮件发送。测试模式(000000)已停用。
-    // 如需临时回退测试模式，把下一行改成 return new URLSearchParams(window.location.search).get("auth") !== "real";
-    return false;
+    // 默认=测试模式(000000)。在 app.html 加 ?auth=real 走真实邮箱验证。
+    const readAuthMode = (search) => new URLSearchParams(search || "").get("auth");
+    if (readAuthMode(window.location.search) === "real") return false;
+    try {
+      if (window.parent && window.parent !== window && readAuthMode(window.parent.location.search) === "real") {
+        return false;
+      }
+    } catch (_) {}
+    return true;
   }
 
   function testAuthCopy(kind) {
     const copies = {
       notice: {
-        en: `Temporary test mode is active: use ${DARLINK_TEST_AUTH_EMAIL}, code ${DARLINK_TEST_AUTH_CODE}, password ${DARLINK_TEST_AUTH_PASSWORD}. Add ?auth=real only when the mail server is ready.`,
-        zhHant: `臨時測試模式已啟用：可使用 ${DARLINK_TEST_AUTH_EMAIL}，驗證碼 ${DARLINK_TEST_AUTH_CODE}，密碼 ${DARLINK_TEST_AUTH_PASSWORD}。郵件伺服器準備好後再使用 ?auth=real。`,
-        zhHans: `临时测试模式已启用：可使用 ${DARLINK_TEST_AUTH_EMAIL}，验证码 ${DARLINK_TEST_AUTH_CODE}，密码 ${DARLINK_TEST_AUTH_PASSWORD}。邮件服务器准备好后再使用 ?auth=real。`,
+        en: `Test mode: enter any email, code ${DARLINK_TEST_AUTH_CODE}, and your own password (6+ chars). Each email is a separate test account. Add ?auth=real for real email verification.`,
+        zhHant: `測試模式：可輸入任意郵箱，驗證碼 ${DARLINK_TEST_AUTH_CODE}，自訂密碼（至少 6 位）。每個郵箱都是獨立測試帳號。郵件伺服器準備好後使用 ?auth=real。`,
+        zhHans: `测试模式：可输入任意邮箱，验证码 ${DARLINK_TEST_AUTH_CODE}，自定义密码（至少 6 位）。每个邮箱都是独立测试账号。邮件服务器准备好后使用 ?auth=real。`,
       },
       code: {
         en: `Test code filled: ${DARLINK_TEST_AUTH_CODE}`,
@@ -1460,6 +1641,7 @@
     restaurant: '<path d="M7 3v8M4 3v8M10 3v8M4 11h6M7 11v10"/><path d="M16 3c2 1.8 3 4.2 3 7v11M16 3v18"/>',
     school: '<path d="m3 10 9-5 9 5-9 5-9-5Z"/><path d="M7 12v5c3 2 7 2 10 0v-5"/><path d="M21 10v6"/>',
     search: '<circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/>',
+    stop: '<rect x="3" y="3" width="18" height="18" rx="3.5" fill="currentColor" stroke="none"/>',
     send: '<path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4 20-7Z"/>',
     settings: '<path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/><path d="M4 12H2M22 12h-2M12 4V2M12 22v-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M18.4 5.6l1.4-1.4M4.2 19.8l1.4-1.4"/>',
     share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.6 6.8-4.2M8.6 13.4l6.8 4.2"/>',
@@ -1500,6 +1682,7 @@
         ...profile,
         id: context.id,
         type: "celebrity",
+        name: celebrityPublicName(context.id),
         avatar: profile.background || avatarDataUri(profile.initials, profile.colors),
         colors: profile.colors || ["#111827", "#6f5092"],
       };
@@ -1567,7 +1750,7 @@
     if (profile.type === "celebrity") {
       return {
         ...profile,
-        subtitle: `${profile.name} · ${isHant ? "人物盲盒已解鎖" : "人物盲盒已解锁"}`,
+        subtitle: isHant ? "人物盲盒已解鎖" : "人物盲盒已解锁",
         opener: celebrityOpener(profile.id),
         userLine: "",
         followup: "",
@@ -1628,7 +1811,7 @@
     if (!res.ok) return cached;
     const data = {
       real_users: res.real_users || [],
-      demo_users: res.demo_users || [],
+      demo_users: [],
       fetchedAt: Date.now(),
     };
     write(STORAGE.plazaFeed, data);
@@ -1733,32 +1916,147 @@
     });
   }
 
-  function questionPlan(phase) {
+
+  function step3QuestionDefs(path) {
+    const cfg = onboardingCfg();
+    if (path === "study") return cfg.step3StudyQuestions || [];
+    if (path === "social") return cfg.step3SocialQuestions || [];
+    if (path === "romance") return cfg.step3RomanceQuestions || [];
+    return [];
+  }
+
+  function resolveStep3Path(answers = {}) {
+    const fromAnswers = normalizePathKey(answers.intent || "");
+    if (fromAnswers) return fromAnswers;
+    const fromStore = normalizePathKey(read(STORAGE.intent, ""));
+    if (fromStore) return fromStore;
+    return normalizePathKey(read(STORAGE.questionnaire, {}).goal || "");
+  }
+
+  function step3HasGuidedFlow(path = "") {
+    const key = path || resolveStep3Path();
+    return step3QuestionDefs(key).length > 0;
+  }
+
+  function studyShowIfMatches(question, answers = {}) {
+    if (!question?.showIf) return true;
+    const value = String(answers[question.showIf.field] || "");
+    if (question.showIf.match === "online") return /线上|線上|online/i.test(value);
+    if (question.showIf.match === "offline") return /线下|線下|offline/i.test(value);
+    return true;
+  }
+
+  function visibleStep3Questions(path, answers = {}) {
+    const defs = step3QuestionDefs(path);
+    if (path === "study") return defs.filter((q) => studyShowIfMatches(q, answers));
+    return defs;
+  }
+
+  function qOptions(question) {
+    if (!question) return [];
+    const key = question.optionsKey || question.id;
+    const opts = onboardingCfg().options?.[key];
+    if (!opts) return [];
+    return opts[lang()] || opts.zhHans || opts.en || [];
+  }
+
+  function step3QuestionText(id, path) {
+    const cfg = onboardingCfg();
+    const textKey = path === "social" ? "socialQuestionText" : path === "romance" ? "romanceQuestionText" : "studyQuestionText";
+    const fromPath = cfg[textKey]?.[lang()]?.[id];
+    if (fromPath) return fromPath;
+    return qText(id);
+  }
+
+  function questionLabel(question, path) {
+    if (!question) return "";
+    const p = path || resolveStep3Path();
+    if (question.id.startsWith("study_") || question.id.startsWith("friend_") || question.id.startsWith("romance_")) {
+      return step3QuestionText(question.id, p);
+    }
+    return qText(question.id);
+  }
+
+  function step3Opening(path) {
+    if (path === "social") {
+      return copy(
+        "Let's talk about what kind of social buddy fits you and how you like to hang out.",
+        "好～我们来聊聊你想找什么样的社交搭子，以及你习惯的相处方式。",
+        "好～我們來聊聊你想找什麼樣的社交搭子，以及你習慣的相處方式。"
+      );
+    }
+    if (path === "romance") {
+      return copy(
+        "Let's talk about what you're looking for in romance and how you like to connect.",
+        "好～我们来聊聊你对恋爱的期待，以及你习惯的相处节奏。",
+        "好～我們來聊聊你對戀愛的期待，以及你習慣的相處節奏。"
+      );
+    }
+    return copy(
+      "Let's talk about your study rhythm and what kind of learning partner fits you best.",
+      "好～我们来聊聊你的学习节奏，以及什么样的学习搭子更适合你。",
+      "好～我們來聊聊你的學習節奏，以及什麼樣的學習搭子更適合你。"
+    );
+  }
+
+  function chatPhaseForRequest(phase, answers = {}) {
+    const path = resolveStep3Path(answers);
+    if (phase === 3 && path === "study") return "step3-study";
+    if (phase === 3 && path === "social") return "step3-social";
+    if (phase === 3 && path === "romance") return "step3-romance";
+    return phase;
+  }
+
+  function persistStep3Answers(state) {
+    write(STORAGE.chat3, {
+      ...(read(STORAGE.chat3, {}) || {}),
+      lang: lang(),
+      answers: state.answers || {},
+      complete: Boolean(state.complete),
+      messages: state.messages || [],
+    });
+  }
+
+  function questionPlan(phase, answers = {}) {
+    const cfg = onboardingCfg();
+    if (phase === 1 && Array.isArray(cfg.step1Fields) && cfg.step1Fields.length) {
+      return cfg.step1Fields.map((field) => ({
+        id: field.id,
+        required: Boolean(field.required),
+        optional: Boolean(field.optional),
+        romanceOnly: Boolean(field.romanceOnly),
+        summaryGate: Boolean(field.summaryGate),
+      }));
+    }
+    if (phase === 2 && Array.isArray(cfg.step2Questions) && cfg.step2Questions.length) {
+      return cfg.step2Questions.map((field) => ({ ...field }));
+    }
     if (phase === 1) {
       return [
         { id: "nickname", required: true },
         { id: "school", required: true },
-        { id: "contact", required: true },
         { id: "goal", required: true },
         { id: "grade", required: true },
         { id: "majorDirection", required: true },
         { id: "selfWords", optional: true },
         { id: "chatStyle", optional: true },
-        { id: "interests", optional: true },
         { id: "tabooTopics", optional: true },
-        { id: "heightWeight", optional: true },
+        { id: "heightWeight", optional: true, romanceOnly: true },
       ];
     }
     if (phase === 2) {
       return [
-        { id: "summaryConfirm", required: true },
+        { id: "summaryConfirm", required: true, summaryGate: true },
         { id: "joke", optional: true },
         { id: "catchphrase", required: true },
         { id: "personality", optional: true },
         { id: "memory", required: true },
-        { id: "comfort", required: true },
-        { id: "disagree", required: true },
       ];
+    }
+    if (phase === 3) {
+      const path = resolveStep3Path(answers);
+      if (step3HasGuidedFlow(path)) return visibleStep3Questions(path, answers);
+      return [{ id: "intent", required: true }];
     }
     return [{ id: "intent", required: true }];
   }
@@ -1869,6 +2167,32 @@
     return labels[id] || id;
   }
 
+  function warmPersonaTransition(nextQuestionId) {
+    const prompts = {
+      joke: copy(
+        "Love that. Now I'm curious — send me a joke, meme, or one-liner that really sounds like your humor.",
+        "好呀～接下来想抓一点你的幽默感：发我一个能代表你风格的梗、玩笑或一句话就行。",
+        "好呀～接下來想抓一點你的幽默感：發我一個能代表你風格的梗、玩笑或一句話就行。"
+      ),
+      catchphrase: copy(
+        "Nice. When you're relaxed, what's a phrase you catch yourself saying?",
+        "收到。那你放松的时候，最常挂在嘴边的一句话是什么？",
+        "收到。那你放鬆的時候，最常掛在嘴邊的一句話是什麼？"
+      ),
+      personality: copy(
+        "Got it. What's your MBTI type? Skip if you don't know.",
+        "收到～你的 MBTI 是什么？不知道也可以跳过。",
+        "收到～你的 MBTI 是什麼？不知道也可以跳過。"
+      ),
+      memory: copy(
+        "Thank you. Last one for this step — tell me about an experience that shaped how you make friends or trust people.",
+        "谢谢分享。这一步最后一题：讲一个影响你交朋友或信任他人的经历吧。",
+        "謝謝分享。這一步最後一題：講一個影響你交朋友或信任他人的經歷吧。"
+      ),
+    };
+    return prompts[nextQuestionId] || qText(nextQuestionId);
+  }
+
   function phaseOneSummaryFallback() {
     const answers = read(STORAGE.questionnaire, {});
     const nickname = answers.nickname || copy("you", "你", "你");
@@ -1886,9 +2210,9 @@
       );
     }
     return copy(
-      `Xiaoda: Here is my live summary from step one. ${nickname} seems shaped by ${details}. If any part feels off, correct me directly and I will rebuild the profile.`,
-      `小搭：我先根据第一步做一个实时总结：${nickname}目前的关键信号是 ${details}。如果哪里不准，你可以直接纠正我，我会按新的内容重新理解你。`,
-      `小搭：我先根據第一步做一個即時總結：${nickname}目前的關鍵信號是 ${details}。如果哪裡不準，你可以直接糾正我，我會按新的內容重新理解你。`
+      `${nickname}, here's what I picked up from step one — ${details}. If anything feels off, tell me and we'll adjust together.`,
+      `${nickname}，我先根据你填的信息整理了这些印象：${details.replace(/；/g, "，")}。如果有哪里不对，直接告诉我，我来改～`,
+      `${nickname}，我先根據你填的資訊整理了這些印象：${details.replace(/；/g, "，")}。如果有哪裡不對，直接告訴我，我來改～`
     );
   }
 
@@ -1896,6 +2220,11 @@
     const t = tr();
     if (phase === 1) return `${t.xiaoda}: ${qText("nickname")}`;
     if (phase === 2) return phaseOneSummaryFallback();
+    const path = resolveStep3Path();
+    if (phase === 3 && step3HasGuidedFlow(path)) {
+      const first = visibleStep3Questions(path, {})[0];
+      return first ? `${step3Opening(path)} ${step3QuestionText(first.id, path)}` : `${t.xiaoda}: ${t.chooseIntent}`;
+    }
     return `${t.xiaoda}: ${t.chooseIntent}`;
   }
 
@@ -1987,6 +2316,7 @@
 
   function enhanceLogin(doc, api) {
     injectStyle(doc, sharedCss() + loginCss() + typographyPolishCss());
+    doc.querySelector(".fixed.top-8.right-8.z-20")?.remove();
     if (!doc.getElementById("darlinkLoginLangSwitch")) {
       const langWrap = doc.createElement("div");
       langWrap.id = "darlinkLoginLangSwitch";
@@ -2001,8 +2331,7 @@
     const t = tr();
     const remembered = read(STORAGE.remembered, {});
     const auth = read(STORAGE.auth, null);
-    if (auth?.email) migrateLegacyProgress(auth.email);
-    if (auth?.email && hasCompletedOnboarding(auth.email)) {
+    if (auth?.email && getUserProgress(auth.email) && hasCompletedOnboarding(auth.email)) {
       restoreOnboardingProgress(getUserProgress(auth.email));
       syncOnboardingProfileFromServer().finally(() => {
         api.navigate(api.page.home, { replace: true, immediate: true });
@@ -2011,8 +2340,8 @@
     }
 
     const useTestAuth = testAuthEnabled();
-    const initialEmail = remembered.email || (useTestAuth ? DARLINK_TEST_AUTH_EMAIL : "");
-    const initialPassword = remembered.password || (useTestAuth ? DARLINK_TEST_AUTH_PASSWORD : "");
+    const initialEmail = remembered.email || "";
+    const initialPassword = remembered.password || "";
     card.innerHTML = `
       <div class="absolute -top-24 -left-24 w-48 h-48 bg-white/40 rounded-full blur-3xl pointer-events-none"></div>
       <div class="text-center space-y-2 relative z-10">
@@ -2032,7 +2361,7 @@
         <label class="darlink-auth-label">${t.password}</label>
         <input class="input-glass darlink-auth-input" name="password" placeholder="******" required type="password" value="${initialPassword}">
         <label class="darlink-remember">
-          <input type="checkbox" name="remember" ${remembered.email || useTestAuth ? "checked" : ""}>
+          <input type="checkbox" name="remember" ${remembered.email ? "checked" : ""}>
           <span>${t.remember}</span>
         </label>
         <div class="darlink-auth-status" role="status"></div>
@@ -2113,6 +2442,7 @@
           submittingAuth = false;
           return;
         }
+        persistCurrentUserProgressBeforeSwitch(payload.email);
         write(STORAGE.auth, testRes.session);
         if (payload.remember) write(STORAGE.remembered, { email: payload.email, password: payload.password });
         else localStorage.removeItem(STORAGE.remembered);
@@ -2131,6 +2461,7 @@
         submittingAuth = false;
         return;
       }
+      persistCurrentUserProgressBeforeSwitch(payload.email);
       write(STORAGE.auth, res.session);
       if (payload.remember) write(STORAGE.remembered, { email: payload.email, password: payload.password });
       else localStorage.removeItem(STORAGE.remembered);
@@ -2150,9 +2481,223 @@
 
   function chatTitle(phase) {
     const t = tr();
-    if (phase === 1) return { step: t.step1, h: t.step1.replace(/^.*·\s*/, ""), caption: lang() === "en" ? "Xiaoda asks one question at a time and learns from your replies." : lang() === "zhHant" ? "小搭會逐題發問，根據你的回答即時學習。" : "小搭会逐题发问，根据你的回答实时学习。" };
+    if (phase === 1) return { step: t.step1, h: t.step1.replace(/^.*·\s*/, ""), caption: t.formCaption || copy("Fill in your basics once.", "一次性填写基础信息。", "一次性填寫基礎資訊。") };
     if (phase === 2) return { step: t.step2, h: t.step2.replace(/^.*·\s*/, ""), caption: lang() === "en" ? "Your phrasing, humor, boundaries, and comfort style shape your digital human." : lang() === "zhHant" ? "你的語氣、幽默、邊界與安慰方式會塑造專屬數字人。" : "你的语气、幽默、边界与安慰方式会塑造专属数字人。" };
+    const path = resolveStep3Path();
+    if (path === "study") {
+      return {
+        step: t.step3,
+        h: copy("Study partner matching", "学习搭子匹配", "學習搭子匹配"),
+        caption: copy(
+          "Xiaoda will guide you through study rhythm and partner preferences — one question at a time.",
+          "小搭会像 Step 2 一样，一题一题了解你的学习节奏和搭子偏好。",
+          "小搭會像 Step 2 一樣，一題一題了解你的學習節奏和搭子偏好。"
+        ),
+      };
+    }
+    if (path === "social") {
+      return {
+        step: t.step3,
+        h: copy("Social buddy matching", "社交搭子匹配", "社交搭子匹配"),
+        caption: copy(
+          "Xiaoda will guide you through social style and buddy preferences — one question at a time.",
+          "小搭会像 Step 2 一样，一题一题了解你的社交习惯和搭子偏好。",
+          "小搭會像 Step 2 一樣，一題一題了解你的社交習慣和搭子偏好。"
+        ),
+      };
+    }
+    if (path === "romance") {
+      return {
+        step: t.step3,
+        h: copy("Romance partner matching", "恋爱对象匹配", "戀愛對象匹配"),
+        caption: copy(
+          "Xiaoda will guide you through romance expectations — one open question at a time, like Step 2.",
+          "小搭会像 Step 2 一样，一题一题了解你的恋爱期待和相处方式。",
+          "小搭會像 Step 2 一樣，一題一題了解你的戀愛期待和相處方式。"
+        ),
+      };
+    }
     return { step: t.step3, h: t.step3.replace(/^.*·\s*/, ""), caption: t.chooseIntent };
+  }
+
+  function isRomanceGoal(value) {
+    return /恋爱|戀愛|romance|love partner|dating|relationship/i.test(String(value || ""));
+  }
+
+  function step1GoalOptions() {
+    return [
+      copy("Study partner", "学习伙伴", "學習夥伴"),
+      copy("Social companion", "社交搭子", "社交搭子"),
+      copy("Romance partner", "恋爱对象", "戀愛對象"),
+    ];
+  }
+
+  function step1ChatStyleOptions() {
+    return [
+      copy("Light and casual", "轻松简短", "輕鬆簡短"),
+      copy("Deep and thoughtful", "深度长聊", "深度長聊"),
+      copy("Playful and witty", "幽默玩梗", "幽默玩梗"),
+      copy("Warm and gentle", "温暖细腻", "溫暖細膩"),
+      copy("Direct and efficient", "直接高效", "直接高效"),
+    ];
+  }
+
+  function step1TabooOptions() {
+    return [
+      copy("Family / parents", "家庭/父母", "家庭/父母"),
+      copy("Relationship history", "感情史", "感情史"),
+      copy("Grades / GPA", "成绩/GPA", "成績/GPA"),
+      copy("Money / salary", "薪资/钱", "薪資/錢"),
+      copy("Politics", "政治", "政治"),
+      copy("Religion", "宗教", "宗教"),
+      copy("No strong taboos", "没有特别忌讳", "沒有特別忌諱"),
+    ];
+  }
+
+  function summaryOkLabel() {
+    const labels = onboardingCfg().summaryOk;
+    if (labels) return labels[lang()] || labels.zhHans || labels.en || "没问题～";
+    return copy("No problem~", "没问题～", "沒問題～");
+  }
+
+  function splitMultiAnswer(value) {
+    return String(value || "").split(/[、,;/|]/).map((part) => part.trim()).filter(Boolean);
+  }
+
+  function resolveStep1Field(field) {
+    const options = field.optionsKey ? onboardingOptions(field.optionsKey) : field.options;
+    return {
+      ...field,
+      required: Boolean(field.required),
+      optional: Boolean(field.optional),
+      options: options || field.options || [],
+    };
+  }
+
+  function step1FormFields() {
+    const cfgFields = onboardingCfg().step1Fields;
+    if (Array.isArray(cfgFields) && cfgFields.length) {
+      return cfgFields.map(resolveStep1Field);
+    }
+    return [
+      { id: "nickname", type: "text", required: true },
+      { id: "school", type: "text", required: true },
+      { id: "goal", type: "choice", required: true, options: step1GoalOptions() },
+      { id: "grade", type: "text", required: true },
+      { id: "majorDirection", type: "text", required: true },
+      { id: "selfWords", type: "text", optional: true },
+      { id: "chatStyle", type: "choice", optional: true, options: step1ChatStyleOptions() },
+      { id: "tabooTopics", type: "multi", optional: true, options: step1TabooOptions() },
+      { id: "heightWeight", type: "text", optional: true, romanceOnly: true },
+    ];
+  }
+
+  function renderStep1Field(field, value = "") {
+    const label = qText(field.id);
+    const optional = field.optional ? `<em class="darlink-form-optional">${copy("Optional", "选填", "選填")}</em>` : "";
+    const multiHint = field.type === "multi" ? `<em class="darlink-form-optional">${copy("(multi-select)", "（可多选）", "（可多選）")}</em>` : "";
+    const safe = escapeHtml(value || "");
+    const selected = new Set(splitMultiAnswer(value));
+    if (field.type === "choice" || field.type === "multi") {
+      const inputType = field.type === "multi" ? "checkbox" : "radio";
+      return `<label class="darlink-form-field" data-field="${field.id}"${field.romanceOnly ? ' data-romance-only="true"' : ""}>
+        <span class="darlink-form-label">${escapeHtml(label)} ${optional}${multiHint}</span>
+        <div class="darlink-form-choices">${field.options.map((option) => {
+          const checked = (field.type === "multi" ? selected.has(option) : value === option) ? " checked" : "";
+          return `<label class="darlink-form-choice"><input type="${inputType}" name="${field.id}" value="${escapeHtml(option)}"${checked}><span>${escapeHtml(option)}</span></label>`;
+        }).join("")}</div>
+      </label>`;
+    }
+    return `<label class="darlink-form-field" data-field="${field.id}"${field.romanceOnly ? ' data-romance-only="true"' : ""}>
+      <span class="darlink-form-label">${escapeHtml(label)} ${optional}</span>
+      <input class="darlink-form-input" name="${field.id}" type="text" value="${safe}" placeholder="${escapeHtml(label)}">
+    </label>`;
+  }
+
+  function enhanceStep1Questionnaire(doc, api) {
+    injectStyle(doc, sharedCss() + onboardingCss() + step1QuestionnaireCss());
+    const t = tr();
+    const saved = read(STORAGE.questionnaire, {}) || {};
+    const authEmail = currentUserEmail();
+    if (authEmail && !saved.email) saved.email = authEmail;
+    doc.body.className = "darlink-onboarding-body darlink-step1-form-body";
+    doc.body.innerHTML = `
+      ${onboardingBackdrop()}
+      <div id="darlinkOnboardingLangSwitch" class="darlink-onboarding-lang-wrap">${langSwitchMarkup()}</div>
+      <main class="darlink-onboarding-shell">
+        ${progressHeader(t.step1, 1)}
+        <section class="darlink-onboarding-stage">
+          ${xiaodaPanel(t.xiaoda, t.formCaption || copy("Fill in your basics once.", "一次性填写基础信息。", "一次性填寫基礎資訊。"))}
+          <section class="darlink-form-panel">
+            <div class="darlink-panel-title">
+              <span>${t.panelFoundation}</span>
+              <h1>${t.panelFoundation}</h1>
+              <p>${t.formCaption || copy("Fill in your basics once.", "一次性填写基础信息。", "一次性填寫基礎資訊。")}</p>
+            </div>
+            <form id="darlinkStep1Form" class="darlink-step1-form" novalidate>
+              <div class="darlink-step1-fields" id="darlinkStep1Fields">
+                ${step1FormFields().map((field) => renderStep1Field(field, saved[field.id] || "")).join("")}
+              </div>
+              <div class="darlink-form-status" role="status"></div>
+              <div class="darlink-chat-actions">
+                <div class="darlink-chat-action-left">
+                  <button type="button" class="darlink-secondary-btn" data-action="previous">${icon("arrow_back")} ${t.previous}</button>
+                </div>
+                <button type="submit" class="darlink-primary-btn">${t.next1} ${icon("arrow_forward")}</button>
+              </div>
+            </form>
+          </section>
+        </section>
+      </main>
+    `;
+    bindLangSwitch(doc.getElementById("darlinkOnboardingLangSwitch"));
+    const form = doc.querySelector("#darlinkStep1Form");
+    const status = doc.querySelector(".darlink-form-status");
+    const syncRomanceFields = () => {
+      const goal = form.querySelector('input[name="goal"]:checked')?.value || "";
+      form.querySelectorAll("[data-romance-only]").forEach((node) => {
+        node.hidden = !isRomanceGoal(goal);
+      });
+    };
+    form.addEventListener("change", (event) => {
+      if (event.target.name === "goal") syncRomanceFields();
+    });
+    syncRomanceFields();
+    doc.querySelector("[data-action='previous']")?.addEventListener("click", () => api.navigate(api.page.login, { immediate: true }));
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const fields = {};
+      let missing = "";
+      step1FormFields().forEach((field) => {
+        if (field.romanceOnly) {
+          const goal = form.querySelector('input[name="goal"]:checked')?.value || "";
+          if (!isRomanceGoal(goal)) return;
+        }
+        if (field.type === "choice") {
+          fields[field.id] = form.querySelector(`input[name="${field.id}"]:checked`)?.value || "";
+        } else if (field.type === "multi") {
+          fields[field.id] = Array.from(form.querySelectorAll(`input[name="${field.id}"]:checked`)).map((node) => node.value).join("、");
+        } else {
+          fields[field.id] = form.elements[field.id]?.value || "";
+        }
+        const normalized = normalizeQuestionnaireAnswer(field.id, fields[field.id]);
+        fields[field.id] = normalized;
+        if (field.required && !normalized) missing = qText(field.id);
+      });
+      if (missing) {
+        status.textContent = copy(`Please complete: ${missing}`, `请填写：${missing}`, `請填寫：${missing}`);
+        status.dataset.tone = "error";
+        return;
+      }
+      status.textContent = copy("Saving...", "正在保存...", "正在保存...");
+      status.dataset.tone = "info";
+      if (authEmail) fields.email = authEmail;
+      await saveProfileQuestionnaire(doc, fields);
+      write(STORAGE.chat1, { lang: lang(), complete: true, answers: fields, messages: [] });
+      status.textContent = copy("Saved. Continuing...", "已保存，正在进入下一步...", "已保存，正在進入下一步...");
+      status.dataset.tone = "success";
+      window.setTimeout(() => api.navigate(api.page.onboard2, { replace: true }), 320);
+    });
   }
 
   function enhanceChatOnboarding(doc, api, phase) {
@@ -2163,30 +2708,50 @@
     injectStyle(doc, sharedCss() + onboardingCss());
     const t = tr();
     const title = chatTitle(phase);
-    const questions = questionPlan(phase);
+    let questions = [];
+    const refreshQuestions = () => { questions = questionPlan(phase, state.answers || {}); };
     const saved = read(chatStateKey(phase), null);
     const hasStaleAiConfigError = (saved?.messages || []).some((message) => /未配置小搭聊天大模型 API Key|ARK_API_KEY|DOUBAO_API_KEY|DEEPSEEK_API_KEY|OPENAI_API_KEY/i.test(message.text || ""));
-    const state = saved && saved.lang === lang() && !hasStaleAiConfigError
-      ? saved
-      : { lang: lang(), index: 0, complete: false, messages: [{ from: "xiaoda", text: initialMessage(phase) }], answers: {} };
-    if (phase === 2) {
+    const hydrateChatState = (raw) => {
+      if (!raw) return null;
+      const messages = (raw.messages || []).filter((message) => message.from !== "xiaoda thinking");
+      return { ...raw, messages, sending: false };
+    };
+    const hydrated = hydrateChatState(saved && !hasStaleAiConfigError ? saved : null);
+    let state;
+    if (phase === 2 && !hydrated) {
+      state = {
+        lang: lang(),
+        index: 0,
+        complete: false,
+        messages: [{ from: "xiaoda thinking", text: `${t.thinking}<span></span><span></span><span></span>` }],
+        answers: {},
+        summaryReady: false,
+      };
+    } else {
+      state = hydrated || { lang: lang(), index: 0, complete: false, messages: [{ from: "xiaoda", text: initialMessage(phase) }], answers: {} };
+    }
+    if (hydrated && hydrated.lang !== lang()) { state = migrateChatStateForLang(state, phase); write(chatStateKey(phase), state); }
+    refreshQuestions();
+    if (phase === 3 && step3HasGuidedFlow(resolveStep3Path(state.answers))) {
+      const path = resolveStep3Path(state.answers);
+      write(STORAGE.intent, path);
+      if (!state.answers.intent) state.answers.intent = path;
+      refreshQuestions();
+    }
+    if (phase === 2 && hydrated) {
+      state.summaryReady = Boolean((state.messages || []).some((message) => message.from === "xiaoda" && !/准确吗|準確嗎|accurate/i.test(message.text || "")));
+      state.summaryLoading = false;
       const firstMessage = state.messages?.[0]?.text || "";
       if (/准确吗|準確嗎|accurate/i.test(firstMessage)) {
-        state.messages[0] = { from: "xiaoda", text: phaseOneSummaryFallback() };
-        state.summaryHydrated = false;
+        state.messages[0] = { from: "xiaoda thinking", text: `${t.thinking}<span></span><span></span><span></span>` };
+        state.summaryReady = false;
       }
-    }
-    if (!doc.getElementById("darlinkOnboardingLangSwitch")) {
-      const langWrap = doc.createElement("div");
-      langWrap.id = "darlinkOnboardingLangSwitch";
-      langWrap.className = "darlink-onboarding-lang-wrap";
-      langWrap.innerHTML = langSwitchMarkup();
-      doc.body.appendChild(langWrap);
-      bindLangSwitch(langWrap);
     }
     doc.body.className = "darlink-onboarding-body";
     doc.body.innerHTML = `
       ${onboardingBackdrop()}
+      <div id="darlinkOnboardingLangSwitch" class="darlink-onboarding-lang-wrap">${langSwitchMarkup()}</div>
       <main class="darlink-onboarding-shell">
         ${progressHeader(title.step, phase)}
         <section class="darlink-onboarding-stage">
@@ -2200,14 +2765,14 @@
             <div class="darlink-chat-window" id="darlinkChatMessages"></div>
             <div class="darlink-quick-replies" id="darlinkQuickReplies"></div>
             <div class="darlink-chat-input-row">
-              <button type="button" class="darlink-icon-btn" data-action="voice" aria-label="${t.voiceLabel}">${interactionIcon("voice")}</button>
+              <button type="button" class="darlink-icon-btn" data-action="voice" data-darlink-local-control="true" aria-label="${t.voiceLabel}">${interactionIcon("voice")}</button>
               <textarea id="darlinkChatInput" class="darlink-textarea" rows="2" placeholder="${t.input}"></textarea>
-              <button type="button" class="darlink-icon-btn primary" data-action="send" aria-label="${t.send}">${interactionIcon("send")}</button>
+              <button type="button" class="darlink-icon-btn primary" data-action="send" data-darlink-local-control="true" aria-label="${t.send}">${interactionIcon("send")}</button>
             </div>
             <div class="darlink-chat-actions">
               <div class="darlink-chat-action-left">
                 <button type="button" class="darlink-secondary-btn" data-action="previous" ${(phase === 1 && state.index === 0) ? "disabled" : ""}>${icon("arrow_back")} ${t.previous}</button>
-                <button type="button" class="darlink-secondary-btn" data-action="skip">${t.skip}</button>
+                <button type="button" class="darlink-secondary-btn" data-action="skip" data-darlink-local-control="true">${t.skip}</button>
               </div>
               <button type="button" class="darlink-primary-btn" data-action="next" ${state.complete ? "" : "disabled"}>${phase === 1 ? t.next1 : phase === 2 ? t.next2 : t.generate} ${icon("arrow_forward")}</button>
             </div>
@@ -2226,153 +2791,478 @@
     let sendToken = 0;
 
     const persist = () => write(chatStateKey(phase), state);
-    const render = () => {
+    let renderedCount = 0;
+    let streamRenderScheduled = false;
+
+    const messageClassName = (from) => {
+      if (from === "xiaoda thinking") return "xiaoda thinking";
+      if (from === "system") return "system";
+      return from;
+    };
+
+    const paintMessageNode = (node, message) => {
+      if (!node || !message) return;
+      node.className = `darlink-message ${messageClassName(message.from)}`;
+      if (message.from === "xiaoda thinking") {
+        node.innerHTML = `<div class="darlink-message-body">${message.text}</div>`;
+      } else {
+        node.innerHTML = formatChatMessage(message.text, message.from);
+      }
+    };
+
+    const scrollMessagesToBottom = (messages) => {
+      if (!messages) return;
+      const distance = messages.scrollHeight - messages.scrollTop - messages.clientHeight;
+      if (distance < 120) messages.scrollTop = messages.scrollHeight;
+    };
+
+    const renderMessages = (options = {}) => {
       const messages = doc.querySelector("#darlinkChatMessages");
-      messages.innerHTML = state.messages.map((message) => `<div class="darlink-message ${message.from}">
-        <div>${message.text}</div>
-      </div>`).join("");
-      messages.scrollTop = messages.scrollHeight;
+      if (!messages) return;
+      const streamIndex = Number.isInteger(options.streamIndex) ? options.streamIndex : -1;
+      if (!options.full && streamIndex >= 0 && streamIndex < state.messages.length) {
+        let node = messages.querySelector(`[data-msg-index="${streamIndex}"]`);
+        if (!node) {
+          node = messages.children[streamIndex] || null;
+        }
+        if (node) {
+          paintMessageNode(node, state.messages[streamIndex]);
+          scrollMessagesToBottom(messages);
+          return;
+        }
+      }
+      const previousCount = renderedCount;
+      messages.innerHTML = state.messages.map((message, index) => {
+        const isNew = index >= previousCount;
+        return `<div class="darlink-message ${messageClassName(message.from)}${isNew ? " is-new" : ""}" data-msg-index="${index}">${message.from === "xiaoda thinking" ? `<div class="darlink-message-body">${message.text}</div>` : formatChatMessage(message.text, message.from)}</div>`;
+      }).join("");
+      renderedCount = state.messages.length;
+      scrollMessagesToBottom(messages);
+    };
+
+    const skipButton = doc.querySelector("[data-action='skip']");
+    let activeAbort = null;
+    const updateComposer = () => {
+      const current = questions[state.index];
+      const hasText = Boolean(normalize(input.value));
+      const canAnswer = Boolean(current) && !state.complete;
+      input.disabled = sending;
+      input.placeholder = state.complete
+        ? copy(
+          "Add anything else for Xiaoda before continuing...",
+          "还有什么想补充的，可以继续告诉小搭...",
+          "還有什麼想補充的，可以繼續告訴小搭..."
+        )
+        : t.input;
+      if (sending) {
+        sendButton.dataset.mode = "stop";
+        sendButton.classList.add("is-stop");
+        sendButton.innerHTML = materialIconSvg("stop");
+        sendButton.setAttribute("aria-label", copy("Stop generating", "停止生成", "停止生成"));
+        sendButton.disabled = false;
+      } else {
+        sendButton.dataset.mode = "send";
+        sendButton.classList.remove("is-stop");
+        sendButton.innerHTML = interactionIcon("send");
+        sendButton.setAttribute("aria-label", t.send);
+        sendButton.disabled = !hasText || (!state.complete && !canAnswer);
+      }
+    };
+    const renderChrome = () => {
       const current = questions[state.index];
       const quick = doc.querySelector("#darlinkQuickReplies");
-      if (!current || state.complete) {
+      if (phase === 2 && current?.id === "summaryConfirm" && state.summaryReady && !state.complete) {
+        quick.innerHTML = `<button type="button" class="darlink-chip is-primary" data-action="summary-ok">${summaryOkLabel()}</button>`;
+      } else if (!current || state.complete) {
         quick.innerHTML = "";
-      } else if (phase === 3) {
+      } else if (phase === 3 && step3HasGuidedFlow(resolveStep3Path(state.answers))) {
+        quick.innerHTML = "";
+      } else if (phase === 3 && current.id === "intent") {
         quick.innerHTML = PRODUCT_PATH_ORDER.map((key) => {
           const item = pathLabel(key, "title");
           return `<button type="button" class="darlink-chip" data-quick="${item}">${item}</button>`;
         }).join("");
-      } else if (current.optional) {
-        quick.innerHTML = `<button type="button" class="darlink-chip" data-quick="${t.skip}">${t.skip}</button>`;
       } else {
         quick.innerHTML = "";
       }
+      if (skipButton) skipButton.hidden = !current || state.complete || !current.optional;
       nextButton.disabled = !state.complete;
-      previousButton.disabled = phase === 1 && state.index === 0;
+      previousButton.disabled = (phase === 1 && state.index === 0) || sending;
+      updateComposer();
+    };
+    const stopGeneration = () => {
+      if (!sending) return;
+      activeAbort?.abort();
+    };
+
+    const render = (options = {}) => {
+      renderMessages(options);
+      renderChrome();
     };
 
     const pushTyping = (pendingFor = "") => {
       state.messages.push({ from: "xiaoda thinking", text: `${t.thinking}<span></span><span></span><span></span>`, pendingFor });
-      render();
+      render({ full: true });
     };
-    const removeTyping = (pendingFor = "") => {
-      state.messages = state.messages.filter((message) => message.from !== "xiaoda thinking" || (pendingFor && message.pendingFor !== pendingFor));
+
+    const removeTyping = () => {
+      state.messages = state.messages.filter((message) => message.from !== "xiaoda thinking");
     };
+
+    const setStepStatus = (tone, message) => {
+      if (!status || !message) return;
+      status.dataset.tone = tone;
+      status.textContent = message;
+    };
+
     const saveAnswer = (question, value, normalized) => {
-      const answer = normalizeQuestionnaireAnswer(question.id, normalized || value);
-      state.answers[question.id] = answer;
+      if (!question) return;
+      const canonical = normalizeQuestionnaireAnswer(question.id, normalized || value);
+      state.answers[question.id] = canonical;
       if (phase === 1) {
-        write(STORAGE.questionnaire, { ...read(STORAGE.questionnaire, {}), ...state.answers });
-        persistUserProgress();
+        const questionnaire = { ...read(STORAGE.questionnaire, {}) };
+        questionnaire[question.id] = canonical;
+        write(STORAGE.questionnaire, questionnaire);
       }
       if (phase === 2) {
-        write(STORAGE.persona, { answers: { ...read(STORAGE.persona, { answers: {} }).answers, ...state.answers }, messages: state.messages });
-        persistUserProgress();
+        const stored = read(STORAGE.persona, {}) || {};
+        const answers = { ...(stored.answers || stored) };
+        answers[question.id] = canonical;
+        write(
+          STORAGE.persona,
+          stored.answers !== undefined
+            ? { ...stored, answers }
+            : { answers, messages: stored.messages || [] }
+        );
       }
       if (phase === 3) {
-        const intent = parseIntent(answer);
-        if (intent) {
+        persistStep3Answers(state);
+        if (question.id === "intent") {
+          const intent = normalizePathKey(parseIntent(canonical) || canonical);
           write(STORAGE.intent, intent);
-          persistUserProgress();
           state.answers.intent = intent;
-          state.complete = true;
+          if (!step3HasGuidedFlow(intent)) state.complete = true;
         }
       }
     };
+
+    const continueAfterOptionalSkip = async (skippedQuestion) => {
+      if (!questions[state.index] || sending) return;
+      const token = ++sendToken;
+      sending = true;
+      activeAbort = new AbortController();
+      const timeoutId = window.setTimeout(() => activeAbort?.abort(), 90000);
+      renderChrome();
+      input.classList.add("is-sending");
+      try {
+        const nextQuestion = questions[state.index];
+        pushTyping(skippedQuestion.id);
+        const res = await postJSON("/api/ai/chat", {
+          lang: lang(),
+          phase: chatPhaseForRequest(phase, state.answers),
+          answer: copy("(skipped optional question)", "（跳过选填题）", "（跳過選填題）"),
+          current_question: questionLabel(skippedQuestion),
+          next_question: questionLabel(nextQuestion),
+          known_answers: state.answers,
+          recent_messages: state.messages
+            .filter((m) => m.from === "user" || m.from === "xiaoda")
+            .slice(-6)
+            .map((m) => ({ role: m.from === "user" ? "user" : "assistant", content: sanitizeXiaodaText(String(m.text || "").replace(/<[^>]+>/g, "")) })),
+        }, { signal: activeAbort.signal });
+        removeTyping();
+        if (token !== sendToken) return;
+        if (res.ok && res.reply) {
+          state.messages.push({ from: "xiaoda", text: sanitizeXiaodaText(res.reply) });
+        } else if (nextQuestion) {
+          state.messages.push({ from: "xiaoda", text: qText(nextQuestion.id) });
+        }
+        persist();
+        render({ full: true });
+      } catch (error) {
+        removeTyping();
+        const nextQuestion = questions[state.index];
+        if (nextQuestion) {
+          state.messages.push({ from: "xiaoda", text: qText(nextQuestion.id) });
+          persist();
+          render({ full: true });
+        }
+      } finally {
+        clearTimeout(timeoutId);
+        removeTyping();
+        input.classList.remove("is-sending");
+        if (token === sendToken) {
+          sending = false;
+          activeAbort = null;
+          renderChrome();
+          render({ full: true });
+        }
+      }
+    };
+
+    const runChatTurn = async ({ value, question, pendingFor, advanceIndex = true }) => {
+      const token = ++sendToken;
+      const draftValue = value;
+      sending = true;
+      activeAbort = new AbortController();
+      const timeoutId = window.setTimeout(() => activeAbort?.abort(), 90000);
+      renderChrome();
+      input.classList.add("is-sending");
+      status.textContent = "";
+      try {
+        state.messages.push({ from: "user", text: value, pendingFor });
+        input.value = "";
+        pushTyping(pendingFor);
+        const nextQ = advanceIndex && questions[state.index + 1] ? questions[state.index + 1] : null;
+        const nextQuestion = nextQ ? questionLabel(nextQ) : "";
+        const res = await postJSON("/api/ai/chat", {
+          lang: lang(),
+          phase: chatPhaseForRequest(phase, state.answers),
+          answer: value,
+          current_question: question ? questionLabel(question) : copy("Optional follow-up", "补充信息", "補充資訊"),
+          next_question: nextQuestion,
+          known_answers: state.answers,
+          recent_messages: state.messages
+            .filter((m) => m.from === "user" || m.from === "xiaoda")
+            .slice(-6)
+            .map((m) => ({ role: m.from === "user" ? "user" : "assistant", content: sanitizeXiaodaText(String(m.text || "").replace(/<[^>]+>/g, "")) })),
+        }, { signal: activeAbort.signal });
+        removeTyping();
+        if (token !== sendToken) return;
+        if (res.aborted || activeAbort.signal.aborted) {
+          state.messages.push({
+            from: "system",
+            text: copy("Generation stopped.", "已停止生成。", "已停止生成。"),
+          });
+          input.value = draftValue;
+          persist();
+          render({ full: true });
+          return;
+        }
+        if (!res.ok) {
+          state.messages.push({ from: "xiaoda", text: aiErrorMessage(res) });
+          input.value = draftValue;
+          setStepStatus("error", copy("Could not reach Xiaoda. Edit your message and send again.", "暂时连不上小搭，可以修改后重新发送。", "暫時連不上小搭，可以修改後重新發送。"));
+          persist();
+          render({ full: true });
+          return;
+        }
+        if (question) saveAnswer(question, value, res.normalized_answer);
+        const canonical = question ? normalizeQuestionnaireAnswer(question.id, res.normalized_answer || value) : "";
+        if (canonical && canonical !== value) {
+          const lastUser = [...state.messages].reverse().find((message) => message.from === "user" && message.pendingFor === pendingFor);
+          if (lastUser) lastUser.text = canonical;
+        }
+        const finalReply = sanitizeXiaodaText(res.reply || "");
+        if (!finalReply) {
+          state.messages.push({
+            from: "xiaoda",
+            text: copy("I did not catch a full reply. Please send again.", "小搭这次没有完整回复，请再发一次。", "小搭這次沒有完整回覆，請再發一次。"),
+          });
+        } else {
+          state.messages.push({ from: "xiaoda", text: finalReply });
+        }
+        if (advanceIndex) {
+          if (phase === 3 && question?.id === "intent") {
+            const intent = normalizePathKey(state.answers.intent || value);
+            if (step3HasGuidedFlow(intent)) {
+              refreshQuestions();
+              state.index = 0;
+            } else {
+              state.complete = true;
+            }
+          } else if (phase === 3) {
+            refreshQuestions();
+            state.index += 1;
+            if (state.index >= questions.length) {
+              state.complete = true;
+              write(STORAGE.intent, resolveStep3Path(state.answers));
+            }
+          } else {
+            state.index += 1;
+            if (!questions[state.index]) state.complete = true;
+          }
+          if (state.complete) {
+            setStepStatus(
+              "success",
+              phase === 3
+                ? (lang() === "en" ? "Great. You can now generate your persona cards." : lang() === "zhHant" ? "很好，現在可以生成你的畫像卡片了。" : "很好，现在可以生成你的画像卡片了。")
+                : (lang() === "en" ? "This step is complete. Continue when you are ready." : lang() === "zhHant" ? "這一步已完成，準備好就可以繼續。" : "这一步已完成，准备好就可以继续。")
+            );
+          }
+        } else {
+          setStepStatus(
+            "success",
+            copy(
+              "Got it. Click the button on the right when you are ready to continue.",
+              "收到。准备好后点击右侧按钮继续。",
+              "收到。準備好後點擊右側按鈕繼續。"
+            )
+          );
+        }
+        state.messages.forEach((message) => {
+          if (message.pendingFor === pendingFor) delete message.pendingFor;
+        });
+        persist();
+        render({ full: true });
+      } catch (error) {
+        removeTyping();
+        state.messages.push({
+          from: "xiaoda",
+          text: copy(
+            "Something went wrong while Xiaoda was replying. Please try again.",
+            "小搭回复时出了点问题，请再试一次。",
+            "小搭回覆時出了點問題，請再試一次。"
+          ),
+        });
+        input.value = draftValue;
+        setStepStatus("error", copy("Could not reach Xiaoda. Edit your message and send again.", "暂时连不上小搭，可以修改后重新发送。", "暫時連不上小搭，可以修改後重新發送。"));
+        persist();
+      } finally {
+        clearTimeout(timeoutId);
+        removeTyping();
+        input.classList.remove("is-sending");
+        if (token === sendToken) {
+          sending = false;
+          activeAbort = null;
+          renderChrome();
+          render({ full: true });
+        }
+      }
+    };
+
     const submit = async (raw) => {
+      if (sending) return;
       const question = questions[state.index];
       const value = question ? normalizeQuestionnaireAnswer(question.id, normalize(raw)) : normalize(raw);
-      if (!question || state.complete) return;
       if (!value) return;
-      if (question.required && isSkip(value)) {
-        state.messages.push({ from: "user", text: value });
-        state.messages.push({ from: "xiaoda", text: t.required });
-        persist();
-        render();
+      if (phase === 2 && question?.id === "summaryConfirm") {
+        if (isSkip(value) || value === summaryOkLabel()) {
+          void advanceAfterSummary(summaryOkLabel(), "ok");
+        } else {
+          void advanceAfterSummary(value, "edit");
+        }
         input.value = "";
         return;
       }
-      const token = ++sendToken;
-      const pendingFor = question.id;
-      if (sending) {
-        state.messages = state.messages.filter((message) => message.pendingFor !== pendingFor);
-      }
-      sending = true;
-      input.classList.add("is-sending");
-      sendButton.disabled = false;
-      state.messages.push({ from: "user", text: value, pendingFor });
-      input.value = "";
-      pushTyping(pendingFor);
-      const nextQuestion = questions[state.index + 1] ? qText(questions[state.index + 1].id) : "";
-      let streamText = "";
-      let streamIndex = -1;
-      const res = await chatWithStream("/api/ai/chat/stream", "/api/ai/chat", {
-        lang: lang(),
-        phase,
-        answer: value,
-        current_question: qText(question.id),
-        next_question: nextQuestion,
-        known_answers: state.answers,
-        recent_messages: state.messages.slice(-6).map((m) => ({ role: m.from, content: m.text.replace(/<[^>]+>/g, "") })),
-      }, {
-        onDelta(delta) {
-          streamText += delta;
-          removeTyping(pendingFor);
-          if (streamIndex < 0) {
-            state.messages.push({ from: "xiaoda", text: streamText });
-            streamIndex = state.messages.length - 1;
-          } else {
-            state.messages[streamIndex].text = streamText;
-          }
-          render();
-        },
-      });
-      if (token !== sendToken) return;
-      removeTyping(pendingFor);
-      if (!res.ok) {
-        state.messages.push({ from: "xiaoda", text: aiErrorMessage(res) });
-        sending = false;
-        input.classList.remove("is-sending");
-        persist();
-        render();
+      if (state.complete) {
+        const pendingOptional = questions.find((item) => item.optional && !state.answers[item.id]);
+        await runChatTurn({
+          value,
+          question: pendingOptional || null,
+          pendingFor: pendingOptional?.id || "followup",
+          advanceIndex: false,
+        });
         return;
       }
-      saveAnswer(question, value, res.normalized_answer);
-      const canonical = normalizeQuestionnaireAnswer(question.id, res.normalized_answer || value);
-      if (canonical && canonical !== value) {
-        const lastUser = [...state.messages].reverse().find((message) => message.from === "user" && message.pendingFor === pendingFor);
-        if (lastUser) lastUser.text = canonical;
+      if (!question) return;
+      if (question.required && isSkip(value)) {
+        state.messages.push({ from: "xiaoda", text: t.required });
+        persist();
+        render({ full: true });
+        input.value = "";
+        return;
       }
-      if (phase !== 3) {
+      if (question.optional && isSkip(value)) {
+        state.messages.push({
+          from: "system",
+          text: copy("Skipped optional question", "已跳过此题", "已跳過此題"),
+        });
         state.index += 1;
         if (!questions[state.index]) state.complete = true;
-      } else if (!state.complete) {
-        state.messages.push({ from: "xiaoda", text: lang() === "en" ? "I heard you, but I still need one clear path: Study Partner, Social Companion, or Romance Partner." : lang() === "zhHant" ? "我聽懂了，但還需要你明確選一條：學習夥伴、社交搭子，或戀愛對象。" : "我听懂了，但还需要你明确选一条：学习伙伴、社交搭子，或恋爱对象。" });
+        if (state.complete) {
+          setStepStatus(
+            "success",
+            phase === 3
+              ? (lang() === "en" ? "Great. You can now generate your persona cards." : lang() === "zhHant" ? "很好，現在可以生成你的畫像卡片了。" : "很好，现在可以生成你的画像卡片了。")
+              : (lang() === "en" ? "This step is complete. Continue when you are ready." : lang() === "zhHant" ? "這一步已完成，準備好就可以繼續。" : "这一步已完成，准备好就可以继续。")
+          );
+          persist();
+          render({ full: true });
+          input.value = "";
+          return;
+        }
+        persist();
+        render({ full: true });
+        input.value = "";
+        await continueAfterOptionalSkip(question);
+        return;
       }
-      if (streamIndex < 0) {
-        state.messages.push({ from: "xiaoda", text: res.reply });
-      } else {
-        state.messages[streamIndex].text = res.reply;
-      }
-      if (state.complete) {
-        state.messages.push({ from: "xiaoda", text: phase === 3 ? (lang() === "en" ? "Great. I can now generate your persona cards." : lang() === "zhHant" ? "很好，現在可以生成你的畫像卡片了。" : "很好，现在可以生成你的画像卡片了。") : (lang() === "en" ? "I have enough for this step. Continue when you are ready." : lang() === "zhHant" ? "這一步的訊號已經足夠，準備好就可以繼續。" : "这一步的信号已经足够，准备好就可以继续。") });
-      }
-      state.messages.forEach((message) => {
-        if (message.pendingFor === pendingFor) delete message.pendingFor;
+      await runChatTurn({
+        value,
+        question,
+        pendingFor: question.id,
+        advanceIndex: true,
       });
-      sending = false;
-      input.classList.remove("is-sending");
-      persist();
-      render();
     };
 
-    doc.querySelector("[data-action='send']").addEventListener("click", () => submit(input.value));
+    sendButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (sendButton.dataset.mode === "stop") stopGeneration();
+      else submit(input.value);
+    });
+    input.addEventListener("input", () => updateComposer());
     input.addEventListener("keydown", (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         submit(input.value);
       }
     });
+    const advanceAfterSummary = async (value, mode = "ok") => {
+      const question = questions[state.index];
+      if (!question || question.id !== "summaryConfirm" || sending) return;
+      const okLabel = summaryOkLabel();
+      const canonical = mode === "ok" ? okLabel : normalizeQuestionnaireAnswer("summaryConfirm", value);
+      saveAnswer(question, canonical, canonical);
+      state.messages.push({ from: "user", text: canonical });
+      state.index += 1;
+      const nextQuestion = questions[state.index];
+      persist();
+      render({ full: true });
+      if (!nextQuestion) {
+        state.complete = true;
+        setStepStatus("success", copy("This step is complete. Continue when you are ready.", "这一步已完成，准备好就可以继续。", "這一步已完成，準備好就可以繼續。"));
+        persist();
+        render({ full: true });
+        return;
+      }
+      sending = true;
+      pushTyping(nextQuestion.id);
+      const userAnswer = mode === "ok"
+        ? copy("The summary looks good to me.", "总结没问题～", "總結沒問題～")
+        : value;
+      try {
+        const res = await postJSON("/api/ai/chat", {
+          lang: lang(),
+          phase: 2,
+          answer: userAnswer,
+          current_question: copy("Step two summary check", "第二步总结确认", "第二步總結確認"),
+          next_question: qText(nextQuestion.id),
+          known_answers: { ...read(STORAGE.questionnaire, {}), ...state.answers },
+          recent_messages: state.messages
+            .filter((m) => m.from === "user" || m.from === "xiaoda")
+            .slice(-8)
+            .map((m) => ({ role: m.from === "user" ? "user" : "assistant", content: sanitizeXiaodaText(String(m.text || "")) })),
+        });
+        removeTyping();
+        const reply = res.ok && res.reply ? sanitizeXiaodaText(res.reply) : warmPersonaTransition(nextQuestion.id);
+        state.messages.push({ from: "xiaoda", text: reply });
+      } catch (error) {
+        removeTyping();
+        state.messages.push({ from: "xiaoda", text: warmPersonaTransition(nextQuestion.id) });
+      } finally {
+        sending = false;
+        render({ full: true });
+      }
+    };
+
     doc.querySelector("#darlinkQuickReplies").addEventListener("click", (event) => {
+      const summaryButton = event.target.closest("[data-action='summary-ok']");
+      if (summaryButton) {
+        event.preventDefault();
+        if (!sending) void advanceAfterSummary(summaryOkLabel(), "ok");
+        return;
+      }
       const button = event.target.closest("[data-quick]");
       if (button) submit(button.dataset.quick);
     });
@@ -2406,32 +3296,43 @@
       else if (phase === 2) api.navigate(api.page.onboard3);
       else await generateProfile(doc, api, status, nextButton);
     });
+    bindLangSwitch(doc.getElementById("darlinkOnboardingLangSwitch"));
     render();
-    if (phase === 2 && !state.summaryHydrated) {
-      state.summaryHydrated = true;
+    const loadPhase2Summary = () => {
+      if (phase !== 2 || state.summaryReady || state.summaryLoading || sending) return;
+      state.summaryLoading = true;
       persist();
-      chatWithStream("/api/ai/chat/stream", "/api/ai/chat", {
+      postJSON("/api/ai/chat", {
         lang: lang(),
         phase: "phase2-summary",
-        answer: "Summarize the user's first-step onboarding answers for the opening of step two. Do not ask whether the summary is accurate. Do not use phrases like 准确吗, 準確嗎, or is this accurate. End by inviting the user to correct or add details.",
+        answer: copy("Write Xiaoda's warm step-two opening summary.", "请根据第一步问卷，用温暖、像朋友聊天的口吻写一段开场小总结，像朋友复述刚了解到的印象。不要问准确吗。禁止使用「偷偷」「小像」「偷看」「收进档案」。", "請根據第一步問卷，用溫暖、像朋友聊天的口吻寫一段開場小總結，像朋友複述剛了解到的印象。不要問準確嗎。禁止使用「偷偷」「小像」「偷看」「收進檔案」。"),
         current_question: "step two opening summary",
-        next_question: qText("summaryConfirm"),
+        next_question: summaryOkLabel(),
         known_answers: read(STORAGE.questionnaire, {}),
         recent_messages: [],
-      }, {
-        onDelta(delta) {
-          const current = state.messages[0]?.text || "";
-          state.messages[0] = { from: "xiaoda", text: current + delta };
-          render();
-        },
       }).then((res) => {
-        if (!res.ok || !res.reply) return;
-        const reply = /准确吗|準確嗎|accurate/i.test(res.reply) ? phaseOneSummaryFallback() : res.reply;
-        state.messages[0] = { from: "xiaoda", text: reply };
+        state.messages = state.messages.filter((message) => message.from !== "xiaoda thinking");
+        let replyRaw = res.ok && res.reply ? sanitizeXiaodaText(res.reply) : "";
+        if (!replyRaw || /准确吗|準確嗎|is this accurate|does it feel accurate/i.test(replyRaw)) {
+          replyRaw = phaseOneSummaryFallback().replace(/^小搭[:：]\s*|^Xiaoda:\s*/i, "").trim();
+        } else {
+          replyRaw = replyRaw.replace(/^小搭[:：]\s*|^Xiaoda:\s*/i, "").trim();
+        }
+        state.messages = [{ from: "xiaoda", text: replyRaw }];
+        state.summaryReady = true;
+        state.summaryLoading = false;
         persist();
-        render();
+        render({ full: true });
+      }).catch(() => {
+        state.messages = state.messages.filter((message) => message.from !== "xiaoda thinking");
+        state.messages = [{ from: "xiaoda", text: phaseOneSummaryFallback().replace(/^小搭[:：]\s*|^Xiaoda:\s*/i, "").trim() }];
+        state.summaryReady = true;
+        state.summaryLoading = false;
+        persist();
+        render({ full: true });
       });
-    }
+    };
+    if (phase === 2 && !state.summaryReady) loadPhase2Summary();
   }
 
   async function generateProfile(doc, api, status, button) {
@@ -2445,10 +3346,15 @@
     button.disabled = true;
     status.dataset.tone = "info";
     status.textContent = t.generating;
+    const chat3Answers = read(STORAGE.chat3, { answers: {} }).answers || {};
+    const questionnaire = { ...read(STORAGE.questionnaire, {}) };
+    if (intent === "study") questionnaire.studySync = chat3Answers;
+    if (intent === "social") questionnaire.socialSync = chat3Answers;
+    if (intent === "romance") questionnaire.romanceSync = chat3Answers;
     const payload = {
       lang: lang(),
       intent,
-      questionnaire: read(STORAGE.questionnaire, {}),
+      questionnaire,
       persona: read(STORAGE.persona, {}),
     };
     const res = await postJSON("/api/ai/analyze", payload);
@@ -2501,6 +3407,48 @@
     return "all";
   }
 
+  function normalizePlazaCategory(item) {
+    if (item.type === "celebrity") return "celebrity";
+    const raw = String(item.category || item.intent || "").toLowerCase();
+    if (/study|学习|學習|academic|自习|自習/.test(raw)) return "study";
+    if (/romance|恋爱|戀愛|深度/.test(raw)) return "romance";
+    if (/social|社交|culinary|饭搭|飯搭/.test(raw)) return "social";
+    const blob = `${item.title || ""} ${(item.tags || []).join(" ")}`;
+    if (/学习|學習|study|搭子.*学|學習搭子/i.test(blob)) return "study";
+    if (/恋爱|戀愛|romance|深度/i.test(blob)) return "romance";
+    return "social";
+  }
+
+  function allPlazaItems() {
+    const feed = getPlazaFeedCache();
+    const realUsers = (feed.real_users || []).map((item) => ({
+      ...item,
+      type: item.type || "user_twin",
+      category: normalizePlazaCategory(item),
+      name: twinDisplayName(item.name || item.twinName),
+      title: item.title || "",
+      body: item.body || "",
+      tags: item.tags || [],
+      initials: item.initials || "DT",
+      colors: item.colors || ["#6f5092", "#fcaad6"],
+    }));
+    const celebrities = Object.entries(CELEBRITY_CHAT_PROFILES).map(([cid, profile], index) => {
+      const built = buildCelebrityPlazaItem(cid, profile, index + 1);
+      if (!built.unlocked) {
+        built.body = copy("Try the challenge to unlock this mystery icon.", "完成挑战后解锁人物盲盒。", "完成挑戰後解鎖人物盲盒。");
+      }
+      return built;
+    });
+    return [...realUsers, ...celebrities];
+  }
+
+  function plazaItemsForFilter(filter = "all") {
+    const items = allPlazaItems();
+    if (filter === "all") return items;
+    return items.filter((item) => item.category === filter);
+  }
+
+
   function categoryLabel(category) {
     const labels = {
       all: copy("All", "全部", "全部"),
@@ -2547,42 +3495,11 @@
     const ids = seededShuffle(Object.keys(CELEBRITY_CHAT_PROFILES), seed + 73);
     const random = seededRandom(seed + 111);
     const count = Math.max(1, Math.min(ids.length, 1 + Math.floor(random() * ids.length)));
-    return ids.slice(0, count).map((id, index) => {
-      const profile = CELEBRITY_CHAT_PROFILES[id];
-      return {
-        id,
-        type: "celebrity",
-        category: "celebrity",
-        name: copy(`Mystery Icon #${index + 1}`, `人物盲盒 #${index + 1}`, `人物盲盒 #${index + 1}`),
-        title: profile.mysteryTitle,
-        body: copy(
-          "A high-glow hidden digital human. Pass the five-question challenge to unlock the real identity and chat.",
-          "高光隐藏款数字人。通过 5 道盲盒问题后即可解锁真实身份并开始聊天。",
-          "高光隱藏款數字人。通過 5 道盲盒問題後即可解鎖真實身份並開始聊天。"
-        ),
-        tags: (profile.mysteryTags || []).slice(0, 4),
-        initials: "??",
-        colors: profile.colors || ["#111827", "#6f5092"],
-      };
-    });
+    return ids.slice(0, count).map((id, index) => buildCelebrityPlazaItem(id, CELEBRITY_CHAT_PROFILES[id], index + 1));
   }
 
-  function demoPlazaItems(seed = currentPlazaSeed()) {
-    const feed = getPlazaFeedCache();
-    if (feed.demo_users && feed.demo_users.length) {
-      return seededShuffle(
-        feed.demo_users.map((item) => ({
-          ...item,
-          type: item.type || "module",
-          name: twinDisplayName(localizedSnippet(item.name)),
-          title: localizedSnippet(item.title),
-          body: localizedSnippet(item.body),
-          tags: (item.tags || []).map((tag) => localizedSnippet(tag)),
-        })),
-        seed + 37,
-      );
-    }
-    return regularPlazaItems(seed);
+  function demoPlazaItems() {
+    return [];
   }
 
   function plazaCardItems(seed = currentPlazaSeed()) {
@@ -2606,32 +3523,138 @@
   }
 
   function allCelebrityCardItems() {
-    return Object.entries(CELEBRITY_CHAT_PROFILES).map(([id, profile], index) => ({
-      id,
-      type: "celebrity",
-      category: "celebrity",
-      name: copy(`Mystery Icon #${index + 1}`, `人物盲盒 #${index + 1}`, `人物盲盒 #${index + 1}`),
-      title: profile.mysteryTitle,
-      body: copy("Try the challenge to reveal the English + meme identity.", "完成挑战后揭晓英文 + 梗名称。", "完成挑戰後揭曉英文 + 梗名稱。"),
-      tags: (profile.mysteryTags || []).slice(0, 4),
-      initials: "??",
-      colors: profile.colors || ["#111827", "#6f5092"],
-    }));
+    return Object.entries(CELEBRITY_CHAT_PROFILES).map(([id, profile], index) => {
+      const item = buildCelebrityPlazaItem(id, profile, index + 1);
+      if (!item.unlocked) {
+        item.body = copy("Try the challenge to unlock this mystery icon.", "完成挑战后解锁人物盲盒。", "完成挑戰後解鎖人物盲盒。");
+      }
+      return item;
+    });
   }
 
-  function homeLeaderboardItems() {
-    return [
-      { id: "plaza-sarah", type: "module", name: "Sarah J. Twin", meta: copy("warm openers", "温和开场", "溫和開場"), score: "98.8" },
-      { id: "jackie-chan", type: "celebrity", name: copy("Mystery Icon #1", "人物盲盒 #1", "人物盲盒 #1"), meta: copy("hidden action warmth", "隐藏动作高光", "隱藏動作高光"), score: "97.6" },
-      { id: "study-astra", type: "module", name: "Astra Chen Twin", meta: copy("study focus", "学习专注", "學習專注"), score: "96.9" },
-      { id: "shing-tung-yau", type: "celebrity", name: copy("Mystery Icon #2", "人物盲盒 #2", "人物盲盒 #2"), meta: copy("geometry legend", "几何传奇", "幾何傳奇"), score: "96.1" },
-      { id: "romance-elias", type: "module", name: "Elias Vance Twin", meta: copy("gentle resonance", "温柔共振", "溫柔共振"), score: "95.4" },
-      { id: "culinary-leo", type: "module", name: "Leo Zhang Twin", meta: copy("social routes", "社交路线", "社交路線"), score: "94.8" },
-      { id: "elon-musk", type: "celebrity", name: copy("Mystery Icon #3", "人物盲盒 #3", "人物盲盒 #3"), meta: copy("space-tech meme", "火星科技梗", "火星科技梗"), score: "94.2" },
-      { id: "plaza-maya", type: "module", name: "Maya K. Twin", meta: copy("visual thinking", "视觉思考", "視覺思考"), score: "93.7" },
-      { id: "study-elara", type: "module", name: "Elara Vance Twin", meta: copy("debate rhythm", "辩论节奏", "辯論節奏"), score: "93.0" },
-      { id: "romance-lyra", type: "module", name: "Lyra Chen Twin", meta: copy("dream resonance", "梦想共振", "夢想共振"), score: "92.5" },
+  function plazaClickKey(type, id) {
+    return `${type}:${id}`;
+  }
+
+  function readPlazaClicks() {
+    return read(STORAGE.plazaClicks, {});
+  }
+
+  function lookupPlazaItemMeta(id, type) {
+    const item = allPlazaItems().find((row) => row.id === id && (!type || row.type === type))
+      || allPlazaItems().find((row) => row.id === id);
+    if (!item) return null;
+    const meta = item.type === "celebrity"
+      ? (item.unlocked ? copy("Unlocked icon", "人物盲盒已解锁", "人物盲盒已解鎖") : (item.title || copy("Mystery icon", "人物盲盒", "人物盲盒")))
+      : (item.title || copy("Campus digital human", "校园数字人", "校園數字人"));
+    return { id: item.id, type: item.type, name: item.name, meta };
+  }
+
+  function recordPlazaClick(payload = {}) {
+    const { id, type, name, meta } = payload;
+    if (!id || !type) return;
+    const key = plazaClickKey(type, id);
+    const store = readPlazaClicks();
+    const prev = store[key] || { id, type, count: 0, name: name || "", meta: meta || "" };
+    const fresh = lookupPlazaItemMeta(id, type);
+    store[key] = {
+      ...prev,
+      id,
+      type,
+      name: fresh?.name || name || prev.name,
+      meta: fresh?.meta || meta || prev.meta,
+      count: (prev.count || 0) + 1,
+      updatedAt: Date.now(),
+    };
+    write(STORAGE.plazaClicks, store);
+  }
+
+  function popularityLeaderboardItems(limit = 3) {
+    const rankLabels = [
+      copy("Champion", "冠军", "冠軍"),
+      copy("Runner-up", "亚军", "亞軍"),
+      copy("Third place", "季军", "季軍"),
     ];
+    const rows = Object.values(readPlazaClicks())
+      .filter((row) => row && row.id && row.type && (row.count || 0) > 0)
+      .sort((a, b) => (b.count - a.count) || ((b.updatedAt || 0) - (a.updatedAt || 0)))
+      .slice(0, limit);
+    return rows.map((row, index) => {
+      const fresh = lookupPlazaItemMeta(row.id, row.type);
+      return {
+        id: row.id,
+        type: row.type,
+        name: fresh?.name || row.name || copy("Digital human", "数字人", "數字人"),
+        meta: fresh?.meta || row.meta || copy("Campus digital human", "校园数字人", "校園數字人"),
+        score: String(row.count || 0),
+        rankLabel: rankLabels[index] || String(index + 1),
+      };
+    });
+  }
+
+  function renderPopularityRankingMarkup(items = popularityLeaderboardItems()) {
+    if (!items.length) {
+      return `<div class="darlink-ranking-empty">${copy(
+        "Click digital humans in the plaza. The top 3 by clicks become champion, runner-up, and third place.",
+        "点击广场里的数字人即可计票，点击最多的 3 位自动成为冠亚季军。",
+        "點擊廣場裡的數字人即可計票，點擊最多的 3 位自動成為冠亞季軍。"
+      )}</div>`;
+    }
+    return items.map((item, index) => {
+      const attrs = item.type === "celebrity"
+        ? `data-darlink-celebrity-id="${item.id}"`
+        : `data-darlink-chat-id="${item.id}" data-darlink-chat-type="${item.type}"`;
+      const clickLabel = copy("clicks", "次点击", "次點擊");
+      return `<button type="button" class="darlink-ranking-row" ${attrs}>
+        <strong title="${escapeHtml(item.rankLabel)}">${index + 1}</strong>
+        <span>${escapeHtml(item.name)}<em>${escapeHtml(item.rankLabel)} · ${escapeHtml(item.meta)}</em></span>
+        <b>${item.score} ${clickLabel}</b>
+      </button>`;
+    }).join("");
+  }
+
+  function renderPopularityRanking(doc) {
+    const list = doc?.querySelector?.(".darlink-ranking-list");
+    if (!list) return;
+    list.innerHTML = renderPopularityRankingMarkup();
+  }
+
+  function trackPlazaCardInteraction(doc, card) {
+    if (!card) return;
+    const celebrityId = card.dataset.darlinkCelebrityId;
+    const chatId = card.dataset.darlinkChatId;
+    const chatType = card.dataset.darlinkChatType || "user_twin";
+    if (celebrityId) {
+      const meta = lookupPlazaItemMeta(celebrityId, "celebrity");
+      recordPlazaClick({ id: celebrityId, type: "celebrity", name: meta?.name, meta: meta?.meta });
+    } else if (chatId) {
+      const meta = lookupPlazaItemMeta(chatId, chatType);
+      recordPlazaClick({ id: chatId, type: chatType, name: meta?.name, meta: meta?.meta });
+    } else {
+      return;
+    }
+    renderPopularityRanking(doc);
+  }
+
+  function bindPopularityRanking(doc) {
+    const list = doc.querySelector(".darlink-ranking-list");
+    if (!list || list.dataset.darlinkRankingBound === "true") return;
+    list.dataset.darlinkRankingBound = "true";
+    list.addEventListener("click", (event) => {
+      const row = event.target.closest(".darlink-ranking-row");
+      if (!row) return;
+      const celebrityId = row.dataset.darlinkCelebrityId;
+      const chatId = row.dataset.darlinkChatId;
+      const chatType = row.dataset.darlinkChatType || "user_twin";
+      if (celebrityId) {
+        const meta = lookupPlazaItemMeta(celebrityId, "celebrity");
+        recordPlazaClick({ id: celebrityId, type: "celebrity", name: meta?.name, meta: meta?.meta });
+      } else if (chatId) {
+        const meta = lookupPlazaItemMeta(chatId, chatType);
+        recordPlazaClick({ id: chatId, type: chatType, name: meta?.name, meta: meta?.meta });
+      }
+      renderPopularityRanking(doc);
+    }, true);
   }
 
   function renderPlazaCard(item) {
@@ -2641,20 +3664,20 @@
     const actionAttrs = isCelebrity
       ? `data-darlink-celebrity-id="${item.id}"`
       : `data-darlink-chat-id="${item.id}" data-darlink-chat-type="${chatType}"`;
-    const buttonCopy = isCelebrity
+    const buttonCopy = isCelebrity && !item.unlocked
       ? copy("Open mystery", "开启盲盒", "開啟盲盒")
-      : copy("Chat with Twin", "和数字人聊天", "和數字人聊天");
-    return `<article class="darlink-home-twin-card ${isCelebrity ? "is-hidden-icon" : ""} ${isUserTwin ? "is-user-twin" : ""}" data-category="${item.category}" data-darlink-plaza-card="true" ${actionAttrs}>
+      : copy("Start chatting", "开始聊天", "開始聊天");
+    const celebrityClass = isCelebrity ? (item.unlocked ? "is-unlocked-icon" : "is-hidden-icon") : "";
+    return `<article class="darlink-home-twin-card ${celebrityClass} ${isUserTwin ? "is-user-twin" : ""}" data-category="${item.category}" data-darlink-plaza-card="true" ${actionAttrs}>
       <div class="darlink-home-avatar" style="--from:${item.colors[0]};--to:${item.colors[1]}">${item.initials}</div>
-      <div>
+      <div class="darlink-card-copy">
         <h3>${item.name}</h3>
-        <p class="darlink-home-role">${item.title}</p>
-        <p>${item.body}</p>
+        <p class="darlink-home-role">${item.title || item.name}</p>
       </div>
       <div class="darlink-home-tags">${item.tags.map((tag) => `<span>${localizedSnippet(tag)}</span>`).join("")}</div>
-      <button type="button" ${actionAttrs}>
+      <button type="button" class="darlink-plaza-chat-btn" ${actionAttrs}>
         ${buttonCopy}
-        ${materialIconSvg(isCelebrity ? "auto_awesome" : "chat_bubble")}
+        ${materialIconSvg(isCelebrity && !item.unlocked ? "auto_awesome" : "chat_bubble")}
       </button>
     </article>`;
   }
@@ -2665,19 +3688,18 @@
     if (!list || !filters || list.dataset.darlinkPlazaBound === "true") return;
     list.dataset.darlinkPlazaBound = "true";
     const activeFilter = () => filters.querySelector(".is-active")?.dataset.filter || "all";
-    const render = (seed = currentPlazaSeed(), filter = activeFilter()) => {
-      const items = filter === "celebrity" ? allCelebrityCardItems() : plazaCardItems(seed);
-      list.innerHTML = items.map(renderPlazaCard).join("");
-      list.querySelectorAll(".darlink-home-twin-card").forEach((card) => {
-        card.hidden = filter !== "all" && card.dataset.category !== filter;
-      });
+    const render = (filter = activeFilter()) => {
+      const items = plazaItemsForFilter(filter);
+      list.innerHTML = items.length
+        ? items.map(renderPlazaCard).join("")
+        : `<div class="darlink-plaza-empty">${copy("No digital humans in this category yet.", "这个分类下还没有数字人。", "這個分類下還沒有數字人。")}</div>`;
     };
     filters.addEventListener("click", (event) => {
       const button = event.target.closest("[data-filter]");
       if (!button) return;
       event.preventDefault();
       filters.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("is-active", item === button));
-      render(currentPlazaSeed(), button.dataset.filter);
+      render(button.dataset.filter);
     });
     doc.querySelector("[data-action='refresh-plaza']")?.addEventListener("click", async (event) => {
       event.preventDefault();
@@ -2686,18 +3708,23 @@
       void button.offsetWidth;
       button.classList.add("is-refreshing");
       await fetchPlazaFeed(true);
-      render(refreshPlazaSeed(), activeFilter());
+      render(activeFilter());
       window.setTimeout(() => button.classList.remove("is-refreshing"), 780);
     });
     list.addEventListener("click", (event) => {
+      const card = event.target.closest(".darlink-home-twin-card");
+      if (card) trackPlazaCardInteraction(doc, card);
       const chatButton = event.target.closest("button[data-darlink-chat-id]");
       if (chatButton) return;
-      const card = event.target.closest(".darlink-home-twin-card[data-darlink-chat-type='user_twin']");
-      if (!card || !card.dataset.darlinkChatId) return;
+      const twinCard = event.target.closest(".darlink-home-twin-card[data-darlink-chat-type='user_twin']");
+      if (!twinCard || !twinCard.dataset.darlinkChatId) return;
       event.preventDefault();
-      if (api) openPlazaTwinModal(card.dataset.darlinkChatId, api);
+      if (api) openPlazaTwinModal(twinCard.dataset.darlinkChatId, api);
+    }, true);
+    fetchPlazaFeed(true).then(() => {
+      render(activeFilter());
+      renderPopularityRanking(doc);
     });
-    fetchPlazaFeed(true).then(() => render(currentPlazaSeed(), activeFilter()));
     render();
   }
 
@@ -2715,8 +3742,7 @@
         </div>
         <div class="darlink-standard-actions">
           ${langSwitchMarkup()}
-          <button type="button" class="darlink-standard-search" data-darlink-search-disabled="true" data-darlink-local-control="true" aria-label="${copy("Search disabled for prototype", "搜索暂未开放", "搜尋暫未開放")}">${materialIconSvg("search")}</button>
-          <button type="button" class="darlink-standard-avatar" aria-label="${copy("Profile", "个人档案", "個人檔案")}"><img src="/files/v13-ai-twin-crop.png" alt="${copy("User profile avatar", "用户头像", "用戶頭像")}"></button>
+          ${userTopbarAvatarMarkup()}
         </div>
       </div>
     </nav>`;
@@ -2768,7 +3794,6 @@
     normalizeStoredProfileTwinName();
     const twinName = twinDisplayName(profile.twinName || buildDigitalHumanName(profileCards));
     const twinTags = (profile.twinTags && profile.twinTags.length ? profile.twinTags : profileTagsFromCards(profileCards)).slice(0, 6);
-    const leaderItems = homeLeaderboardItems();
     doc.body.className = "darlink-home-discovery-body darlink-page-polished darlink-page-home-luminous-dashboard-refined-v4";
     doc.body.innerHTML = `
       ${renderHomeTopbar("discover")}
@@ -2782,18 +3807,10 @@
         </section>
         <section class="darlink-home-ranking">
           <div class="darlink-ranking-head">
-            <div>
-              <span>${copy("Live Ranking", "数字人人气榜", "數字人人氣榜")}</span>
-              <h2>${copy("Top 10 most popular digital humans", "最有人气的 10 位数字人", "最有人氣的 10 位數字人")}</h2>
-            </div>
-            <button type="button" data-action="toggle-ranking" data-darlink-local-control="true" aria-expanded="false">${copy("Show all", "展开全部", "展開全部")}</button>
+            <h2>${copy("Popularity board", "人气榜", "人氣榜")}</h2>
           </div>
           <div class="darlink-ranking-list">
-            ${leaderItems.map((item, index) => `<button type="button" class="darlink-ranking-row ${index > 2 ? "darlink-ranking-extra" : ""}" ${item.type === "celebrity" ? `data-darlink-celebrity-id="${item.id}"` : `data-darlink-chat-id="${item.id}" data-darlink-chat-type="module"`}>
-              <strong>${index + 1}</strong>
-              <span>${item.name}<em>${item.meta}</em></span>
-              <b>${item.score}</b>
-            </button>`).join("")}
+            ${renderPopularityRankingMarkup()}
           </div>
         </section>
         <section class="darlink-home-grid">
@@ -2811,7 +3828,7 @@
               </div>
             </div>
             <div class="darlink-home-plaza-scroll">
-              ${plazaCardItems().map(renderPlazaCard).join("")}
+              ${plazaItemsForFilter("all").map(renderPlazaCard).join("")}
             </div>
           </section>
           <aside class="darlink-my-twin">
@@ -2833,14 +3850,7 @@
       ${profileModalMarkup(profileCards)}
     `;
 
-    const rankingButton = doc.querySelector("[data-action='toggle-ranking']");
-    const rankingList = doc.querySelector(".darlink-ranking-list");
-    rankingButton?.addEventListener("click", (event) => {
-      event.preventDefault();
-      const expanded = rankingList.classList.toggle("is-expanded");
-      rankingButton.setAttribute("aria-expanded", String(expanded));
-      rankingButton.textContent = expanded ? copy("Collapse", "收起", "收起") : copy("Show all", "展开全部", "展開全部");
-    });
+    bindPopularityRanking(doc);
 
     bindLangSwitch(doc.querySelector(".darlink-standard-topbar"));
     bindPlazaControls(doc, api);
@@ -2930,41 +3940,17 @@
   function enhanceExploreChat(doc, api) {
     injectStyle(doc, sharedCss() + exploreChatCss());
     const profile = read(STORAGE.profile, {});
-    const draft = read(STORAGE.avatarDraft, {});
     normalizeStoredProfileTwinName();
     const twinName = twinDisplayName(profile.twinName || buildDigitalHumanName(profile.cards || []));
     doc.title = "Darlink - Refine Digital Human";
     doc.body.className = "darlink-avatar-refine-body darlink-page-polished darlink-page-chat-explore-potential-with-ai-twin";
     doc.body.innerHTML = `
-      <main class="darlink-avatar-refine-shell">
-        <section class="darlink-avatar-guide">
-          <div class="darlink-avatar-guide-head">
-            <span>${materialIconSvg("bot")}</span>
-            <div>
-              <strong>${copy("Xiaoda Avatar Guide", "小搭头像引导", "小搭頭像引導")}</strong>
-              <p>${copy("Upload a photo, sketch, or reference image. Xiaoda will help convert it into your living digital-human direction.", "上传照片、草图或参考图，小搭会帮你转化成自己的数字人头像方向。", "上傳照片、草圖或參考圖，小搭會幫你轉化成自己的數字人頭像方向。")}</p>
-            </div>
-          </div>
-          <label class="darlink-upload-zone" for="darlinkAvatarInput">
-            <input id="darlinkAvatarInput" type="file" accept="image/*">
-            <span>${materialIconSvg("upload")}</span>
-            <strong>${copy("Upload avatar / reference", "上传我的数字人头像/图片", "上傳我的數字人頭像/圖片")}</strong>
-            <em>${copy("PNG, JPG, or a clear screenshot", "支持 PNG、JPG 或清晰截图", "支援 PNG、JPG 或清晰截圖")}</em>
-          </label>
-          <div class="darlink-avatar-preview ${draft.src ? "has-image" : ""}" id="darlinkAvatarPreview">
-            ${draft.src ? `<img src="${draft.src}" alt="${copy("Uploaded avatar preview", "上传预览", "上傳預覽")}">` : `<div>${materialIconSvg("image")}<p>${copy("Preview appears here", "预览会出现在这里", "預覽會出現在這裡")}</p></div>`}
-          </div>
-          <div class="darlink-avatar-steps">
-            <article><b>1</b><span>${copy("Upload a visual reference", "上传视觉参考", "上傳視覺參考")}</span></article>
-            <article><b>2</b><span>${copy("Tell Xiaoda what feels like you", "告诉小搭哪里像你", "告訴小搭哪裡像你")}</span></article>
-            <article><b>3</b><span>${copy("Keep refining with real LLM chat", "用真实 LLM 继续完善", "用真實 LLM 繼續完善")}</span></article>
-          </div>
-        </section>
+      <main class="darlink-avatar-refine-shell darlink-avatar-refine-shell--chat-only">
         <section class="darlink-avatar-chat">
           <header>
             <div>
               <strong>${escapeHtml(twinName)}</strong>
-              <p>${copy("Xiaoda is refining your avatar and personality signals.", "小搭正在完善你的头像与人格信号。", "小搭正在完善你的頭像與人格信號。")}</p>
+              <p>${copy("Chat with your own digital human — the more you talk, the more it becomes you.", "和你自己的数字人对话，越聊越像你。", "和你自己的數字人對話，越聊越像你。")}</p>
             </div>
             <label class="darlink-mood-control" data-darlink-local-control="true">
               <span>${copy("Status", "状态", "狀態")}</span>
@@ -2976,33 +3962,75 @@
               </select>
             </label>
           </header>
+          <div class="darlink-avatar-refine-note">${copy("Avatar upload lives in Personal Profile.", "头像上传已移到个人档案。", "頭像上傳已移到個人檔案。")} <button type="button" class="darlink-inline-link" data-darlink-flow-target="${api.page.profile}" data-darlink-local-control="true">${copy("Go to profile", "去个人档案", "去個人檔案")}</button></div>
           <div class="darlink-avatar-messages" id="darlinkAvatarMessages">
-            <div class="darlink-free-message ai">${copy("Send me what you want this avatar to express: warmer, more playful, more reliable, more mysterious, or closer to your real photo.", "告诉我你希望头像表达什么：更温暖、更灵动、更可靠、更神秘，或者更接近真实照片。", "告訴我你希望頭像表達什麼：更溫暖、更靈動、更可靠、更神秘，或者更接近真實照片。")}</div>
+            <div class="darlink-free-message ai">${copy("Hi — talk to me like you normally would. If I don't sound like you, just say so and I'll adjust.", "嗨，就像平时跟自己聊天一样——哪不像你就直接说，我会改。", "嗨，就像平時跟自己聊天一樣——哪不像你就直接說，我會改。")}</div>
           </div>
           <form class="darlink-avatar-input" id="darlinkAvatarForm">
-            <input id="darlinkAvatarText" autocomplete="off" placeholder="${copy("Tell Xiaoda how to refine your digital human...", "告诉小搭如何完善你的数字人...", "告訴小搭如何完善你的數字人...")}">
-            <button type="submit">${materialIconSvg("send")}</button>
+            <input id="darlinkAvatarText" autocomplete="off" placeholder="${copy("Say something to your digital human...", "和你的数字人说点什么...", "和你的數字人說點什麼...")}">
+            <button type="submit" data-darlink-local-control="true" aria-label="${copy("Send", "发送", "發送")}">${materialIconSvg("send")}</button>
           </form>
         </section>
       </main>
     `;
-    const fileInput = doc.querySelector("#darlinkAvatarInput");
-    const preview = doc.querySelector("#darlinkAvatarPreview");
-    fileInput?.addEventListener("change", () => {
-      const file = fileInput.files && fileInput.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        write(STORAGE.avatarDraft, { name: file.name, src: reader.result, updatedAt: Date.now() });
-        preview.classList.add("has-image");
-        preview.innerHTML = `<img src="${reader.result}" alt="${copy("Uploaded avatar preview", "上传预览", "上傳預覽")}">`;
-      };
-      reader.readAsDataURL(file);
-    });
     const form = doc.querySelector("#darlinkAvatarForm");
     const input = doc.querySelector("#darlinkAvatarText");
     const messages = doc.querySelector("#darlinkAvatarMessages");
+    const thinkingLabel = copy(`${twinName} is thinking`, `${twinName}正在思考`, `${twinName}正在思考`);
     let token = 0;
+    let selfSessionId = read(STORAGE.selfChatSession, null);
+
+    const appendAi = (text) => {
+      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message ai">${escapeHtml(text)}</div>`);
+      messages.scrollTop = messages.scrollHeight;
+    };
+    const appendUser = (text) => {
+      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message user">${escapeHtml(text)}</div>`);
+      messages.scrollTop = messages.scrollHeight;
+    };
+
+    async function loadSelfChatHistory() {
+      if (!selfSessionId) return false;
+      const hist = await getJSON(`/api/self-chat/history/${encodeURIComponent(selfSessionId)}`);
+      if (!hist?.ok || !Array.isArray(hist.messages) || !hist.messages.length) return false;
+      messages.innerHTML = "";
+      hist.messages.forEach((m) => {
+        const text = (m.text || "").trim();
+        if (!text) return;
+        if (m.role === "user") appendUser(text);
+        else appendAi(text);
+      });
+      return true;
+    }
+
+    async function startSelfSession() {
+      const userToken = authUserToken();
+      if (!userToken) return { reason: "auth_required" };
+      const res = await postJSON("/api/self-chat/start", { user_token: userToken });
+      if (res && res.ok && res.session_id) {
+        selfSessionId = res.session_id;
+        write(STORAGE.selfChatSession, selfSessionId);
+        return { ok: true };
+      }
+      return res || { reason: "start_failed" };
+    }
+
+    // 进屏先建立/复用自聊会话，并拉取历史记录
+    (async () => {
+      const res = await startSelfSession();
+      if (res.ok) {
+        await loadSelfChatHistory();
+        return;
+      }
+      if (res.reason === "auth_required") {
+        appendAi(copy("Please log in first to chat with your digital human.", "请先登录，再和你的数字人对话。", "請先登入，再和你的數字人對話。"));
+      } else if (res.reason === "not_distilled_yet") {
+        appendAi(res.message || copy("I need to know you a bit more first. Finish the questionnaire and chat with a few AI figures, then come back.", "我还需要更了解你一点。先完成问卷、多和几个AI人物聊聊，再回来找我吧。", "我還需要更了解你一點。先完成問卷、多和幾個AI人物聊聊，再回來找我吧。"));
+      } else {
+        appendAi(copy("Could not start the chat right now. Please try again later.", "暂时无法开始对话，请稍后再试。", "暫時無法開始對話，請稍後再試。"));
+      }
+    })();
+
     form?.addEventListener("submit", async (event) => {
       event.preventDefault();
       const value = normalize(input.value);
@@ -3010,44 +4038,26 @@
       const currentToken = ++token;
       input.value = "";
       messages.querySelector(".thinking")?.remove();
-      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message user">${escapeHtml(value)}</div><div class="darlink-free-message ai thinking">${copy("Xiaoda is thinking", "小搭正在思考", "小搭正在思考")}<span></span><span></span><span></span></div>`);
+      appendUser(value);
+      messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message ai thinking">${thinkingLabel}<span></span><span></span><span></span></div>`);
       messages.scrollTop = messages.scrollHeight;
-      let aiNode = null;
-      const res = await chatWithStream("/api/ai/chat/stream", "/api/ai/chat", {
-        lang: lang(),
-        phase: "avatar-refinement",
-        answer: value,
-        current_question: "refine digital human avatar",
-        known_answers: {
-          questionnaire: read(STORAGE.questionnaire, {}),
-          profile,
-          avatar_uploaded: Boolean(read(STORAGE.avatarDraft, {}).src),
-        },
-        recent_messages: Array.from(messages.querySelectorAll(".darlink-free-message")).slice(-10).map((node) => ({
-          role: node.classList.contains("user") ? "user" : "assistant",
-          content: normalize(node.textContent),
-        })),
-      }, {
-        onDelta(delta) {
+
+      if (!selfSessionId) {
+        const started = await startSelfSession();
+        if (!started.ok) {
+          if (currentToken !== token) return;
           messages.querySelector(".thinking")?.remove();
-          if (!aiNode) {
-            messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message ai"></div>`);
-            aiNode = messages.lastElementChild;
-          }
-          aiNode.textContent = (aiNode.textContent || "") + delta;
-          messages.scrollTop = messages.scrollHeight;
-        },
-      });
+          if (started.reason === "auth_required") appendAi(copy("Please log in first.", "请先登录。", "請先登入。"));
+          else if (started.reason === "not_distilled_yet") appendAi(started.message || copy("I need to know you a bit more first.", "我还需要更了解你一点，先完成问卷、多聊几句再来。", "我還需要更了解你一點，先完成問卷、多聊幾句再來。"));
+          else appendAi(copy("Could not start the chat.", "暂时无法开始对话。", "暫時無法開始對話。"));
+          return;
+        }
+      }
+
+      const res = await postJSON("/api/self-chat/message", { session_id: selfSessionId, text: value });
       if (currentToken !== token) return;
       messages.querySelector(".thinking")?.remove();
-      if (!aiNode) {
-        messages.insertAdjacentHTML("beforeend", `<div class="darlink-free-message ai">${escapeHtml(res.ok && res.reply ? res.reply : aiErrorMessage(res))}</div>`);
-      } else if (!res.ok) {
-        aiNode.textContent = aiErrorMessage(res);
-      } else if (res.reply) {
-        aiNode.textContent = finalizeStreamReply(aiNode.textContent, res.reply);
-      }
-      messages.scrollTop = messages.scrollHeight;
+      appendAi(res && res.ok && res.reply ? res.reply : copy("Your digital human is offline for now. Please try again later.", "你的数字人暂时不在线，稍后再试。", "你的數字人暫時不在線，稍後再試。"));
       input.focus();
     });
   }
@@ -3105,37 +4115,412 @@
             </div>
           </div>
           <div class="darlink-home-plaza-scroll">
-            ${plazaCardItems().map(renderPlazaCard).join("")}
+            ${plazaItemsForFilter("all").map(renderPlazaCard).join("")}
           </div>
         </section>
       </main>
     `;
     bindPlazaControls(doc, api);
     bindLangSwitch(doc.querySelector(".darlink-standard-topbar"));
+    fetchPlazaFeed(true).then(() => {
+      const list = doc.querySelector(".darlink-home-plaza-scroll");
+      const filters = doc.querySelector(".darlink-plaza-filters");
+      if (!list) return;
+      const filter = filters?.querySelector(".is-active")?.dataset.filter || "all";
+      const items = plazaItemsForFilter(filter);
+      list.innerHTML = items.length
+        ? items.map(renderPlazaCard).join("")
+        : `<div class="darlink-plaza-empty">${copy("No digital humans in this category yet.", "这个分类下还没有数字人。", "這個分類下還沒有數字人。")}</div>`;
+    });
   }
 
-  function enhanceMatching(doc) {
+  function matchingLiveCss() {
+    return `
+      .glowing-sphere-3d{cursor:pointer}
+      .glowing-sphere-3d .darlink-self-label{display:block;max-width:78px;text-align:center;font-size:clamp(13px,1.5vw,18px)!important;line-height:1.12!important;letter-spacing:0!important;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+      .darlink-match-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:10;overflow:visible}
+      .darlink-live-line{stroke-linecap:round;filter:drop-shadow(0 0 5px rgba(126,212,253,.34));animation:darlinkLinePulse 2.8s ease-in-out infinite}
+      .darlink-live-line.is-selected{filter:drop-shadow(0 0 8px rgba(252,170,214,.5))}
+      @keyframes darlinkLinePulse{0%,100%{opacity:.34}50%{opacity:.76}}
+      .darlink-match-node-wrap{position:absolute;z-index:22;display:flex;flex-direction:column;align-items:center;gap:6px;width:122px;min-height:104px;transform:translate(-50%,-50%);pointer-events:auto;--node-size:54px}
+      .darlink-match-node{position:relative;width:var(--node-size);height:var(--node-size);border-radius:999px;border:2px solid rgba(255,255,255,.72);display:grid;place-items:center;cursor:pointer;color:#fff;font-weight:950;background:linear-gradient(135deg,var(--from,#6f5092),var(--to,#fcaad6));box-shadow:0 9px 22px rgba(111,80,146,.34);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;overflow:hidden}
+      .darlink-match-node span{font-size:13px;letter-spacing:0}
+      .darlink-match-node-wrap:hover .darlink-match-node{transform:scale(1.08);box-shadow:0 14px 30px rgba(111,80,146,.42)}
+      .darlink-match-node-wrap.is-selected .darlink-match-node{border-color:#fff;box-shadow:0 0 0 3px rgba(219,184,255,.85),0 12px 28px rgba(111,80,146,.46)}
+      .darlink-node-score{position:absolute;top:calc(var(--node-size) - 17px);left:50%;transform:translateX(8px);z-index:24;min-width:34px;text-align:center;background:#111c2d;color:#fff;font-size:10px;line-height:1;padding:5px 7px;border-radius:999px;border:1px solid rgba(255,255,255,.78);box-shadow:0 7px 16px rgba(17,28,45,.24);white-space:nowrap;pointer-events:none}
+      .darlink-match-name{max-width:118px;min-height:30px;padding:4px 8px;border-radius:10px;background:rgba(255,255,255,.78);backdrop-filter:blur(10px);color:#111c2d;font-size:11px;font-weight:850;line-height:1.18;text-align:center;box-shadow:0 7px 18px rgba(31,42,68,.12);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word;pointer-events:none}
+      .darlink-match-empty{width:100%;text-align:center;color:#4a454f;font-size:14px;padding:22px 8px;line-height:1.6}
+      .darlink-match-insight{background:rgba(255,255,255,.45);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.4);border-radius:16px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px}
+      .darlink-match-insight .darlink-insight-ic{background:rgba(219,184,255,.4);padding:8px;border-radius:999px;flex:0 0 auto;color:#6f5092;display:grid;place-items:center}
+      .darlink-match-insight h4{margin:0 0 2px;font-size:14px;color:#111c2d;font-weight:800}
+      .darlink-match-insight p{margin:0;font-size:12px;color:#4a454f;line-height:1.5}
+      .darlink-match-portrait{width:112px;height:112px;border-radius:999px;overflow:hidden;border:4px solid rgba(255,255,255,.7);box-shadow:0 12px 30px rgba(31,42,68,.2);margin:0 auto 16px;background:linear-gradient(135deg,var(--from,#6f5092),var(--to,#fcaad6))}
+      .darlink-match-portrait img{width:100%;height:100%;object-fit:cover;display:block}
+      .darlink-self-tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:12px 0 0}
+      .darlink-self-tags span{border-radius:999px;background:linear-gradient(135deg,#efdbff,#dff4ff);color:#604283;padding:6px 10px;font-size:12px;font-weight:850}
+      .darlink-match-status{margin:0 0 18px;color:#604283;font-size:13px;font-weight:850;text-align:center}
+      .darlink-self-summary{width:100%;border-radius:18px;background:rgba(255,255,255,.54);border:1px solid rgba(255,255,255,.56);padding:14px 16px;margin:0 0 16px}
+      .darlink-self-summary strong{display:block;color:#111c2d;font-size:14px;margin-bottom:5px}
+      .darlink-self-summary p{margin:0;color:#4a454f;font-size:12px;line-height:1.55}`;
+  }
+
+  // 网络图上头像的固定坐标（top%, left%, 尺寸px），最多渲染 9 个候选
+  const MATCH_NODE_POSITIONS = [
+    { t: 28, l: 32, s: 58 }, { t: 68, l: 25, s: 52 }, { t: 72, l: 78, s: 58 },
+    { t: 15, l: 55, s: 46 }, { t: 50, l: 15, s: 46 }, { t: 85, l: 45, s: 46 },
+    { t: 40, l: 88, s: 46 }, { t: 20, l: 82, s: 46 }, { t: 60, l: 40, s: 46 },
+  ];
+
+  function matchReasonInsight(reason) {
+    if (reason === "shared_interests") {
+      return { icon: "interests", title: copy("Shared interests", "共同兴趣", "共同興趣"), desc: copy("You both flagged overlapping interests and tags.", "你们标注了重叠的兴趣与标签。", "你們標注了重疊的興趣與標籤。") };
+    }
+    if (reason === "personality_similar") {
+      return { icon: "psychology", title: copy("Similar personality", "性格相似", "性格相似"), desc: copy("Your thinking and communication styles are close.", "你们的思维与沟通风格很接近。", "你們的思維與溝通風格很接近。") };
+    }
+    if (reason === "personality_complementary") {
+      return { icon: "join_inner", title: copy("Complementary personality", "性格互补", "性格互補"), desc: copy("Your styles balance each other and add new angles.", "你们的风格互补，可能带来新视角。", "你們的風格互補，可能帶來新視角。") };
+    }
+    if (reason && reason.indexOf("same_intent") === 0) {
+      const intent = reason.split(":")[1] || "";
+      const descByIntent = {
+        study: copy("You're both here to find study partners.", "你们都在找学习搭子。", "你們都在找學習搭子。"),
+        social: copy("You both want to expand your social circle.", "你们都想拓展社交圈。", "你們都想拓展社交圈。"),
+        romance: copy("You're both open to romantic connections.", "你们都对恋爱开放。", "你們都對戀愛開放。"),
+      };
+      return { icon: "target", title: copy("Same intent", "目标一致", "目標一致"), desc: descByIntent[intent] || copy("You share the same intent on Darlink.", "你们在 Darlink 上的意图一致。", "你們在 Darlink 上的意圖一致。") };
+    }
+    return null;
+  }
+
+  function buildMatchInsights(match) {
+    const cards = (match.reasons || []).map(matchReasonInsight).filter(Boolean);
+    if (!cards.length) {
+      cards.push({ icon: "hub", title: copy("Semantic affinity", "语义相近", "語義相近"), desc: copy("Your digital-twin profiles are semantically close.", "你们的数字分身画像在语义上相近。", "你們的數字分身畫像在語義上相近。") });
+    }
+    return cards.slice(0, 3).map((c) => `<div class="darlink-match-insight">
+      <div class="darlink-insight-ic"><span class="material-symbols-outlined text-[20px]" data-icon="${c.icon}">${c.icon}</span></div>
+      <div><h4>${escapeHtml(c.title)}</h4><p>${escapeHtml(c.desc)}</p></div>
+    </div>`).join("");
+  }
+
+  function displayInitials(name, fallback = "DL") {
+    const cleaned = normalize(name).replace(/[^\p{L}\p{N}]/gu, "");
+    return (cleaned ? cleaned.slice(0, 2).toUpperCase() : fallback).slice(0, 3);
+  }
+
+  function uniqueTags(values) {
+    const out = [];
+    (values || []).forEach((value) => {
+      const tag = normalize(value);
+      if (tag && !out.includes(tag)) out.push(tag);
+    });
+    return out;
+  }
+
+  function asArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
+  function selfSummaryFromProfile(res) {
+    const auth = read(STORAGE.auth, null) || {};
+    const localProfile = read(STORAGE.profile, {}) || {};
+    const onboarding = res?.onboarding || {};
+    const questionnaire = onboarding.questionnaire || read(STORAGE.questionnaire, {}) || {};
+    const cards = asArray(res?.cards || onboarding.cards || localProfile.cards);
+    const twinName = twinDisplayName(res?.twinName || onboarding.twinName || localProfile.twinName || "");
+    const nickname = normalize(questionnaire.nickname || onboarding.nickname || localProfile.nickname || "");
+    const emailName = normalize((auth.email || currentUserEmail() || "").split("@")[0]);
+    const name = nickname || twinName || emailName || copy("You", "你", "你");
+    const firstCard = cards[0] || {};
+    const cardTags = cards.flatMap((card) => asArray(card?.tags));
+    const tags = uniqueTags([...asArray(res?.twinTags || onboarding.twinTags || localProfile.twinTags), ...cardTags]).slice(0, 3);
+    return {
+      name,
+      twinName,
+      title: firstCard.title || twinName || copy("Digital twin profile", "数字分身画像", "數字分身畫像"),
+      body: firstCard.body || copy("Your profile is ready for resonance matching.", "你的画像已准备好参与共振匹配。", "你的畫像已準備好參與共振匹配。"),
+      tags,
+      school: questionnaire.school || "",
+      grade: questionnaire.grade || "",
+      major: questionnaire.majorDirection || questionnaire.major || "",
+      profileId: res?.plaza_profile_id || "",
+      initials: displayInitials(name),
+      colors: ["#6f5092", "#7ed4fd"],
+      ready: Boolean(res?.ok || cards.length || twinName || nickname),
+    };
+  }
+
+  // 把匹配候选写入 plaza 缓存，保证进入聊天时能解析到正确的名字/头像
+  function cacheMatchProfiles(matches) {
+    const cache = getPlazaFeedCache();
+    const byId = new Map((cache.real_users || []).map((u) => [u.id, u]));
+    matches.forEach((m) => {
+      byId.set(m.profile_id, {
+        id: m.profile_id,
+        type: "user_twin",
+        name: m.card.name,
+        title: m.card.title,
+        body: m.card.body,
+        tags: m.card.tags || [],
+        initials: m.card.initials || "DT",
+        colors: m.card.colors || ["#6f5092", "#fcaad6"],
+        category: m.intent || "social",
+      });
+    });
+    write(STORAGE.plazaFeed, { real_users: Array.from(byId.values()), demo_users: cache.demo_users || [], fetchedAt: cache.fetchedAt || Date.now() });
+  }
+
+  function enhanceMatching(doc, api) {
     appendStyle(doc, "matching-polish", matchingPolishCss());
+    appendStyle(doc, "matching-live", matchingLiveCss());
     normalizeStandardTopBar(doc, "matches");
     replaceTextSnippets(doc, pageSnippetTranslations("matching"));
-    const locationLine = Array.from(doc.querySelectorAll("p")).find((node) => node.textContent.includes("San Francisco") || node.textContent.includes("miles away"));
-    if (locationLine) {
-      locationLine.innerHTML = `<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span><span>Beijing</span>`;
-    }
-    const refreshButton = Array.from(doc.querySelectorAll("button")).find((button) => (button.textContent || "").includes("refresh") || button.querySelector("[data-icon='refresh']"));
-    if (refreshButton && refreshButton.dataset.darlinkRefreshBound !== "true") {
-      refreshButton.dataset.darlinkRefreshBound = "true";
-      refreshButton.dataset.darlinkRefresh = "true";
-      refreshButton.setAttribute("aria-label", copy("Refresh matches", "刷新匹配", "刷新匹配"));
-      refreshButton.addEventListener("click", (event) => {
+
+    const network = doc.querySelector(".glowing-sphere-3d")?.closest("section")
+      || doc.querySelector("[data-darlink-match-id]")?.closest("section")
+      || doc.querySelector("main section");
+    const sidebarCard = doc.querySelector("aside .iridescent-frosted") || doc.querySelector("aside > div");
+    if (!network || !sidebarCard) return;
+
+    const state = { matches: [], selected: -1, mode: "similar", self: selfSummaryFromProfile(null), loading: true, error: "" };
+
+    const matchName = (m) => normalize(m?.card?.name) || copy("Campus Twin", "校园数字人", "校園數字人");
+
+    const renderSelfSidebar = () => {
+      const self = state.self || selfSummaryFromProfile(null);
+      const colors = self.colors || ["#6f5092", "#7ed4fd"];
+      const campusLine = [self.school, self.major, self.grade].filter(Boolean).join(" · ");
+      const statusText = state.loading
+        ? copy("Refreshing resonance network", "正在刷新共振网络", "正在刷新共振網絡")
+        : state.error
+          ? state.error
+          : copy(`${state.matches.length} potential matches found`, `已发现 ${state.matches.length} 个潜在匹配`, `已發現 ${state.matches.length} 個潛在匹配`);
+      sidebarCard.innerHTML = `
+        <div class="darlink-match-portrait" style="--from:${colors[0]};--to:${colors[1]}">
+          <img alt="${escapeHtml(self.name)}" src="${avatarDataUri(self.initials || displayInitials(self.name), colors)}">
+        </div>
+        <h2 class="font-headline-md text-headline-lg text-on-surface mb-1" style="text-align:center">${escapeHtml(self.name)}</h2>
+        <p class="font-label-sm text-label-sm text-on-surface-variant mb-4 flex items-center gap-1" style="justify-content:center;text-align:center">
+          <span class="material-symbols-outlined text-[14px]" data-icon="person">person</span>
+          <span>${escapeHtml(campusLine || copy("Your digital twin", "你的数字分身", "你的數字分身"))}</span>
+        </p>
+        <p class="darlink-match-status">${escapeHtml(statusText)}</p>
+        <div class="darlink-self-summary">
+          <strong>${escapeHtml(self.twinName || self.title)}</strong>
+          <p>${escapeHtml(self.body)}</p>
+          ${self.tags.length ? `<div class="darlink-self-tags">${self.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
+        </div>
+        <div class="w-full flex gap-3">
+          <button type="button" data-darlink-local-control="true" data-match-refresh="true" class="flex-1 bg-gradient-to-r from-primary via-secondary to-tertiary text-on-primary font-label-lg text-label-lg py-4 rounded-full shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[20px]" data-icon="refresh">refresh</span>
+            ${copy("Refresh Matches", "刷新匹配", "刷新匹配")}
+          </button>
+        </div>`;
+      bindSidebar();
+    };
+
+    const renderSidebar = () => {
+      if (state.selected < 0) {
+        renderSelfSidebar();
+        return;
+      }
+      const m = state.matches[state.selected];
+      if (!m) {
+        sidebarCard.innerHTML = `<div class="darlink-match-empty">${escapeHtml(copy("No resonant matches yet. Finish your digital twin onboarding, then refresh.", "还没有共振的匹配。完成你的数字分身引导后点刷新。", "還沒有共振的匹配。完成你的數字分身引導後點刷新。"))}<div style="margin-top:14px"><button type="button" data-darlink-local-control="true" data-match-refresh="true" class="darlink-refine-btn">${copy("Refresh", "刷新", "刷新")} <span class="material-symbols-outlined" data-icon="refresh">refresh</span></button></div></div>`;
+        bindSidebar();
+        return;
+      }
+      const colors = m.card.colors || ["#6f5092", "#fcaad6"];
+      const locationText = m.school || (m.card.tags || []).slice(0, 2).join(" · ") || copy("Campus digital twin", "校园数字人", "校園數字人");
+      sidebarCard.innerHTML = `
+        <div class="darlink-match-portrait" style="--from:${colors[0]};--to:${colors[1]}">
+          <img alt="${escapeHtml(matchName(m))}" src="${avatarDataUri(displayInitials(matchName(m), m.card.initials || "DT"), colors)}">
+        </div>
+        <h2 class="font-headline-md text-headline-lg text-on-surface mb-1" style="text-align:center">${escapeHtml(matchName(m))}</h2>
+        <p class="font-label-sm text-label-sm text-on-surface-variant mb-6 flex items-center gap-1" style="justify-content:center">
+          <span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+          <span>${escapeHtml(locationText)}</span>
+        </p>
+        <div class="w-full mb-6">
+          <div class="flex justify-between items-end mb-3">
+            <span class="font-label-lg text-label-lg text-primary font-bold">${copy("Resonance Level", "共振度", "共振度")}</span>
+            <span class="font-headline-md text-headline-md text-secondary font-bold">${Math.round(m.score)}%</span>
+          </div>
+          <div class="h-4 w-full bg-white/40 rounded-full overflow-hidden shadow-inner">
+            <div class="h-full rounded-full liquid-progress" style="width:${Math.max(4, Math.min(100, m.score))}%"></div>
+          </div>
+        </div>
+        <div class="w-full flex flex-col gap-3 mb-6">
+          <h3 class="font-label-lg text-label-lg text-on-surface font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px] text-tertiary" data-icon="psychology">psychology</span>
+            ${copy("AI Insights", "AI 洞察", "AI 洞察")}
+          </h3>
+          ${buildMatchInsights(m)}
+        </div>
+        <div class="w-full flex gap-3">
+          <button type="button" data-darlink-local-control="true" data-match-connect="true" class="flex-1 bg-gradient-to-r from-primary via-secondary to-tertiary text-on-primary font-label-lg text-label-lg py-4 rounded-full shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[20px]" data-icon="chat_bubble">chat_bubble</span>
+            ${copy("Initiate Connect", "发起连接", "發起連接")}
+          </button>
+          <button type="button" data-darlink-local-control="true" data-match-refresh="true" aria-label="${copy("Refresh matches", "刷新匹配", "刷新匹配")}" class="w-14 h-14 glass-layer-2 hover:bg-white/80 rounded-full flex items-center justify-center text-primary transition-all hover:scale-110 shadow-lg border border-white/50">
+            <span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+          </button>
+        </div>`;
+      bindSidebar();
+    };
+
+    const openChat = (m) => {
+      if (!m) return;
+      storeChatContext("user_twin", m.profile_id);
+      if (api && api.navigate) api.navigate(api.page.matchChat, { immediate: true });
+    };
+
+    const bindSidebar = () => {
+      sidebarCard.querySelector("[data-match-connect]")?.addEventListener("click", (event) => {
         event.preventDefault();
-        event.stopPropagation();
-        refreshButton.classList.remove("is-refreshing");
-        void refreshButton.offsetWidth;
-        refreshButton.classList.add("is-refreshing");
-        window.setTimeout(() => refreshButton.classList.remove("is-refreshing"), 760);
+        openChat(state.matches[state.selected]);
       });
-    }
+      const refreshBtn = sidebarCard.querySelector("[data-match-refresh]");
+      if (refreshBtn) {
+        refreshBtn.addEventListener("click", async (event) => {
+          event.preventDefault();
+          refreshBtn.classList.remove("is-refreshing");
+          void refreshBtn.offsetWidth;
+          refreshBtn.classList.add("is-refreshing");
+          await loadMatches(true);
+          window.setTimeout(() => refreshBtn.classList.remove("is-refreshing"), 760);
+        });
+      }
+    };
+
+    const selectMatch = (index) => {
+      state.selected = index;
+      network.querySelectorAll(".darlink-match-node-wrap").forEach((node) => {
+        node.classList.toggle("is-selected", node.dataset.matchIndex === String(index));
+      });
+      renderNetwork();
+      renderSidebar();
+    };
+
+    const renderNetworkLines = (matches) => {
+      network.querySelector(".darlink-match-lines")?.remove();
+      if (!matches.length) return;
+      const lines = doc.createElementNS("http://www.w3.org/2000/svg", "svg");
+      lines.setAttribute("class", "darlink-match-lines");
+      lines.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      const lineMarkup = matches.map((m, i) => {
+        const p = MATCH_NODE_POSITIONS[i];
+        const selected = i === state.selected;
+        return `<line class="darlink-live-line${selected ? " is-selected" : ""}" stroke="url(#darlinkLineGrad${i % 2})" stroke-width="${selected ? "2.4" : "1.5"}" x1="50%" y1="50%" x2="${p.l}%" y2="${p.t}%"></line>`;
+      }).join("");
+      lines.innerHTML = `<defs>
+        <linearGradient id="darlinkLineGrad0" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#d8b4fe"></stop><stop offset="52%" stop-color="#fcaad6"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
+        <linearGradient id="darlinkLineGrad1" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#7ed4fd"></stop><stop offset="52%" stop-color="#d8b4fe"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient>
+      </defs>${lineMarkup}`;
+      const youNode = network.querySelector(".glowing-sphere-3d");
+      if (youNode && youNode.parentElement === network) network.insertBefore(lines, youNode);
+      else network.appendChild(lines);
+    };
+
+    const renderNetwork = () => {
+      network.querySelectorAll("[data-darlink-match-id], .darlink-match-node-wrap").forEach((node) => node.remove());
+      network.querySelectorAll("svg").forEach((svg) => {
+        if (svg.classList.contains("darlink-match-lines") || svg.querySelector(".network-line")) svg.remove();
+      });
+      const youNode = network.querySelector(".glowing-sphere-3d");
+      if (youNode) {
+        let label = youNode.querySelector("span");
+        if (!label) {
+          label = doc.createElement("span");
+          youNode.appendChild(label);
+        }
+        label.className = "font-headline-md text-headline-md text-white font-bold drop-shadow-md darlink-self-label";
+        label.textContent = state.self?.name || copy("You", "你", "你");
+        youNode.setAttribute("role", "button");
+        youNode.setAttribute("tabindex", "0");
+        youNode.setAttribute("aria-label", copy("Show my profile", "查看我的画像", "查看我的畫像"));
+        if (youNode.dataset.darlinkSelfBound !== "true") {
+          youNode.dataset.darlinkSelfBound = "true";
+          youNode.addEventListener("click", () => selectMatch(-1));
+          youNode.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              selectMatch(-1);
+            }
+          });
+        }
+      }
+      const visibleMatches = state.matches.slice(0, MATCH_NODE_POSITIONS.length);
+      renderNetworkLines(visibleMatches);
+      visibleMatches.forEach((m, i) => {
+        const p = MATCH_NODE_POSITIONS[i];
+        const colors = m.card.colors || ["#6f5092", "#fcaad6"];
+        const name = matchName(m);
+        const wrap = doc.createElement("div");
+        wrap.className = "darlink-match-node-wrap" + (i === state.selected ? " is-selected" : "");
+        wrap.dataset.matchIndex = String(i);
+        wrap.style.cssText = `top:${p.t}%;left:${p.l}%;--node-size:${p.s}px;--from:${colors[0]};--to:${colors[1]}`;
+        const btn = doc.createElement("button");
+        btn.type = "button";
+        btn.className = "darlink-match-node";
+        btn.dataset.darlinkLocalControl = "true";
+        btn.dataset.matchIndex = String(i);
+        btn.setAttribute("aria-label", `${name} · ${Math.round(m.score)}%`);
+        btn.innerHTML = `<span>${escapeHtml(displayInitials(name, m.card.initials || "DT"))}</span>`;
+        const score = doc.createElement("span");
+        score.className = "darlink-node-score";
+        score.textContent = `${Math.round(m.score)}%`;
+        const label = doc.createElement("span");
+        label.className = "darlink-match-name";
+        label.title = name;
+        label.textContent = name;
+        wrap.append(btn, score, label);
+        wrap.addEventListener("click", (event) => {
+          event.preventDefault();
+          selectMatch(i);
+        });
+        if (youNode && youNode.parentElement === network) network.insertBefore(wrap, youNode);
+        else network.appendChild(wrap);
+      });
+    };
+
+    const loadMatches = async (force) => {
+      const token = authUserToken();
+      if (!token) {
+        state.matches = [];
+        state.loading = false;
+        state.error = copy("Sign in to view resonance matches.", "登录后即可查看共振匹配。", "登入後即可查看共振匹配。");
+        renderNetwork();
+        renderSidebar();
+        return;
+      }
+      state.loading = true;
+      state.error = "";
+      state.selected = -1;
+      renderNetwork();
+      renderSidebar();
+      const [profileRes, matchRes] = await Promise.all([
+        getJSON(`/api/user/onboarding-profile?user_token=${encodeURIComponent(token)}`),
+        getJSON(`/api/matching/matches?user_token=${encodeURIComponent(token)}&mode=${encodeURIComponent(state.mode)}&limit=20`),
+      ]);
+      if (profileRes && profileRes.ok) state.self = selfSummaryFromProfile(profileRes);
+      else state.self = selfSummaryFromProfile(null);
+      state.matches = matchRes && matchRes.ok ? (matchRes.matches || []) : [];
+      state.loading = false;
+      if (matchRes && !matchRes.ok) {
+        state.error = matchRes.reason === "profile_not_ready"
+          ? copy("Your profile vector is still being prepared.", "你的画像向量还在准备中。", "你的畫像向量還在準備中。")
+          : copy("Matches are temporarily unavailable.", "匹配暂时不可用。", "匹配暫時不可用。");
+      }
+      if (state.matches.length) cacheMatchProfiles(state.matches);
+      renderNetwork();
+      renderSidebar();
+    };
+
+    renderNetwork();
+    renderSidebar();
+    loadMatches(false);
   }
 
 
@@ -3595,6 +4980,7 @@
       heroActions.className = "flex flex-col space-y-3 darlink-profile-hero-actions";
       heroActions.innerHTML = `
         <button type="button" class="px-8 py-3 bg-primary text-white font-label-lg text-label-lg rounded-xl shadow-lg shadow-primary/20 opacity-80 cursor-default" disabled data-darlink-local-control="true">${copy("Sync twin", "同步数字人", "同步數字人")}</button>
+        <button type="button" class="darlink-logout-btn px-8 py-3 font-label-lg text-label-lg rounded-xl" data-action="logout" data-darlink-local-control="true">${copy("Log out", "退出登录", "退出登入")}</button>
       `;
     }
 
@@ -3634,10 +5020,13 @@
 
     const avatarImg = doc.querySelector("main section .avatar-glow img, main section .w-48 img, main section .w-56 img");
     if (avatarImg) {
-      avatarImg.src = "/files/v13-ai-twin-crop.png";
+      const uploadedSrc = userUploadedAvatarSrc();
+      const initials = (view.nickname || view.displayName || "DL").replace(/[^\p{L}\p{N}]/gu, "").slice(0, 2).toUpperCase() || "DL";
+      avatarImg.src = uploadedSrc || avatarDataUri(initials);
       avatarImg.alt = `${view.displayName} Avatar`;
     }
 
+    bindProfileAvatarUpload(doc);
     injectPathProfileSections(doc);
     bindProfileEditActions(doc);
     bindProfilePathActions(doc);
@@ -3689,6 +5078,8 @@
       body.darlink-page-profile-full-campus-identity-final .darlink-profile-hero-card{display:flex!important;flex-direction:row!important;align-items:center!important;gap:clamp(24px,4vw,48px)!important;width:100%}
       body.darlink-page-profile-full-campus-identity-final .darlink-profile-hero-card>.flex-1{text-align:left}
       body.darlink-page-profile-full-campus-identity-final .darlink-profile-hero-actions{align-items:stretch;min-width:180px}
+      body.darlink-page-profile-full-campus-identity-final .darlink-logout-btn{border:1px solid rgba(186,26,26,.18);background:rgba(255,255,255,.82);color:#ba1a1a;font-weight:850;cursor:pointer;transition:background .2s ease,transform .2s ease}
+      body.darlink-page-profile-full-campus-identity-final .darlink-logout-btn:hover{background:rgba(255,218,214,.55);transform:translateY(-1px)}
       body.darlink-page-profile-full-campus-identity-final .darlink-profile-field{display:inline-flex;align-items:center;gap:8px;max-width:100%;position:relative}
       body.darlink-page-profile-full-campus-identity-final .darlink-profile-field--hero,body.darlink-page-profile-full-campus-identity-final .darlink-profile-field--school{display:inline-flex}
       body.darlink-page-profile-full-campus-identity-final .darlink-profile-field--tag{display:inline-flex;align-items:center}
@@ -3724,8 +5115,26 @@
       body.darlink-page-profile-full-campus-identity-final .darlink-distilled-title{display:flex;align-items:center;gap:10px;margin-bottom:6px}
       body.darlink-page-profile-full-campus-identity-final .darlink-distilled-title h3{margin:0}
       @media(max-width:1023px){body.darlink-page-profile-full-campus-identity-final main section.grid{grid-template-columns:1fr}body.darlink-page-profile-full-campus-identity-final .darlink-profile-campus-card,body.darlink-page-profile-full-campus-identity-final .darlink-profile-friends-card{grid-column:1/-1}}
+      body.darlink-page-profile-full-campus-identity-final .darlink-profile-avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+      body.darlink-page-profile-full-campus-identity-final .darlink-profile-avatar-controls{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:14px;width:100%}body.darlink-page-profile-full-campus-identity-final .darlink-profile-avatar-upload{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.92);border:1px solid rgba(111,80,146,.16);color:#604283;font-size:13px;font-weight:850;cursor:pointer;box-shadow:0 8px 20px rgba(111,80,146,.08);transition:transform .18s ease,background .18s ease
+      body.darlink-page-profile-full-campus-identity-final .darlink-profile-avatar-upload .darlink-material-svg{width:18px;height:18px}
+      body.darlink-page-profile-full-campus-identity-final .darlink-profile-avatar-upload:hover{transform:translateY(-1px);background:white}
+      body.darlink-page-profile-full-campus-identity-final .darlink-profile-avatar-hint{margin:0;max-width:220px;text-align:center;color:#8a486f;font-size:11px;line-height:1.45;font-weight:600
       @media(max-width:767px){body.darlink-page-profile-full-campus-identity-final main{padding-top:84px!important}body.darlink-page-profile-full-campus-identity-final .darlink-profile-hero-card{flex-direction:column!important;align-items:center!important;text-align:center}body.darlink-page-profile-full-campus-identity-final .darlink-profile-hero-card>.flex-1{text-align:center}body.darlink-page-profile-full-campus-identity-final .darlink-profile-hero-actions{width:100%}}
     `;
+  }
+
+  function bindProfileLogout(doc, api) {
+    if (!doc.body || doc.body.dataset.darlinkLogoutBound === "true") return;
+    doc.body.dataset.darlinkLogoutBound = "true";
+    doc.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-action='logout']");
+      if (!button) return;
+      event.preventDefault();
+      event.stopPropagation();
+      logoutUser();
+      api.navigate(api.page.login, { replace: true, immediate: true });
+    });
   }
 
   function enhanceProfile(doc, api) {
@@ -3750,8 +5159,10 @@
     }
     replaceTextSnippets(doc, pageSnippetTranslations("profile"));
     applyUserProfileToPage(doc);
+    bindProfileLogout(doc, api);
     syncOnboardingProfileFromServer().then(() => {
       applyUserProfileToPage(doc);
+      bindProfileLogout(doc, api);
       loadProfileFriends(doc);
     });
     loadProfileFriends(doc);
@@ -3784,7 +5195,7 @@
           </div>
           <form class="darlink-free-input" id="darlinkFreeForm">
             <input id="darlinkFreeInput" autocomplete="off" placeholder="${copy("Ask Xiaoda anything...", "问小搭任何问题...", "問小搭任何問題...")}">
-            <button type="submit">${materialIconSvg("send")}</button>
+            <button type="submit" data-darlink-local-control="true">${materialIconSvg("send")}</button>
           </form>
         </section>
       </main>
@@ -3841,6 +5252,9 @@
 
   function enhanceContextualChat(doc) {
     const profile = localizedChatProfile(chatProfileFromContext());
+    const bindKey = `darlink-contextual-chat:${profile.type || "module"}:${profile.id || "unknown"}`;
+    if (doc.body.dataset.darlinkContextualChatBound === bindKey) return;
+    doc.body.dataset.darlinkContextualChatBound = bindKey;
     injectStyle(doc, sharedCss() + contextualChatCss());
     removeMobileBottomNavigation(doc);
     normalizeInteractiveIconButtons(doc);
@@ -3848,11 +5262,17 @@
     doc.body.classList.add("darlink-contextual-chat");
     if (profile.type === "celebrity") {
       doc.body.classList.add("darlink-celebrity-chat");
+      doc.documentElement.classList.add("darlink-celebrity-chat-root");
       if (profile.background) {
         doc.documentElement.style.setProperty("--darlink-chat-bg", `url("${profile.background}")`);
       } else {
         doc.documentElement.style.setProperty("--darlink-chat-bg", "radial-gradient(circle at 30% 20%, rgba(126,212,253,.28), transparent 34%), radial-gradient(circle at 70% 10%, rgba(252,170,214,.22), transparent 28%), #070b18");
       }
+      doc.querySelectorAll("main .shrink-0").forEach((node) => {
+        if (node.querySelector(".glass-input")) {
+          node.classList.remove("bg-gradient-to-t", "from-[#f9f9ff]", "via-[#f9f9ff]/90", "to-transparent");
+        }
+      });
     } else {
       doc.body.classList.remove("darlink-celebrity-chat");
       doc.documentElement.style.removeProperty("--darlink-chat-bg");
@@ -4013,11 +5433,13 @@
       return chatMessages.lastElementChild;
     };
     const submitMessage = async () => {
+      if (sending) return;
       const value = normalize(input?.value);
-      if (!value || sending) return;
+      if (!value) return;
+      sending = true;
+      setSending(true);
       input.value = "";
       appendMessage("user", value);
-      setSending(true);
       let streamParagraph = null;
       let streamHost = appendMessage("assistant", copy(`${profile.name} is thinking`, `${profile.name} 正在思考`, `${profile.name} 正在思考`), true);
       streamParagraph = streamHost?.querySelector(".glass-bubble-ai p, .glass-bubble-user p");
@@ -4090,9 +5512,16 @@
       const historyRes = await getJSON(`/api/ai/contextual-chat/history?session_id=${encodeURIComponent(sessionId)}&user_token=${encodeURIComponent(userToken)}`);
       if (historyRes.ok && Array.isArray(historyRes.messages) && historyRes.messages.length) {
         if (chatMessages) chatMessages.innerHTML = "";
+        let lastKey = "";
         historyRes.messages.forEach((item) => {
+          const content = normalize(item.content || "");
+          if (!content) return;
+          const key = `${item.role || "assistant"}:${content}`;
+          // 只去掉连续重复（例如一次双击连发两条），保留用户隔几句又发的同一句
+          if (key === lastKey) return;
+          lastKey = key;
           const role = item.role === "user" ? "user" : "assistant";
-          appendMessage(role, item.content || "");
+          appendMessage(role, content);
         });
         return;
       }
@@ -4119,9 +5548,257 @@
     scrollMessages();
   }
 
+  const YAU_GUESS_SCRIPT = [
+    "你最近還學數學嗎？別跟我說只是刷題，那樣很可惜。//發自我的手機",
+    "分數當然重要，但不要把它當成全部。這是你們學習的一個極小部分。//發自我的手機",
+    "現在有些學生題做得很多，可是真問他為什麼，反而說不清楚。成績看著好，底子卻虛。//發自我的手機",
+    "豈止是不滿意。有些成績拿出來宣傳，反而讓人擔心。這樣的成績，使人汗顏！如此成績，如何招生？//發自我的手機",
+    "更糟的是，有些地方把數學搞成包裝，把教育搞成表演，已經到了無恥的地步。//發自我的手機",
+  ];
+  const YAU_GUESS_ASK = "猜猜我是誰";
+  const YAU_GUESS_REWARD = "獎勵一個華為手錶//發自我的手機";
+  const YAU_GUESS_FAIL = "我宣布你已經不是我的學生了！";
+
+  function isYauGuessCorrect(text) {
+    const v = normalize(text).toLowerCase();
+    return /丘成桐|丘\*桐|丘\s*成\s*桐|shing[\s-]*tung[\s-]*yau|yau[\s-]*shing|数学皇帝|數學皇帝|丘赛|丘賽|菲尔兹|菲爾茲|fields medal/i.test(v);
+  }
+
+  function buildYauQuizOptions() {
+    const pool = [
+      { id: "shing-tung-yau", label: copy("Y* Yau", "丘*桐", "丘*桐") },
+      { id: "yang-zhenning", label: copy("C*-N. Yang", "杨*宁", "楊*寧") },
+      { id: "chen-jingrun", label: copy("J*run Chen", "陈*润", "陳*潤") },
+      { id: "hua-luogeng", label: copy("L*egeng Hua", "华*庚", "華*庚") },
+    ];
+    return seededShuffle(pool, Date.now() + 17).map((opt, index) => ({
+      ...opt,
+      key: String.fromCharCode(65 + index),
+      correct: opt.id === "shing-tung-yau",
+    }));
+  }
+
+  function enhanceCelebrityYauGuessChat(doc, api) {
+    const id = "shing-tung-yau";
+    injectStyle(doc, sharedCss() + celebrityChallengeCss());
+    doc.title = "Darlink - Mystery Icon";
+    doc.body.className = "darlink-celebrity-challenge-body darlink-yau-guess-body darlink-page-polished darlink-page-celebrity-mystery-liquid-glass-challenge";
+    let userTurns = 0;
+    let phase = "script";
+    let messages = [{ from: "qiu", text: YAU_GUESS_SCRIPT[0] }];
+    doc.body.innerHTML = `
+      <main class="darlink-challenge-scene darlink-yau-guess-scene">
+        <section class="darlink-liquid-stage">
+          <div class="darlink-liquid-sky"></div>
+          <div class="darlink-liquid-water"><span></span><span></span><span></span></div>
+          <div class="darlink-digital-player">
+            <div class="darlink-player-aura"></div>
+            <div class="darlink-player-avatar">??</div>
+            <strong>${copy("Mystery Icon", "神秘人物", "神秘人物")}</strong>
+          </div>
+        </section>
+        <aside class="darlink-challenge-panel darlink-yau-guess-panel">
+          <span>${copy("Mystery Icon", "人物盲盒", "人物盲盒")}</span>
+          <h1>${copy("Guess who I am", "猜猜我是誰", "猜猜我是誰")}</h1>
+          <div class="darlink-yau-chat" id="darlinkYauMessages"></div>
+          <form class="darlink-yau-input-row" id="darlinkYauForm" data-darlink-local-control="true">
+            <textarea id="darlinkYauInput" rows="2" data-darlink-local-control="true" placeholder="${copy("Type anything...", "随便说点什么...", "隨便說點什麼...")}"></textarea>
+            <button type="submit" data-darlink-local-control="true">${materialIconSvg("send")}</button>
+          </form>
+          <button type="button" class="darlink-challenge-exit" data-darlink-local-control="true">${copy("Back to Discover", "返回发现", "返回發現")}</button>
+          <button type="button" class="darlink-challenge-chat" id="darlinkYauChatBtn" hidden>${copy("Start chatting", "开始聊天", "開始聊天")} ${materialIconSvg("chat_bubble")}</button>
+        </aside>
+      </main>
+    `;
+    const messagesEl = doc.querySelector("#darlinkYauMessages");
+    const input = doc.querySelector("#darlinkYauInput");
+    const form = doc.querySelector("#darlinkYauForm");
+    const chatBtn = doc.querySelector("#darlinkYauChatBtn");
+    let sending = false;
+    const ensureYauSuffix = (text) => {
+      const cleaned = String(text || "").trim();
+      if (!cleaned) return "";
+      if (cleaned.endsWith("//發自我的手機")) return cleaned;
+      return `${cleaned.replace(/\/\/發自我的手機\s*$/u, "").trim()}//發自我的手機`;
+    };
+    const fetchYauReply = async (userAnswer, turnIndex, anchorScript) => {
+      const recent_messages = messages
+        .filter((message) => !message.typing)
+        .slice(-8)
+        .map((message) => ({
+          role: message.from === "user" ? "user" : "assistant",
+          content: message.text,
+        }));
+      const res = await postJSON("/api/ai/chat", {
+        lang: "zhHant",
+        phase: "celebrity-yau-guess",
+        answer: userAnswer,
+        current_question: `盲盒對話第 ${turnIndex + 1} 輪`,
+        next_question: turnIndex + 1 < YAU_GUESS_SCRIPT.length ? YAU_GUESS_SCRIPT[turnIndex + 1] : "",
+        known_answers: { turn: turnIndex + 1, anchor_script: anchorScript },
+        recent_messages,
+      });
+      if (res.ok && res.reply) return ensureYauSuffix(res.reply);
+      return anchorScript;
+    };
+    const render = () => {
+      messagesEl.innerHTML = messages.map((message) => {
+        if (message.from === "qiu") {
+          const body = message.typing
+            ? '<p class="darlink-yau-typing"><span></span><span></span><span></span></p>'
+            : `<p>${escapeHtml(message.text)}</p>`;
+          return `<div class="darlink-yau-msg qiu"><span>丘</span>${body}</div>`;
+        }
+        return `<div class="darlink-yau-msg user"><p>${escapeHtml(message.text)}</p></div>`;
+      }).join("");
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    };
+    const setTyping = (active) => {
+      for (let i = messages.length - 1; i >= 0; i -= 1) {
+        if (messages[i].typing) messages.splice(i, 1);
+      }
+      if (active) messages.push({ from: "qiu", text: "", typing: true });
+      render();
+    };
+    const unlockCelebrity = () => {
+      const unlocked = read(STORAGE.celebrityUnlocked, {});
+      unlocked[id] = { unlockedAt: Date.now(), mode: "yau-quiz" };
+      write(STORAGE.celebrityUnlocked, unlocked);
+      storeChatContext("celebrity", id);
+      chatBtn.hidden = false;
+    };
+    const openYauQuizModal = () => {
+      phase = "quiz";
+      input.disabled = true;
+      form.hidden = true;
+      const options = buildYauQuizOptions();
+      const overlay = doc.createElement("div");
+      overlay.className = "darlink-yau-quiz-overlay";
+      overlay.dataset.darlinkLocalControl = "true";
+      overlay.innerHTML = `
+        <section class="darlink-yau-quiz-modal" role="dialog" aria-modal="true">
+          <span>${copy("Final round", "最后一关", "最後一關")}</span>
+          <h2>${copy("Guess who I am", "猜猜我是谁？", "猜猜我是誰？")}</h2>
+          <p>${copy("Pick one answer below.", "请从下面选一个答案。", "請從下面選一個答案。")}</p>
+          <div class="darlink-challenge-options" id="darlinkYauQuizOptions">
+            ${options.map((opt) => `<button type="button" data-quiz-option="${opt.id}" data-darlink-local-control="true">${opt.key}. ${escapeHtml(opt.label)}</button>`).join("")}
+          </div>
+        </section>`;
+      doc.body.appendChild(overlay);
+      overlay.querySelectorAll("[data-quiz-option]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const chosen = options.find((opt) => opt.id === button.dataset.quizOption);
+          overlay.remove();
+          if (chosen?.correct) showYauRewardModal();
+          else showYauFailModal();
+        });
+      });
+    };
+    const showYauRewardModal = () => {
+      phase = "done";
+      unlockCelebrity();
+      const overlay = doc.createElement("div");
+      overlay.className = "darlink-yau-quiz-overlay darlink-yau-reward-overlay";
+      overlay.dataset.darlinkLocalControl = "true";
+      overlay.innerHTML = `
+        <section class="darlink-yau-quiz-modal darlink-yau-reward-modal">
+          <div class="darlink-yau-watch-scene">
+            <div class="darlink-yau-watch-glow"></div>
+            <div class="darlink-yau-watch-ring"></div>
+            <div class="darlink-yau-watch">⌚</div>
+          </div>
+          <h2>${copy("Reward unlocked!", "奖励到手！", "獎勵到手！")}</h2>
+          <p>${copy("You earned a Huawei watch!", "奖励一个华为手表！", "獎勵一個華為手錶！")}</p>
+          <button type="button" class="darlink-challenge-chat" id="darlinkYauRewardChatBtn" data-darlink-local-control="true">${copy("Start chatting", "开始聊天", "開始聊天")} ${materialIconSvg("chat_bubble")}</button>
+        </section>`;
+      doc.body.appendChild(overlay);
+      overlay.querySelector("#darlinkYauRewardChatBtn").addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        storeChatContext("celebrity", id);
+        api.navigate(api.page.matchChat, { immediate: true });
+      });
+    };
+    const showYauFailModal = () => {
+      phase = "done";
+      const overlay = doc.createElement("div");
+      overlay.className = "darlink-yau-quiz-overlay darlink-yau-fail-overlay";
+      overlay.dataset.darlinkLocalControl = "true";
+      overlay.innerHTML = `
+        <section class="darlink-yau-quiz-modal darlink-yau-fail-modal">
+          <h2>${YAU_GUESS_FAIL}</h2>
+          <p>${copy("Try the blind box again from Discover.", "请回到发现页重新挑战盲盒。", "請回到發現頁重新挑戰盲盒。")}</p>
+          <button type="button" class="darlink-challenge-exit" data-darlink-local-control="true">${copy("Back to Discover", "返回发现", "返回發現")}</button>
+        </section>`;
+      doc.body.appendChild(overlay);
+      overlay.querySelector(".darlink-challenge-exit").addEventListener("click", () => api.navigate(api.page.home, { immediate: true, fromBack: true }));
+    };
+    const submit = async (raw) => {
+      const value = normalize(raw);
+      if (!value || phase !== "script" || sending) return;
+      sending = true;
+      input.disabled = true;
+      messages.push({ from: "user", text: value });
+      render();
+      try {
+        userTurns += 1;
+        if (userTurns < YAU_GUESS_SCRIPT.length) {
+          setTyping(true);
+          try {
+            const reply = await fetchYauReply(value, userTurns, YAU_GUESS_SCRIPT[userTurns]);
+            setTyping(false);
+            messages.push({ from: "qiu", text: reply });
+          } catch {
+            setTyping(false);
+            messages.push({ from: "qiu", text: YAU_GUESS_SCRIPT[userTurns] });
+          }
+        } else {
+          messages.push({ from: "qiu", text: copy("Five rounds done. Time for the final question.", "五轮聊完了，来最后一题。", "五輪聊完了，來最後一題。") });
+          render();
+          window.setTimeout(openYauQuizModal, 420);
+        }
+      } finally {
+        sending = false;
+        input.disabled = phase !== "script";
+        render();
+      }
+    };
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const draft = input.value;
+      input.value = "";
+      submit(draft);
+    });
+    form.addEventListener("click", (event) => event.stopPropagation());
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        event.stopPropagation();
+        const draft = input.value;
+        input.value = "";
+        submit(draft);
+      }
+    });
+    chatBtn.dataset.darlinkLocalControl = "true";
+    chatBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      storeChatContext("celebrity", id);
+      api.navigate(api.page.matchChat, { immediate: true });
+    });
+    doc.querySelector(".darlink-challenge-exit").addEventListener("click", () => api.navigate(api.page.home, { immediate: true, fromBack: true }));
+    render();
+  }
+
+
   function enhanceCelebrityChallenge(doc, api) {
     const challenge = read(STORAGE.celebrityChallenge, {});
     const id = challenge.id && CELEBRITY_CHAT_PROFILES[challenge.id] ? challenge.id : "jackie-chan";
+    if (id === "shing-tung-yau") {
+      enhanceCelebrityYauGuessChat(doc, api);
+      return;
+    }
     const profile = CELEBRITY_CHAT_PROFILES[id];
     const questions = CELEBRITY_CHALLENGES[id] || CELEBRITY_CHALLENGES["jackie-chan"];
     injectStyle(doc, celebrityChallengeCss());
@@ -4141,10 +5818,10 @@
         <aside class="darlink-challenge-panel">
           <span>${copy("Mystery Icon Challenge", "人物盲盒挑战", "人物盲盒挑戰")}</span>
           <h1>${copy("Guess the hidden figure", "猜出隐藏人物", "猜出隱藏人物")}</h1>
-          <p>${copy("Answer five public-fact questions to unlock the English + meme identity. The challenge returns only once for each figure.", "答对 5 道人人皆知的梗与事实题，即可解锁英文 + 梗名称。每位人物只需要通关一次。", "答對 5 道人人皆知的梗與事實題，即可解鎖英文 + 梗名稱。每位人物只需要通關一次。")}</p>
+          <p>${copy("Answer five public-fact questions to unlock this mystery icon. The challenge returns only once for each figure.", "答对 5 道人人皆知的梗与事实题，即可解锁该人物盲盒并开始聊天。每位盲盒只需要通关一次。", "答對 5 道人人皆知的梗與事實題，即可解鎖該人物盲盒並開始聊天。每位盲盒只需要通關一次。")}</p>
           <article class="darlink-rising-question" id="darlinkChallengeCard"></article>
           <div class="darlink-challenge-progress"><strong id="darlinkChallengeStep">1/5</strong><em id="darlinkChallengeScore">0 ${copy("correct", "题正确", "題正確")}</em></div>
-          <button type="button" class="darlink-challenge-exit" data-darlink-local-control="true">${copy("Back to plaza", "返回广场", "返回廣場")}</button>
+          <button type="button" class="darlink-challenge-exit" data-darlink-local-control="true">${copy("Back to Discover", "返回发现", "返回發現")}</button>
         </aside>
       </main>
     `;
@@ -4191,7 +5868,7 @@
       card.classList.add("is-complete");
       card.innerHTML = `
         <span>${copy("Unlocked", "已解锁", "已解鎖")}</span>
-        <h2>${profile.name}</h2>
+        <h2>${celebrityPublicName(id)}</h2>
         <p>${copy("Challenge complete. This hidden digital human is now available for direct conversation.", "挑战通关。这位隐藏款数字人已解锁，下次点击可直接聊天。", "挑戰通關。這位隱藏款數字人已解鎖，下次點擊可直接聊天。")}</p>
         <button type="button" class="darlink-challenge-chat" data-darlink-local-control="true">${copy("Start chatting", "开始聊天", "開始聊天")} ${materialIconSvg("chat_bubble")}</button>
       `;
@@ -4238,8 +5915,33 @@
       event.stopPropagation();
       answerChallenge(button);
     });
-    doc.querySelector(".darlink-challenge-exit").addEventListener("click", () => api.navigate(api.page.digitalPlaza, { immediate: true }));
+    doc.querySelector(".darlink-challenge-exit").addEventListener("click", () => api.navigate(api.page.home, { immediate: true, fromBack: true }));
     renderQuestion();
+  }
+
+  function resolveBackTarget(page, api) {
+    if (page === api.page.matchChat) {
+      const context = read(STORAGE.chatContext, null);
+      if (context?.type === "match") return api.page.matching;
+      if (context?.type === "celebrity") return api.page.home;
+      if (context?.type === "module" || context?.type === "user_twin") {
+        return api.page.home;
+      }
+    }
+    const map = {
+      [api.page.celebrityChallenge]: api.page.home,
+      [api.page.matchChat]: api.page.home,
+      [api.page.digitalPlaza]: api.page.home,
+      [api.page.exploreChat]: api.page.digitalPlaza,
+      [api.page.xiaodaChat]: api.page.home,
+      [api.page.study]: api.page.home,
+      [api.page.culinary]: api.page.home,
+      [api.page.romance]: api.page.home,
+      [api.page.matching]: api.page.home,
+      [api.page.community]: api.page.home,
+      [api.page.profile]: api.page.home,
+    };
+    return map[page] || api.page.home;
   }
 
   function addModuleBackControl(doc, page, api) {
@@ -4266,12 +5968,21 @@
       doc.head.appendChild(style);
     }
 
-    const label = "返回";
+    const discoverBackPages = new Set([api.page.celebrityChallenge, api.page.matchChat]);
+    const label = discoverBackPages.has(page)
+      ? copy("Back to Discover", "返回发现", "返回發現")
+      : copy("Back", "返回", "返回");
     const button = doc.createElement("button");
     button.type = "button";
     button.className = "darlink-module-back";
+    button.dataset.darlinkLocalControl = "true";
     button.setAttribute("aria-label", label);
     button.innerHTML = `${icon("arrow_back")}<strong>${label}</strong>`;
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      api.navigate(resolveBackTarget(page, api), { immediate: true, fromBack: true });
+    });
     doc.body.appendChild(button);
   }
 
@@ -4354,19 +6065,31 @@
     recognition.start();
   }
 
-  async function postJSON(url, payload) {
+  async function postJSON(url, payload, options = {}) {
+    const timeoutMs = Number(options.timeoutMs || 120000);
+    const timeoutController = new AbortController();
+    const timeoutId = window.setTimeout(() => timeoutController.abort(), timeoutMs);
+    const signals = [timeoutController.signal];
+    if (options.signal) signals.push(options.signal);
+    const signal = typeof AbortSignal !== "undefined" && AbortSignal.any
+      ? AbortSignal.any(signals)
+      : options.signal || timeoutController.signal;
     try {
       const targetUrl = resolveApiUrl(url);
       const response = await fetch(targetUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        signal,
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) return { ...data, ok: false, status: response.status };
       return data;
     } catch (error) {
+      if (error?.name === "AbortError") return { ok: false, aborted: true, error: error.message };
       return { ok: false, error: error.message };
+    } finally {
+      window.clearTimeout(timeoutId);
     }
   }
 
@@ -4399,12 +6122,15 @@
   async function postStream(url, payload, handlers = {}) {
     const onDelta = typeof handlers.onDelta === "function" ? handlers.onDelta : null;
     const onDone = typeof handlers.onDone === "function" ? handlers.onDone : null;
+    const signal = handlers.signal;
+    let streamedText = "";
     try {
       const targetUrl = resolveApiUrl(url);
       const response = await fetch(targetUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
         body: JSON.stringify(payload),
+        signal,
       });
       if (!response.ok || !response.body) {
         const data = await response.json().catch(() => ({}));
@@ -4415,7 +6141,27 @@
       let buffer = "";
       let result = { ok: false };
       while (true) {
-        const { value, done } = await reader.read();
+        if (signal?.aborted) {
+          try { await reader.cancel(); } catch (_error) {}
+          if (streamedText) return { ok: true, reply: streamedText, aborted: true };
+          return { ok: true, aborted: true, reply: "" };
+        }
+        const readPromise = reader.read();
+        let idleTimer = null;
+        const idleTimeout = new Promise((_, reject) => {
+          idleTimer = window.setTimeout(() => reject(new Error("stream_idle_timeout")), 45000);
+        });
+        let chunk;
+        try {
+          chunk = await Promise.race([readPromise, idleTimeout]);
+        } catch (idleError) {
+          if (idleTimer) window.clearTimeout(idleTimer);
+          try { await reader.cancel(); } catch (_error) {}
+          if (streamedText) return { ok: true, reply: streamedText };
+          return { ok: false, error: idleError.message };
+        }
+        if (idleTimer) window.clearTimeout(idleTimer);
+        const { value, done } = chunk;
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
         let splitAt = buffer.indexOf("\n\n");
@@ -4423,7 +6169,10 @@
           const block = buffer.slice(0, splitAt);
           buffer = buffer.slice(splitAt + 2);
           const parsed = parseSseBlock(block);
-          if (parsed?.event === "delta" && parsed.data?.text && onDelta) onDelta(parsed.data.text);
+          if (parsed?.event === "delta" && parsed.data?.text) {
+            streamedText += parsed.data.text;
+            if (onDelta) onDelta(parsed.data.text);
+          }
           if (parsed?.event === "done") {
             result = { ok: true, ...parsed.data };
             if (onDone) onDone(result);
@@ -4434,8 +6183,14 @@
           splitAt = buffer.indexOf("\n\n");
         }
       }
+      if (!result.ok && streamedText) return { ok: true, reply: streamedText };
       return result;
     } catch (error) {
+      if (signal?.aborted || error?.name === "AbortError") {
+        if (streamedText) return { ok: true, reply: streamedText, aborted: true };
+        return { ok: true, aborted: true, reply: "" };
+      }
+      if (streamedText) return { ok: true, reply: streamedText };
       return { ok: false, error: error.message };
     }
   }
@@ -4443,19 +6198,28 @@
 
   function finalizeStreamReply(streamedText, finalReply) {
     const final = normalize(finalReply || "");
-    if (final) return final;
     const streamed = normalize(streamedText || "");
-    if (streamed.length >= 40 && streamed.length % 2 === 0) {
+    let reply = "";
+    if (!streamed) reply = final;
+    else if (!final) reply = streamed;
+    else if (final === streamed) reply = final;
+    else if (streamed === final + final) reply = final;
+    else if (streamed.length >= 40 && streamed.length % 2 === 0) {
       const half = streamed.slice(0, streamed.length / 2);
-      if (half === streamed.slice(streamed.length / 2)) return half;
-    }
-    return streamed;
+      reply = half === streamed.slice(streamed.length / 2) ? half : (final.length >= streamed.length ? final : streamed);
+    } else if (streamed.includes(final) && final.length >= Math.min(24, streamed.length / 2)) reply = final;
+    else reply = final.length >= streamed.length ? final : streamed;
+    return sanitizeXiaodaText(reply);
   }
 
   async function chatWithStream(streamUrl, jsonUrl, payload, handlers = {}) {
     const streamRes = await postStream(streamUrl, payload, handlers);
-    if (streamRes.ok) return streamRes;
-    return postJSON(jsonUrl, payload);
+    if (streamRes.aborted) return streamRes;
+    if (streamRes.ok && (streamRes.reply || streamRes.normalized_answer !== undefined)) return streamRes;
+    const jsonRes = await postJSON(jsonUrl, payload, { signal: handlers.signal });
+    if (jsonRes.ok) return jsonRes;
+    if (streamRes.ok && streamRes.reply) return streamRes;
+    return jsonRes.ok === false ? jsonRes : streamRes;
   }
 
 
@@ -4463,10 +6227,12 @@
     if (!url.startsWith("/api/")) return url;
     const configured = localStorage.getItem("darlink-api-base") || window.DARLINK_API_BASE_URL || "";
     if (configured) return `${configured.replace(/\/$/, "")}${url}`;
-    if (location.hostname === "127.0.0.1" || location.hostname === "localhost") {
-      if (!["8000", "8081", "8082"].includes(location.port)) return `http://127.0.0.1:8000${url}`;
-    }
-    return url;
+    const host = location.hostname || "127.0.0.1";
+    const port = location.port;
+    const backendPort = "8000";
+    if (!port || port === backendPort) return url;
+    const protocol = location.protocol === "https:" ? "https:" : "http:";
+    return `${protocol}//${host}:${backendPort}${url}`;
   }
 
   function onboardingBackdrop() {
@@ -4497,10 +6263,10 @@
       .darlink-primary-btn,.darlink-secondary-btn,.darlink-icon-btn{border:0;cursor:pointer;font-weight:850;transition:transform .2s ease,box-shadow .2s ease,opacity .2s ease}.darlink-primary-btn[disabled],.darlink-secondary-btn[disabled],.darlink-icon-btn[disabled]{opacity:.55;cursor:not-allowed}
       .darlink-primary-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:15px 22px;background:linear-gradient(135deg,#6f5092,#006686);color:white;box-shadow:0 16px 36px rgba(111,80,146,.22)}
       .darlink-secondary-btn{border:1px solid rgba(111,80,146,.2);border-radius:999px;padding:12px 16px;background:rgba(255,255,255,.72);color:#604283}
-      .darlink-icon-btn{width:48px;height:48px;border-radius:18px;background:rgba(255,255,255,.65);color:#604283}.darlink-icon-btn.primary{background:linear-gradient(135deg,#d8b4fe,#7ed4fd);color:white}
+      .darlink-icon-btn{width:48px;height:48px;border-radius:18px;background:rgba(255,255,255,.65);color:#604283;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:0}.darlink-icon-btn.primary{background:linear-gradient(135deg,#d8b4fe,#7ed4fd);color:white}.darlink-icon-btn .darlink-material-svg{width:22px;height:22px;flex-shrink:0}.darlink-icon-btn.is-stop{width:56px;height:56px;border-radius:22px}.darlink-icon-btn.is-stop .darlink-material-svg{width:34px;height:34px}
       .darlink-symbol{display:inline-flex;align-items:center;justify-content:center;line-height:1;font-weight:900;font-family:inherit}.darlink-control-glyph{display:inline-flex;align-items:center;justify-content:center;min-width:2em;font-size:12px;line-height:1;font-weight:900;letter-spacing:0}.darlink-material-fallback{display:inline-flex;align-items:center;justify-content:center;line-height:1;vertical-align:-.125em;font-family:inherit!important;letter-spacing:0!important}.darlink-material-svg{width:1em;height:1em;display:block;overflow:visible;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
       .darlink-chip{border:1px solid rgba(111,80,146,.18);background:rgba(255,255,255,.55);border-radius:999px;padding:10px 13px;color:#4a454f;font-weight:750;font-size:13px;cursor:pointer;transition:.2s ease}.darlink-chip:hover{background:linear-gradient(135deg,#efdbff,#c0e8ff);color:#29074a;transform:translateY(-1px)}
-      .darlink-textarea{width:100%;border:1px solid rgba(255,255,255,.68);background:rgba(255,255,255,.62);border-radius:18px;padding:14px 16px;color:#111c2d;outline:none;box-shadow:inset 0 1px 5px rgba(31,42,68,.04);resize:none}.darlink-textarea:focus{box-shadow:0 0 0 3px rgba(216,180,254,.45),inset 0 1px 5px rgba(31,42,68,.04)}.darlink-textarea.is-sending{transform:scale(.992);filter:saturate(.94)}
+      .darlink-textarea{width:100%;border:1px solid rgba(255,255,255,.68);background:rgba(255,255,255,.62);border-radius:18px;padding:14px 16px;color:#111c2d;outline:none;box-shadow:inset 0 1px 5px rgba(31,42,68,.04);resize:none}.darlink-textarea:focus{box-shadow:0 0 0 3px rgba(216,180,254,.45),inset 0 1px 5px rgba(31,42,68,.04)}.darlink-textarea.is-sending{opacity:.82}
     `;
   }
 
@@ -4513,19 +6279,42 @@
     `;
   }
 
+  function step1QuestionnaireCss() {
+    return `
+      .darlink-step1-form-body .darlink-onboarding-stage{grid-template-columns:minmax(260px,360px) minmax(0,1fr)}
+      .darlink-form-panel{display:flex;flex-direction:column;min-height:0;border-radius:34px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.72);box-shadow:0 24px 70px rgba(111,80,146,.12);padding:24px 26px 22px;backdrop-filter:blur(24px)}
+      .darlink-step1-form{display:flex;flex-direction:column;min-height:0;flex:1;gap:14px}
+      .darlink-step1-fields{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:16px;padding-right:6px}
+      .darlink-form-field{display:flex;flex-direction:column;gap:8px}
+      .darlink-form-label{font-size:14px;font-weight:850;color:#111c2d;line-height:1.45}
+      .darlink-form-optional{font-style:normal;font-size:12px;font-weight:750;color:#8a486f;margin-left:6px}
+      .darlink-form-input{width:100%;border:1px solid rgba(255,255,255,.68);background:rgba(255,255,255,.72);border-radius:16px;padding:13px 15px;color:#111c2d;font-size:15px;outline:none}
+      .darlink-form-input:focus{box-shadow:0 0 0 3px rgba(216,180,254,.45)}
+      .darlink-form-choices{display:flex;flex-wrap:wrap;gap:8px}
+      .darlink-form-choice{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(111,80,146,.16);border-radius:999px;background:rgba(255,255,255,.66);padding:8px 12px;font-size:13px;font-weight:750;color:#4a454f;cursor:pointer}
+      .darlink-form-choice input{accent-color:#6f5092}
+      .darlink-form-choice:has(input:checked){background:linear-gradient(135deg,#efdbff,#c0e8ff);border-color:rgba(111,80,146,.28);color:#29074a}
+      .darlink-chip.is-primary{background:linear-gradient(135deg,#6f5092,#006686);color:white;border-color:transparent;box-shadow:0 10px 24px rgba(111,80,146,.22)}
+      .darlink-form-status{min-height:20px;font-size:13px;font-weight:750;color:#604283}
+      .darlink-form-status[data-tone='error']{color:#ba1a1a}
+      .darlink-form-field[hidden]{display:none!important}
+      @media(max-width:900px){.darlink-step1-form-body .darlink-onboarding-stage{grid-template-rows:auto minmax(0,1fr)}.darlink-form-panel{min-height:0}}
+    `;
+  }
+
   function onboardingCss() {
     return `
       .darlink-onboarding-body{min-height:100vh;margin:0;overflow:hidden;background:linear-gradient(135deg,#f9fbff 0%,#f8f0ff 48%,#edf8ff 100%);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#111c2d}
       .darlink-orb{position:fixed;border-radius:50%;filter:blur(70px);opacity:.45;pointer-events:none}.darlink-orb.one{width:360px;height:360px;left:-80px;top:-80px;background:#d8b4fe}.darlink-orb.two{width:380px;height:380px;right:-100px;bottom:-100px;background:#7ed4fd}.darlink-orb.three{width:260px;height:260px;left:44%;top:18%;background:#fcaad6;opacity:.2}
-      .darlink-onboarding-shell{position:relative;z-index:1;max-width:1280px;margin:0 auto;height:100vh;padding:28px 28px 32px;display:flex;flex-direction:column;gap:22px}
+      .darlink-onboarding-shell{position:relative;z-index:1;max-width:1280px;margin:0 auto;height:100vh;min-height:0;padding:28px 28px 32px;display:flex;flex-direction:column;gap:22px;overflow:hidden}
       .darlink-progress{max-width:620px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:10px}.darlink-progress>div:first-child{display:flex;align-items:center;justify-content:center;gap:10px;color:#604283;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:850}.darlink-progress em{font-style:normal;color:#8a486f}.darlink-progress-track{height:8px;border-radius:999px;background:rgba(216,227,251,.72);overflow:hidden}.darlink-progress-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6f5092,#fcaad6,#7ed4fd);box-shadow:0 0 18px rgba(216,180,254,.75)}
-      .darlink-onboarding-stage{flex:1;min-height:0;display:grid;grid-template-columns:minmax(300px,420px) minmax(0,1fr);gap:28px;align-items:stretch}
+      .darlink-onboarding-stage{flex:1;min-height:0;overflow:hidden;display:grid;grid-template-columns:minmax(300px,420px) minmax(0,1fr);gap:28px;align-items:stretch}
       .darlink-xiaoda-panel{position:relative;overflow:hidden;border-radius:34px;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.62);box-shadow:0 24px 70px rgba(111,80,146,.14);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:26px}.darlink-xiaoda-glow{position:absolute;inset:10%;background:radial-gradient(circle,rgba(216,180,254,.45),rgba(126,212,253,.15),transparent 62%);filter:blur(12px)}.darlink-xiaoda-panel img{position:relative;z-index:1;width:min(92%,340px);max-height:64vh;object-fit:contain;filter:drop-shadow(0 28px 44px rgba(60,70,100,.2));animation:darlinkFloat 4.6s ease-in-out infinite}.darlink-xiaoda-caption{position:relative;z-index:2;width:100%;border-radius:24px;background:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.72);padding:18px;backdrop-filter:blur(20px)}.darlink-xiaoda-caption span{display:flex;align-items:center;gap:6px;color:#8a486f;font-size:12px;font-weight:850}.darlink-xiaoda-caption h2{font-size:22px;line-height:1.15;margin:8px 0;color:#111c2d}.darlink-xiaoda-caption p{margin:0;color:#4a454f;line-height:1.55;font-size:14px}
       @keyframes darlinkFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-      .darlink-chat-panel{overflow:auto;border-radius:34px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.68);box-shadow:0 24px 70px rgba(31,42,68,.08);padding:28px;backdrop-filter:blur(24px)}.darlink-panel-title span{color:#8a486f;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:900}.darlink-panel-title h1{font-size:34px;line-height:1.04;margin:8px 0 8px}.darlink-panel-title p{margin:0 0 18px;color:#4a454f}
-      .darlink-chat-window{height:48vh;min-height:330px;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:26px;background:rgba(255,255,255,.38);border:1px solid rgba(255,255,255,.68);scroll-behavior:smooth}.darlink-message{max-width:82%;border-radius:22px;padding:13px 16px;line-height:1.55;font-size:15px;animation:darlinkMessageIn .26s cubic-bezier(.16,1,.3,1)}.darlink-message.xiaoda{align-self:flex-start;background:rgba(255,255,255,.78);color:#111c2d;border-top-left-radius:6px;box-shadow:0 10px 30px rgba(111,80,146,.08)}.darlink-message.user{align-self:flex-end;background:linear-gradient(135deg,#6f5092,#006686);color:white;border-top-right-radius:6px}.darlink-message.thinking span{display:inline-block;width:5px;height:5px;margin-left:4px;border-radius:50%;background:#8a486f;animation:darlinkDot 900ms infinite}.darlink-message.thinking span:nth-child(2){animation-delay:120ms}.darlink-message.thinking span:nth-child(3){animation-delay:240ms}@keyframes darlinkDot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}@keyframes darlinkMessageIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
-      .darlink-quick-replies{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.darlink-chat-input-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:end}.darlink-chat-actions{display:flex;justify-content:space-between;gap:12px;margin-top:14px}.darlink-chat-action-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.darlink-analysis-status{min-height:24px;color:#ba1a1a;font-weight:800;font-size:13px;margin:8px 0}.darlink-analysis-status[data-tone='success']{color:#005b78}.darlink-analysis-status[data-tone='info']{color:#604283}
-      @media(max-width:900px){.darlink-onboarding-body{overflow:auto}.darlink-onboarding-shell{height:auto;min-height:100vh}.darlink-onboarding-stage{grid-template-columns:1fr}.darlink-xiaoda-panel{min-height:520px}}
+      .darlink-chat-panel{overflow:hidden;display:flex;flex-direction:column;min-height:0;border-radius:34px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.68);box-shadow:0 24px 70px rgba(31,42,68,.08);padding:28px;backdrop-filter:blur(24px)}.darlink-panel-title span{color:#8a486f;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:900}.darlink-panel-title h1{font-size:34px;line-height:1.04;margin:8px 0 8px}.darlink-panel-title p{margin:0 0 18px;color:#4a454f}
+      .darlink-chat-window{flex:1;min-height:240px;max-height:48vh;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:26px;background:rgba(255,255,255,.38);border:1px solid rgba(255,255,255,.68);scroll-behavior:smooth;overflow-anchor:none}.darlink-message{max-width:82%;border-radius:22px;padding:13px 16px;line-height:1.55;font-size:15px}.darlink-message.is-new{animation:darlinkMessageIn .26s cubic-bezier(.16,1,.3,1)}.darlink-message-body p{margin:0 0 8px}.darlink-message-body p:last-child{margin:0}.darlink-message-body code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;background:rgba(111,80,146,.08);padding:1px 5px;border-radius:6px}.darlink-message-body strong{font-weight:850}.darlink-message.xiaoda{align-self:flex-start;background:rgba(255,255,255,.78);color:#111c2d;border-top-left-radius:6px;box-shadow:0 10px 30px rgba(111,80,146,.08)}.darlink-message.user{align-self:flex-end;background:linear-gradient(135deg,#6f5092,#006686);color:white;border-top-right-radius:6px}.darlink-message.system{align-self:center;max-width:92%;background:transparent;box-shadow:none;padding:0;color:#8a486f;font-size:12px;font-weight:800}.darlink-message.system .darlink-message-body.is-system{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.52);border:1px solid rgba(111,80,146,.1)}.darlink-icon-btn.is-stop{background:linear-gradient(135deg,#8a486f,#604283)!important;color:white!important}.darlink-message.thinking span{display:inline-block;width:5px;height:5px;margin-left:4px;border-radius:50%;background:#8a486f;animation:darlinkDot 900ms infinite}.darlink-message.thinking span:nth-child(2){animation-delay:120ms}.darlink-message.thinking span:nth-child(3){animation-delay:240ms}@keyframes darlinkDot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}@keyframes darlinkMessageIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+      .darlink-quick-replies{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px;min-height:0}.darlink-quick-replies:empty{display:none}.darlink-chat-input-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:stretch;margin-top:12px}.darlink-chat-input-row .darlink-icon-btn{flex:0 0 auto;align-self:end}.darlink-chat-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(111,80,146,.08)}.darlink-chat-action-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.darlink-chat-action-left [data-action='skip'][hidden]{display:none!important}.darlink-analysis-status{min-height:24px;color:#ba1a1a;font-weight:800;font-size:13px;margin:8px 0}.darlink-analysis-status[data-tone='success']{color:#005b78}.darlink-analysis-status[data-tone='info']{color:#604283}.darlink-analysis-status[data-tone='error']{color:#ba1a1a}
+      @media(max-width:900px){.darlink-onboarding-body{overflow:hidden}.darlink-onboarding-shell{height:100vh;min-height:100vh}.darlink-onboarding-stage{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}.darlink-xiaoda-panel{min-height:360px;max-height:42vh}.darlink-chat-panel{min-height:0}}
     `;
   }
 
@@ -4539,13 +6328,13 @@
       .darlink-home-shell{width:min(1480px,calc(100vw - 48px));margin:0 auto;padding:34px 0 54px;display:flex;flex-direction:column;gap:22px}
       .darlink-home-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:22px}.darlink-home-hero span,.darlink-ranking-head span,.darlink-section-head span,.darlink-my-twin>span{display:block;color:#8a486f;font-size:12px;font-weight:950;letter-spacing:.12em;text-transform:uppercase}.darlink-home-hero h1{max-width:720px;margin:8px 0 10px;font-size:clamp(28px,3.8vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em}.darlink-home-hero p{max-width:760px;margin:0;color:#4a454f;line-height:1.7}
       .darlink-home-ranking,.darlink-home-plaza,.darlink-my-twin{border:1px solid rgba(255,255,255,.74);background:rgba(255,255,255,.58);box-shadow:0 24px 70px rgba(31,42,68,.09);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
-      .darlink-home-ranking{border-radius:28px;padding:18px}.darlink-ranking-head{display:flex;align-items:center;justify-content:space-between;gap:16px}.darlink-ranking-head h2{margin:4px 0 0;font-size:20px;font-weight:800}.darlink-ranking-head button{border:1px solid rgba(111,80,146,.18);border-radius:999px;background:rgba(255,255,255,.66);color:#604283;padding:10px 14px;font-weight:900;cursor:pointer}
-      .darlink-ranking-list{margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-height:74px;overflow:hidden;transition:max-height .26s ease}.darlink-ranking-list.is-expanded{max-height:230px;overflow-y:auto;grid-template-columns:repeat(5,minmax(180px,1fr));padding-right:4px}.darlink-ranking-row{min-height:64px;border:1px solid rgba(111,80,146,.12);border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(239,248,255,.62));display:flex;align-items:center;gap:12px;padding:10px 12px;text-align:left;color:#111c2d;cursor:pointer}.darlink-ranking-row strong{display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#6f5092,#006686);color:white}.darlink-ranking-row span{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;font-weight:900}.darlink-ranking-row em{font-style:normal;color:#4a454f;font-size:12px;font-weight:760}.darlink-ranking-row b{color:#8a486f}
+      .darlink-home-ranking{border-radius:28px;padding:18px}.darlink-ranking-head{display:flex;align-items:center;justify-content:space-between;gap:16px}.darlink-ranking-head h2{margin:0;font-size:22px;font-weight:800}.darlink-ranking-head button{border:1px solid rgba(111,80,146,.18);border-radius:999px;background:rgba(255,255,255,.66);color:#604283;padding:10px 14px;font-weight:900;cursor:pointer}
+      .darlink-ranking-list{margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.darlink-ranking-empty{grid-column:1/-1;border-radius:20px;padding:22px 18px;text-align:center;color:#604283;background:rgba(255,255,255,.62);border:1px dashed rgba(111,80,146,.18);line-height:1.65;font-weight:750}.darlink-ranking-row{min-height:64px;border:1px solid rgba(111,80,146,.12);border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(239,248,255,.62));display:flex;align-items:center;gap:12px;padding:10px 12px;text-align:left;color:#111c2d;cursor:pointer}.darlink-ranking-row strong{display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#6f5092,#006686);color:white}.darlink-ranking-row span{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;font-weight:900}.darlink-ranking-row em{font-style:normal;color:#4a454f;font-size:12px;font-weight:760}.darlink-ranking-row b{color:#8a486f}
       .darlink-home-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(320px,.72fr);gap:22px;align-items:start}.darlink-home-plaza,.darlink-my-twin{border-radius:30px;padding:22px}.darlink-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:18px}.darlink-section-head h2{margin:4px 0 0;font-size:24px;font-weight:800}.darlink-plaza-tools{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}.darlink-plaza-filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.darlink-plaza-filters button,.darlink-plaza-refresh{border:1px solid rgba(111,80,146,.16);border-radius:999px;background:rgba(255,255,255,.62);color:#604283;font-weight:900;cursor:pointer}.darlink-plaza-filters button{padding:9px 12px;font-size:12px}.darlink-plaza-refresh{width:42px;height:42px;display:grid;place-items:center;font-size:18px;box-shadow:0 12px 26px rgba(31,42,68,.08)}.darlink-plaza-filters button.is-active{background:linear-gradient(135deg,#6f5092,#006686);color:white;box-shadow:0 12px 26px rgba(111,80,146,.22)}.darlink-plaza-refresh.is-refreshing{box-shadow:0 0 0 8px rgba(216,180,254,.22),0 16px 34px rgba(111,80,146,.2)}.darlink-plaza-refresh.is-refreshing .darlink-material-svg{animation:darlinkPlazaSpin .72s cubic-bezier(.16,1,.3,1)}@keyframes darlinkPlazaSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-      .darlink-home-plaza-scroll{height:min(68vh,760px);min-height:560px;overflow-y:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding-right:4px;scroll-behavior:smooth}.darlink-home-twin-card{min-height:300px;border:1px solid rgba(255,255,255,.78);border-radius:24px;background:rgba(255,255,255,.72);box-shadow:0 16px 42px rgba(111,80,146,.1);padding:18px;display:flex;flex-direction:column;gap:13px;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}.darlink-home-twin-card:hover{transform:translateY(-3px);box-shadow:0 22px 48px rgba(111,80,146,.16)}.darlink-home-twin-card.is-user-twin{border-color:rgba(126,212,253,.72);background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(223,244,255,.62))}.darlink-home-twin-card.is-user-twin{cursor:pointer}.darlink-home-twin-card.is-hidden-icon{border-color:rgba(252,170,214,.92);box-shadow:0 0 0 2px rgba(252,170,214,.28),0 22px 54px rgba(138,72,111,.16);background:linear-gradient(145deg,rgba(255,255,255,.78),rgba(239,219,255,.58))}
-      .darlink-home-avatar{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,var(--from),var(--to));display:grid;place-items:center;color:white;font-size:22px;font-weight:950;overflow:hidden;box-shadow:0 16px 34px rgba(111,80,146,.2)}.darlink-home-avatar img{width:100%;height:100%;object-fit:cover}.darlink-home-twin-card h3{margin:0;font-size:18px;font-weight:800}.darlink-home-twin-card p{margin:0;color:#4a454f;line-height:1.56;font-size:13px}.darlink-home-role{color:#604283!important;font-weight:900}.darlink-home-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}.darlink-home-tags span{border-radius:999px;background:#efdbff;color:#604283;padding:6px 9px;font-size:11px;font-weight:850}.darlink-home-twin-card>button{border:0;border-radius:16px;background:linear-gradient(135deg,#6f5092,#006686);color:white;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;cursor:pointer}
+      .darlink-home-plaza-scroll{height:min(68vh,760px);min-height:560px;overflow-y:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding-right:4px;scroll-behavior:smooth}.darlink-home-twin-card{min-height:248px;border:1px solid rgba(255,255,255,.78);border-radius:24px;background:rgba(255,255,255,.72);box-shadow:0 16px 42px rgba(111,80,146,.1);padding:18px;display:flex;flex-direction:column;gap:13px;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}.darlink-home-twin-card:hover{transform:translateY(-3px);box-shadow:0 22px 48px rgba(111,80,146,.16)}.darlink-home-twin-card.is-user-twin{border-color:rgba(126,212,253,.72);background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(223,244,255,.62))}.darlink-home-twin-card.is-user-twin{cursor:pointer}.darlink-home-twin-card.is-unlocked-icon{border-color:rgba(126,212,253,.72);background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(223,244,255,.58))}.darlink-home-twin-card.is-hidden-icon{border-color:rgba(252,170,214,.92);box-shadow:0 0 0 2px rgba(252,170,214,.28),0 22px 54px rgba(138,72,111,.16);background:linear-gradient(145deg,rgba(255,255,255,.78),rgba(239,219,255,.58))}
+      .darlink-home-avatar{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,var(--from),var(--to));display:grid;place-items:center;color:white;font-size:22px;font-weight:950;overflow:hidden;box-shadow:0 16px 34px rgba(111,80,146,.2)}.darlink-home-avatar img{width:100%;height:100%;object-fit:cover}.darlink-home-twin-card h3{margin:0;font-size:18px;font-weight:800}.darlink-home-twin-card p{margin:0;color:#4a454f;line-height:1.56;font-size:13px}.darlink-home-role{color:#604283!important;font-weight:900}.darlink-card-copy{flex:1;display:flex;flex-direction:column;gap:6px;min-height:52px}.darlink-home-role{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.darlink-home-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto;min-height:34px}.darlink-plaza-chat-btn{margin-top:12px!important;width:100%}.darlink-plaza-empty{grid-column:1/-1;border-radius:24px;padding:42px 24px;text-align:center;color:#604283;background:rgba(255,255,255,.62);border:1px dashed rgba(111,80,146,.22)}.darlink-home-tags span{border-radius:999px;background:#efdbff;color:#604283;padding:6px 9px;font-size:11px;font-weight:850}.darlink-home-twin-card>button{border:0;border-radius:16px;background:linear-gradient(135deg,#6f5092,#006686);color:white;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;cursor:pointer}
       .darlink-my-twin{position:sticky;top:102px;display:flex;flex-direction:column;gap:16px}.darlink-my-twin-orb{width:86px;height:86px;border-radius:28px;background:radial-gradient(circle at 28% 22%,#fff,transparent 34%),linear-gradient(135deg,#6f5092,#7ed4fd);color:white;display:grid;place-items:center;font-size:30px;box-shadow:0 20px 44px rgba(111,80,146,.22)}.darlink-my-twin h2{margin:0;font-size:26px;line-height:1.12;font-weight:800}.darlink-my-twin p{margin:0;color:#4a454f;line-height:1.68}.darlink-my-profile-tags{display:flex;flex-wrap:wrap;gap:7px}.darlink-my-profile-tags span{border-radius:999px;background:linear-gradient(135deg,#efdbff,#dff4ff);color:#604283;padding:7px 10px;font-size:12px;font-weight:900}.darlink-my-profile-cards{display:flex;flex-direction:column;gap:9px}.darlink-my-profile-cards article{border-radius:18px;background:rgba(255,255,255,.64);border:1px solid rgba(111,80,146,.1);padding:12px}.darlink-my-profile-cards strong{display:block;color:#111c2d}.darlink-my-profile-cards em{font-style:normal;color:#8a486f;font-size:12px;font-weight:850}.darlink-refine-btn{margin-top:4px;border:0;border-radius:999px;background:linear-gradient(135deg,#8a486f,#006686);color:white;min-height:52px;padding:0 18px;font-weight:950;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;box-shadow:0 18px 40px rgba(138,72,111,.22)}
-      @media(max-width:1180px){.darlink-home-grid{grid-template-columns:1fr}.darlink-my-twin{position:relative;top:auto}.darlink-home-plaza-scroll{grid-template-columns:repeat(2,minmax(0,1fr))}.darlink-ranking-list,.darlink-ranking-list.is-expanded{grid-template-columns:1fr 1fr;max-height:260px}}@media(max-width:700px){.darlink-home-shell{width:calc(100vw - 28px);padding-top:22px}.darlink-section-head,.darlink-ranking-head{align-items:flex-start;flex-direction:column}.darlink-home-plaza-scroll{height:auto;min-height:0;grid-template-columns:1fr}.darlink-ranking-list,.darlink-ranking-list.is-expanded{grid-template-columns:1fr}.darlink-home-hero h1{font-size:34px}}
+      @media(max-width:1180px){.darlink-home-grid{grid-template-columns:1fr}.darlink-my-twin{position:relative;top:auto}.darlink-home-plaza-scroll{grid-template-columns:repeat(2,minmax(0,1fr))}.darlink-ranking-list{grid-template-columns:1fr}}@media(max-width:700px){.darlink-home-shell{width:calc(100vw - 28px);padding-top:22px}.darlink-section-head,.darlink-ranking-head{align-items:flex-start;flex-direction:column}.darlink-home-plaza-scroll{height:auto;min-height:0;grid-template-columns:1fr}.darlink-ranking-list{grid-template-columns:1fr}.darlink-home-hero h1{font-size:34px}}
     `;
   }
 
@@ -4563,7 +6352,7 @@
       .darlink-mood-control{min-width:168px;height:42px;border:1px solid rgba(255,255,255,.62);border-radius:999px;background:rgba(255,255,255,.58);box-shadow:0 12px 28px rgba(31,42,68,.08);display:flex;align-items:center;gap:8px;padding:0 9px 0 14px;color:#604283;font-weight:900}
       .darlink-mood-control span{font-size:12px;white-space:nowrap}.darlink-mood-control select{min-width:0;max-width:128px;border:0;background:transparent;color:#111c2d;font-size:12px;font-weight:850;outline:none;cursor:pointer}
       .darlink-avatar-refine-body{min-height:100vh;margin:0;overflow:hidden;background:linear-gradient(135deg,#f9fbff 0%,#f7f1ff 46%,#edf8ff 100%);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#111c2d}
-      .darlink-avatar-refine-shell{height:100vh;width:min(1380px,calc(100vw - 48px));margin:0 auto;padding:28px 0;display:grid;grid-template-columns:minmax(320px,440px) minmax(0,1fr);gap:24px}
+      .darlink-avatar-refine-shell{height:100vh;width:min(1380px,calc(100vw - 48px));margin:0 auto;padding:28px 0;display:grid;grid-template-columns:minmax(320px,440px) minmax(0,1fr);gap:24px}.darlink-avatar-refine-shell--chat-only{grid-template-columns:minmax(0,1fr);max-width:920px}.darlink-avatar-refine-shell--chat-only .darlink-avatar-chat{min-height:calc(100vh - 56px)}.darlink-avatar-refine-note{padding:0 24px 12px;color:#4a454f;font-size:13px;line-height:1.6;background:rgba(255,255,255,.28)}.darlink-inline-link{border:0;background:transparent;padding:0;color:#604283;font-weight:900;cursor:pointer;text-decoration:underline}
       .darlink-avatar-guide,.darlink-avatar-chat{border:1px solid rgba(255,255,255,.72);border-radius:34px;background:rgba(255,255,255,.58);box-shadow:0 24px 70px rgba(31,42,68,.09);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);overflow:hidden}
       .darlink-avatar-guide{padding:24px;display:flex;flex-direction:column;gap:18px}.darlink-avatar-guide-head{display:flex;gap:14px;align-items:flex-start}.darlink-avatar-guide-head>span{width:54px;height:54px;border-radius:20px;background:linear-gradient(135deg,#6f5092,#006686);color:white;display:grid;place-items:center;flex:0 0 auto}.darlink-avatar-guide-head strong{display:block;font-size:24px;line-height:1.1;color:#111c2d}.darlink-avatar-guide-head p{margin:6px 0 0;color:#4a454f;line-height:1.65}
       .darlink-upload-zone{min-height:168px;border:1.5px dashed rgba(111,80,146,.34);border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.66),rgba(239,248,255,.52));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;color:#604283;cursor:pointer;transition:.18s ease}.darlink-upload-zone:hover{transform:translateY(-2px);border-color:#6f5092;box-shadow:0 18px 38px rgba(111,80,146,.12)}.darlink-upload-zone input{display:none}.darlink-upload-zone>span{font-size:32px}.darlink-upload-zone strong{font-size:17px}.darlink-upload-zone em{font-style:normal;color:#4a454f;font-size:12px;font-weight:800}
@@ -4649,7 +6438,11 @@
       body.darlink-contextual-chat.darlink-celebrity-chat .glass-bubble-ai,body.darlink-contextual-chat.darlink-celebrity-chat .darlink-suggestion-card{background:rgba(10,15,31,.72)!important;border-color:rgba(255,255,255,.16)!important;color:#f8fbff!important;box-shadow:0 20px 50px rgba(0,0,0,.24)}
       body.darlink-contextual-chat.darlink-celebrity-chat .glass-bubble-ai p,body.darlink-contextual-chat.darlink-celebrity-chat .darlink-suggestion-card p,body.darlink-contextual-chat.darlink-celebrity-chat .darlink-suggestion-card span{color:rgba(248,251,255,.92)!important}
       body.darlink-contextual-chat #chat-messages{scroll-behavior:smooth}
-      body.darlink-contextual-chat .glass-bubble-ai,body.darlink-contextual-chat .darlink-suggestion-card,body.darlink-contextual-chat .glass-input{background:rgba(255,255,255,.72)!important;border:1px solid rgba(255,255,255,.76)!important;backdrop-filter:blur(24px)}
+      body.darlink-contextual-chat:not(.darlink-celebrity-chat) .glass-bubble-ai,body.darlink-contextual-chat:not(.darlink-celebrity-chat) .darlink-suggestion-card,body.darlink-contextual-chat:not(.darlink-celebrity-chat) .glass-input{background:rgba(255,255,255,.72)!important;border:1px solid rgba(255,255,255,.76)!important;backdrop-filter:blur(24px)}
+      body.darlink-contextual-chat.darlink-celebrity-chat,html:has(body.darlink-celebrity-chat){background:#070b18!important}
+      body.darlink-contextual-chat.darlink-celebrity-chat main{background:transparent!important}
+      body.darlink-contextual-chat.darlink-celebrity-chat main>.shrink-0{background:linear-gradient(to top,#070b18 0%,rgba(7,11,24,.94) 72%,transparent 100%)!important}
+      body.darlink-contextual-chat.darlink-celebrity-chat .glass-input{background:rgba(10,15,31,.82)!important;border-color:rgba(255,255,255,.16)!important}
       body.darlink-contextual-chat .darlink-context-message{animation:darlinkContextMessageIn .22s ease}
       body.darlink-contextual-chat .darlink-context-message.thinking span{display:inline-block;width:5px;height:5px;margin-left:4px;border-radius:999px;background:#8a486f;animation:darlinkContextDot 900ms infinite}
       body.darlink-contextual-chat .darlink-context-message.thinking span:nth-child(2){animation-delay:120ms}
@@ -4681,8 +6474,9 @@
       .darlink-rising-question{position:absolute;left:50%;top:11%;z-index:4;width:min(720px,72%);min-height:330px;transform:translateX(-50%);border-radius:30px;background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.22);box-shadow:0 28px 90px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.26);backdrop-filter:blur(28px);padding:28px;animation:darlinkRise .42s cubic-bezier(.16,1,.3,1)}@keyframes darlinkRise{from{opacity:0;transform:translateX(-50%) translateY(60px) scale(.96)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
       .darlink-challenge-panel .darlink-rising-question{position:relative;left:auto;top:auto;width:100%;min-height:300px;transform:none;padding:20px;animation:none}
       .darlink-rising-question>span,.darlink-challenge-panel>span{color:#7ed4fd;text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:950}.darlink-rising-question h2{font-size:clamp(24px,3vw,40px);line-height:1.12;margin:10px 0 22px;color:#fff}.darlink-challenge-options{display:grid;gap:12px}.darlink-challenge-options button{border:1px solid rgba(255,255,255,.18);border-radius:18px;background:rgba(255,255,255,.1);color:white;padding:14px 16px;text-align:left;font-weight:900;cursor:pointer;transition:.18s ease}.darlink-challenge-options button:hover{transform:translateY(-1px);background:rgba(255,255,255,.16)}.darlink-challenge-options button.is-selected{border-color:#fcaad6}.darlink-challenge-options button.is-answer{background:rgba(16,185,129,.22);border-color:rgba(16,185,129,.72)}.darlink-challenge-feedback{min-height:24px;margin:14px 0 0;color:rgba(248,251,255,.82);font-weight:850}.darlink-rising-question.is-wrong{box-shadow:0 28px 90px rgba(185,28,28,.24),inset 0 1px 0 rgba(255,255,255,.26)}.darlink-rising-question.is-correct{box-shadow:0 28px 90px rgba(16,185,129,.24),inset 0 1px 0 rgba(255,255,255,.26)}
-      .darlink-challenge-panel{border-radius:30px;border:1px solid rgba(255,255,255,.14);background:rgba(8,13,28,.72);box-shadow:0 24px 90px rgba(0,0,0,.28);backdrop-filter:blur(26px);padding:26px;display:flex;flex-direction:column;gap:16px}.darlink-challenge-panel h1{font-size:42px;line-height:1;margin:0}.darlink-challenge-panel p{color:rgba(248,251,255,.72);line-height:1.7;margin:0}.darlink-challenge-progress{display:flex;align-items:center;justify-content:space-between;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:14px}.darlink-challenge-progress strong{font-size:28px}.darlink-challenge-progress em{font-style:normal;color:#fcaad6;font-weight:900}.darlink-challenge-exit,.darlink-challenge-chat{margin-top:auto;border:0;border-radius:999px;background:linear-gradient(135deg,#6f5092,#006686);color:white;min-height:50px;padding:0 18px;font-weight:950;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}.darlink-rising-question.is-complete{display:flex;flex-direction:column;justify-content:center}.darlink-rising-question.is-complete p{color:rgba(248,251,255,.78);line-height:1.7}
-      @media(max-width:960px){.darlink-celebrity-challenge-body{overflow:auto}.darlink-challenge-scene{height:auto;min-height:100vh;grid-template-columns:1fr;padding:16px;gap:14px}.darlink-liquid-stage{min-height:720px;order:0}.darlink-challenge-panel{order:1}.darlink-rising-question{width:calc(100% - 32px);top:72px;min-height:320px}.darlink-digital-player{bottom:18%}}
+      .darlink-challenge-panel{border-radius:30px;border:1px solid rgba(255,255,255,.14);background:rgba(8,13,28,.72);box-shadow:0 24px 90px rgba(0,0,0,.28);backdrop-filter:blur(26px);padding:26px;display:flex;flex-direction:column;gap:16px}.darlink-challenge-panel h1{font-size:42px;line-height:1;margin:0}.darlink-challenge-panel p{color:rgba(248,251,255,.72);line-height:1.7;margin:0}.darlink-challenge-progress{display:flex;align-items:center;justify-content:space-between;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:14px}.darlink-challenge-progress strong{font-size:28px}.darlink-challenge-progress em{font-style:normal;color:#fcaad6;font-weight:900}.darlink-challenge-chat[hidden]{display:none!important}.darlink-challenge-exit,.darlink-challenge-chat{margin-top:auto;border:0;border-radius:999px;background:linear-gradient(135deg,#6f5092,#006686);color:white;min-height:50px;padding:0 18px;font-weight:950;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}.darlink-rising-question.is-complete{display:flex;flex-direction:column;justify-content:center}.darlink-rising-question.is-complete p{color:rgba(248,251,255,.78);line-height:1.7}
+      .darlink-yau-guess-scene{grid-template-columns:minmax(0,1fr) minmax(320px,420px)}.darlink-yau-guess-panel{min-height:0}.darlink-yau-chat{flex:1;min-height:280px;max-height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}.darlink-yau-msg{border-radius:18px;padding:10px 12px;line-height:1.55;font-size:14px}.darlink-yau-msg.qiu{align-self:flex-start;background:rgba(255,255,255,.1);color:#f8fbff}.darlink-yau-msg.qiu span{display:inline-block;margin-right:6px;font-weight:900;color:#7ed4fd}.darlink-yau-msg.user{align-self:flex-end;background:linear-gradient(135deg,#6f5092,#006686);color:white}.darlink-yau-typing{display:flex;gap:6px;padding:4px 0}.darlink-yau-typing span{width:7px;height:7px;border-radius:999px;background:rgba(255,255,255,.55);animation:darlinkYauDot 1s infinite ease-in-out}.darlink-yau-typing span:nth-child(2){animation-delay:.15s}.darlink-yau-typing span:nth-child(3){animation-delay:.3s}@keyframes darlinkYauDot{0%,80%,100%{opacity:.35;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}.darlink-yau-input-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}.darlink-yau-input-row textarea{border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(255,255,255,.08);color:#f8fbff;padding:10px 12px;font:inherit;resize:none}.darlink-yau-input-row button{border:0;border-radius:14px;width:44px;height:44px;background:linear-gradient(135deg,#6f5092,#006686);color:white;cursor:pointer}
+      .darlink-yau-quiz-overlay{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:24px;background:rgba(4,8,18,.72);backdrop-filter:blur(14px)}.darlink-yau-quiz-modal{width:min(460px,92vw);border-radius:28px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(160deg,rgba(12,18,36,.96),rgba(8,13,28,.92));box-shadow:0 28px 90px rgba(0,0,0,.42);padding:26px;color:#f8fbff}.darlink-yau-quiz-modal>span{color:#7ed4fd;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:950}.darlink-yau-quiz-modal h2{margin:10px 0 8px;font-size:30px;line-height:1.15}.darlink-yau-quiz-modal p{margin:0 0 16px;color:rgba(248,251,255,.76);line-height:1.6}.darlink-yau-reward-modal,.darlink-yau-fail-modal{text-align:center}.darlink-yau-watch-scene{position:relative;height:160px;margin:8px auto 18px}.darlink-yau-watch-glow{position:absolute;inset:20% 18%;border-radius:50%;background:radial-gradient(circle,rgba(252,170,214,.42),rgba(126,212,253,.18),transparent 70%);animation:darlinkWatchGlow 1.8s ease-in-out infinite}.darlink-yau-watch-ring{position:absolute;left:50%;top:50%;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;border:2px dashed rgba(126,212,253,.55);animation:darlinkWatchSpin 3.2s linear infinite}.darlink-yau-watch{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:64px;filter:drop-shadow(0 12px 24px rgba(126,212,253,.45));animation:darlinkWatchBounce .9s ease-in-out infinite alternate}@keyframes darlinkWatchGlow{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.06)}}@keyframes darlinkWatchSpin{to{transform:rotate(360deg)}}@keyframes darlinkWatchBounce{from{transform:translate(-50%,-52%)}to{transform:translate(-50%,-46%)}}.darlink-yau-fail-modal h2{color:#fcaad6;font-size:26px}@media(max-width:960px){.darlink-celebrity-challenge-body{overflow:auto}.darlink-challenge-scene{height:auto;min-height:100vh;grid-template-columns:1fr;padding:16px;gap:14px}.darlink-liquid-stage{min-height:720px;order:0}.darlink-challenge-panel{order:1}.darlink-rising-question{width:calc(100% - 32px);top:72px;min-height:320px}.darlink-digital-player{bottom:18%}}
     `;
   }
 
@@ -4690,7 +6484,6 @@
     return `
       html{font-family:"Plus Jakarta Sans",system-ui,sans-serif}
       body.darlink-page-polished>nav:first-of-type:not(.darlink-unpolished-nav),body.darlink-page-polished>header.fixed{min-height:76px}
-      body.darlink-page-polished button[data-darlink-search-disabled='true']{cursor:default;pointer-events:none;opacity:.78}
       body.darlink-page-polished .darlink-material-svg{width:1em;height:1em;display:block}
       .darlink-icon-normalized .darlink-material-svg{width:1.1em;height:1.1em}
       .darlink-standard-topbar{position:sticky;top:0;z-index:90;width:100%;background:rgba(255,255,255,.58);border-bottom:1px solid rgba(255,255,255,.52);box-shadow:0 10px 36px rgba(31,42,68,.08);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px)}
@@ -4701,10 +6494,11 @@
       .darlink-standard-tabs a:hover{background:rgba(255,255,255,.58);color:#604283;transform:translateY(-1px)}
       .darlink-standard-tabs a.is-active{background:linear-gradient(135deg,rgba(216,180,254,.42),rgba(126,212,253,.28));color:#29074a;box-shadow:inset 0 0 0 1px rgba(111,80,146,.1)}
       .darlink-standard-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto}
-      .darlink-standard-search,.darlink-standard-avatar{border:1px solid rgba(255,255,255,.62);background:rgba(255,255,255,.58);color:#604283;box-shadow:0 10px 24px rgba(31,42,68,.08);cursor:pointer}
-      .darlink-standard-search{width:42px;height:42px;border-radius:999px;display:grid;place-items:center}
+      .darlink-standard-avatar{border:1px solid rgba(255,255,255,.62);background:rgba(255,255,255,.58);color:#604283;box-shadow:0 10px 24px rgba(31,42,68,.08);cursor:pointer}
       .darlink-standard-avatar{width:42px;height:42px;border-radius:999px;padding:0;overflow:hidden}
       .darlink-standard-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+      .darlink-standard-avatar.is-icon{display:grid;place-items:center}
+      .darlink-standard-avatar.is-icon .darlink-material-svg{width:22px;height:22px}
       @media(min-width:768px){
         body.darlink-page-polished>nav:first-of-type:not(.darlink-unpolished-nav){display:flex;align-items:center}
       }
@@ -4774,14 +6568,80 @@
     });
   }
 
-  function currentAvatarSrc(doc) {
-    return doc.querySelector("nav img[src], header img[src], aside img[src], img[alt*='profile' i]")?.getAttribute("src") || "/files/v13-ai-twin-crop.png";
+  function saveAvatarDraftFromFile(file, doc, onPreview) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      write(STORAGE.avatarDraft, { name: file.name, src: reader.result, updatedAt: Date.now() });
+      if (typeof onPreview === "function") onPreview(reader.result);
+      syncTopbarAvatar(doc);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function bindProfileAvatarUpload(doc) {
+    const avatarImg = doc.querySelector("main section .avatar-glow img, main section .w-48 img, main section .w-56 img");
+    const avatarWrap = avatarImg?.closest(".relative");
+    if (!avatarWrap || avatarWrap.dataset.darlinkAvatarBound === "true") return;
+    avatarWrap.dataset.darlinkAvatarBound = "true";
+    avatarWrap.classList.add("darlink-profile-avatar-wrap");
+    avatarWrap.querySelectorAll(".absolute").forEach((node) => {
+      if (/verified|验证|驗證/i.test(node.textContent || "")) node.remove();
+    });
+    if (!doc.querySelector("#darlinkProfileAvatarInput")) {
+      const controls = doc.createElement("div");
+      controls.className = "darlink-profile-avatar-controls";
+      controls.innerHTML = `
+        <input id="darlinkProfileAvatarInput" type="file" accept="image/*" hidden data-darlink-local-control="true">
+        <label class="darlink-profile-avatar-upload" for="darlinkProfileAvatarInput" data-darlink-local-control="true">
+          ${materialIconSvg("upload")}
+          <span>${copy("Change avatar", "更换头像", "更換頭像")}</span>
+        </label>
+        <p class="darlink-profile-avatar-hint">${copy("PNG or JPG photo", "支持 PNG、JPG 照片", "支援 PNG、JPG 照片")}</p>
+      `;
+      avatarWrap.appendChild(controls);
+    }
+    doc.querySelector("#darlinkProfileAvatarInput")?.addEventListener("change", (event) => {
+      const file = event.target.files && event.target.files[0];
+      saveAvatarDraftFromFile(file, doc, (src) => {
+        if (avatarImg) {
+          avatarImg.src = src;
+          avatarImg.alt = copy("Uploaded avatar preview", "上传预览", "上傳預覽");
+        }
+      });
+    });
+  }
+
+  function userUploadedAvatarSrc() {
+    const draft = read(STORAGE.avatarDraft, {});
+    return draft && draft.src ? String(draft.src) : "";
+  }
+
+  function userTopbarAvatarMarkup() {
+    const label = copy("Profile", "个人档案", "個人檔案");
+    const alt = copy("User profile avatar", "用户头像", "用戶頭像");
+    const src = userUploadedAvatarSrc();
+    if (src) {
+      return `<button type="button" class="darlink-standard-avatar has-image" aria-label="${label}"><img src="${src}" alt="${alt}"></button>`;
+    }
+    return `<button type="button" class="darlink-standard-avatar is-icon" aria-label="${label}">${materialIconSvg("person")}</button>`;
+  }
+
+  function syncTopbarAvatar(doc) {
+    const existing = doc?.querySelector(".darlink-standard-avatar");
+    if (!existing) return;
+    const wrap = doc.createElement("div");
+    wrap.innerHTML = userTopbarAvatarMarkup();
+    const next = wrap.firstElementChild;
+    if (next) existing.replaceWith(next);
   }
 
   function normalizeStandardTopBar(doc, activeKey = "discover") {
     const topbar = doc.querySelector("body > nav, body > header");
-    if (!topbar || topbar.dataset.darlinkStandardTopbar === "true") return;
-    const avatarSrc = currentAvatarSrc(doc);
+    if (!topbar || topbar.dataset.darlinkStandardTopbar === "true") {
+      syncTopbarAvatar(doc);
+      return;
+    }
     topbar.dataset.darlinkStandardTopbar = "true";
     topbar.className = "darlink-standard-topbar";
     const items = [
@@ -4797,8 +6657,7 @@
         </div>
         <div class="darlink-standard-actions">
           ${langSwitchMarkup()}
-          <button type="button" class="darlink-standard-search" data-darlink-search-disabled="true" data-darlink-local-control="true" aria-label="${copy("Search disabled for prototype", "搜索暂未开放", "搜尋暫未開放")}">${materialIconSvg("search")}</button>
-          <button type="button" class="darlink-standard-avatar" aria-label="${copy("Profile", "个人档案", "個人檔案")}"><img src="${avatarSrc}" alt="${copy("User profile avatar", "用户头像", "用戶頭像")}"></button>
+          ${userTopbarAvatarMarkup()}
         </div>
       </div>
     `;
@@ -5015,7 +6874,7 @@
       if (!doc || !page) return;
       applyGlobalFramePolish(doc, page);
       if (page === api.page.login) enhanceLogin(doc, api);
-      if (page === api.page.onboard1) enhanceChatOnboarding(doc, api, 1);
+      if (page === api.page.onboard1) enhanceStep1Questionnaire(doc, api);
       if (page === api.page.onboard2) enhanceChatOnboarding(doc, api, 2);
       if (page === api.page.onboard3) enhanceChatOnboarding(doc, api, 3);
       if (page === api.page.home) enhanceHome(doc, api);
@@ -5033,6 +6892,7 @@
       replaceMaterialIconFallbacks(doc);
       watchMaterialIconFallbacks(doc);
       addModuleBackControl(doc, page, api);
+      syncTopbarAvatar(doc);
     },
   };
 
@@ -5041,7 +6901,11 @@
       const auth = read(STORAGE.auth, null);
       const email = auth?.email;
       if (!email) return null;
-      migrateLegacyProgress(email);
+      const saved = getUserProgress(email);
+      if (!saved) {
+        if (!canMigrateLegacyProgressTo(email)) return null;
+        persistUserProgress(email);
+      }
       if (!hasCompletedOnboarding(email)) return null;
       restoreOnboardingProgress(getUserProgress(email));
       return "home_luminous_dashboard_refined_v4";

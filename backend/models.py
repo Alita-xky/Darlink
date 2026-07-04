@@ -9,6 +9,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     user_token = Column(String(64), unique=True, index=True)
     email = Column(String(256), unique=True, index=True)
+    password_hash = Column(String(256), nullable=True)  # 新增：密码哈希（nullable 兼容旧数据）
     verified = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -16,8 +17,10 @@ class User(Base):
 class EmailVerification(Base):
     __tablename__ = 'email_verifications'
     id = Column(Integer, primary_key=True)
-    token = Column(String(128), unique=True, index=True)
+    token = Column(String(128), unique=True, index=True, nullable=True)  # 旧字段，保留兼容
+    code = Column(String(6), index=True, nullable=True)                  # 新增：6位验证码
     email = Column(String(256), index=True)
+    expires_at = Column(DateTime, nullable=True)                         # 新增：过期时间
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
@@ -58,3 +61,15 @@ class UserProfile(Base):
     profile_text = Column(Text)
     vector = Column(JSON)
     meta = Column(JSON, nullable=True)
+
+
+class FriendRequest(Base):
+    __tablename__ = 'friend_requests'
+    id = Column(Integer, primary_key=True)
+    from_user_id = Column(Integer, ForeignKey('users.id'), index=True)
+    to_user_id = Column(Integer, ForeignKey('users.id'), index=True)
+    source_profile_id = Column(String(64), index=True)
+    status = Column(String(16), default='pending', index=True)
+    message = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

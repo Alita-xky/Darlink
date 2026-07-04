@@ -169,16 +169,6 @@
             100% { background-position: 0% 0%; }
         }
 
-        .network-line {
-            stroke-dasharray: 8;
-            animation: dashMove 30s linear infinite;
-        }
-
-        @keyframes dashMove {
-            from { stroke-dashoffset: 400; }
-            to { stroke-dashoffset: 0; }
-        }
-
         /* 3D Particle animations */
         .particle {
             position: absolute;
@@ -238,12 +228,9 @@
 </div>
 <!-- Cloud Disk Background -->
 <div class="absolute inset-0 w-full h-full opacity-60 mix-blend-overlay bg-cover bg-center" style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBvbMV1-NvNG4EZJLWPg4jtHcA7xpvr4hQItG1kySiHF20bqJoFf3iFvKnqrU9DpRtqkqkFZBpgxSohpntpTD6nlOaOBQzSTIJODoVP1dfueO6hquiEifYhh51J3u7jJcEIBo51nX_DyzteIcnKnDt1RpT80HbdKbzNQQW6mYTCSsVecWpc_JaiAEUAmcorXiLOnO1v1G9R_XX-MwTDKuUxx31u6ujEmJKLY8u25tohLMImWM3rnrZTuC-DwL3lcN_UzQoJS_RSu-U3&quot;);"></div>
-<!-- Network SVG Lines -->
-<svg class="absolute inset-0 w-full h-full pointer-events-none z-1" xmlns="http://www.w3.org/2000/svg"><line class="network-line" opacity="0.4" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="32%" y1="50%" y2="28%"></line><line class="network-line" opacity="0.6" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="25%" y1="50%" y2="68%"></line><line class="network-line" opacity="0.5" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="78%" y1="50%" y2="72%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="55%" y1="50%" y2="15%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="15%" y1="50%" y2="50%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="45%" y1="50%" y2="85%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="88%" y1="50%" y2="40%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="82%" y1="50%" y2="20%"></line><line class="network-line" opacity="0.3" stroke="url(#lineGrad1)" stroke-width="1.5" x1="50%" x2="40%" y1="50%" y2="60%"></line><line class="network-line" opacity="0.2" stroke="url(#lineGrad2)" stroke-width="1.5" x1="50%" x2="10%" y1="50%" y2="10%"></line><defs><linearGradient id="lineGrad1" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#d8b4fe"></stop><stop offset="50%" stop-color="#fcaad6"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient><linearGradient id="lineGrad2" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#7ed4fd"></stop><stop offset="50%" stop-color="#d8b4fe"></stop><stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop></linearGradient></defs></svg>
-<!-- Live match nodes are injected by prototype-engine.js -->
-<!-- Central 'You' Node - 3D Glowing Sphere -->
+<!-- Central user node. Live matches and network lines are rendered by prototype-engine.js. -->
 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full glowing-sphere-3d flex items-center justify-center z-30 shadow-2xl">
-<span class="font-headline-md text-headline-md text-white font-bold drop-shadow-md">You</span>
+<span class="font-headline-md text-headline-md text-white font-bold drop-shadow-md">Me</span>
 </div>
 <!-- Atmosphere Sparkles -->
 <div class="absolute top-10 left-10 text-primary-container/40 animate-pulse">
@@ -257,52 +244,7 @@
 <aside class="md:col-span-4 flex flex-col gap-element-gap h-full">
 <!-- Selected Match Card -->
 <div class="iridescent-frosted rounded-xl p-8 flex flex-col items-center relative overflow-hidden shadow-xl">
-<div class="darlink-match-empty" style="width:100%;text-align:center;color:#4a454f;font-size:14px;padding:22px 8px;line-height:1.6">Loading live matches...</div>
-<!-- Resonance Meter -->
-<div class="w-full mb-8 z-10">
-<div class="flex justify-between items-end mb-3">
-<span class="font-label-lg text-label-lg text-primary font-bold">Resonance Level</span>
-<span class="font-headline-md text-headline-md text-secondary font-bold">92%</span>
-</div>
-<div class="h-4 w-full bg-white/40 rounded-full overflow-hidden shadow-inner">
-<div class="h-full rounded-full liquid-progress" style="width: 92%;"></div>
-</div>
-</div>
-<!-- AI Insights -->
-<div class="w-full z-10 flex flex-col gap-4 mb-8">
-<h3 class="font-label-lg text-label-lg text-on-surface font-bold mb-1 flex items-center gap-2">
-<span class="material-symbols-outlined text-[20px] text-tertiary">psychology</span>
-                        AI Insights
-                    </h3>
-<div class="bg-white/40 backdrop-blur-md border border-white/30 rounded-xl p-4 flex items-start gap-4 hover:bg-white/60 transition-colors">
-<div class="bg-primary-container/40 p-2 rounded-full flex-shrink-0 text-primary shadow-sm">
-<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">palette</span>
-</div>
-<div>
-<h4 class="font-label-lg text-label-lg text-on-surface">Aesthetic Alignment</h4>
-<p class="font-label-sm text-label-sm text-on-surface-variant">Both profiles exhibit high affinity for minimalist digital art and brutalist architecture.</p>
-</div>
-</div>
-<div class="bg-white/40 backdrop-blur-md border border-white/30 rounded-xl p-4 flex items-start gap-4 hover:bg-white/60 transition-colors">
-<div class="bg-secondary-container/40 p-2 rounded-full flex-shrink-0 text-secondary shadow-sm">
-<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">menu_book</span>
-</div>
-<div>
-<h4 class="font-label-lg text-label-lg text-on-surface">Literature Overlap</h4>
-<p class="font-label-sm text-label-sm text-on-surface-variant">Strong mutual interest in speculative sci-fi and historical non-fiction.</p>
-</div>
-</div>
-</div>
-<!-- Actions -->
-<div class="w-full flex gap-3 z-10">
-<button class="flex-1 bg-gradient-to-r from-primary via-secondary to-tertiary text-on-primary font-label-lg text-label-lg py-4 rounded-full shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
-<span class="material-symbols-outlined text-[20px]">chat_bubble</span>
-                        Initiate Connect
-                    </button>
-<button class="w-14 h-14 glass-layer-2 hover:bg-white/80 rounded-full flex items-center justify-center text-primary transition-all hover:scale-110 shadow-lg border border-white/50">
-<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">refresh</span>
-</button>
-</div>
+<div class="darlink-match-empty">Loading live matches...</div>
 </div>
 </aside>
 </div>

@@ -21,12 +21,26 @@
   };
 
   const PAGES = new Set(Object.values(PAGE));
+  const ONBOARD_PAGES = new Set([PAGE.login, PAGE.onboard1, PAGE.onboard2, PAGE.onboard3]);
+  const BACK_PARENT = {
+    [PAGE.celebrityChallenge]: PAGE.home,
+    [PAGE.matchChat]: PAGE.home,
+    [PAGE.digitalPlaza]: PAGE.home,
+    [PAGE.exploreChat]: PAGE.digitalPlaza,
+    [PAGE.xiaodaChat]: PAGE.home,
+    [PAGE.study]: PAGE.home,
+    [PAGE.culinary]: PAGE.home,
+    [PAGE.romance]: PAGE.home,
+    [PAGE.matching]: PAGE.home,
+    [PAGE.community]: PAGE.home,
+    [PAGE.profile]: PAGE.home,
+  };
   const LANDING = "__landing__";
   const frame = document.getElementById("flowFrame");
   const status = document.getElementById("flowStatus");
   const profileHotspot = document.getElementById("profileHotspot");
   const topNavHotspots = document.getElementById("topNavHotspots");
-  const PAGE_ASSET_VERSION = "20260629-3";
+  const PAGE_ASSET_VERSION = "20260704-restore-2";
 
   let currentPage = null;
   let previousPage = PAGE.home;
@@ -37,7 +51,7 @@
   const PAGE_LABELS = {
     zhHans: {
       [PAGE.login]: "学校邮箱验证",
-      [PAGE.onboard1]: "小搭基础信息对话",
+      [PAGE.onboard1]: "小搭基础信息问卷",
       [PAGE.onboard2]: "小搭人物画像对话",
       [PAGE.onboard3]: "小搭社交路径选择",
       [PAGE.home]: "首页",
@@ -55,7 +69,7 @@
     },
     zhHant: {
       [PAGE.login]: "學校郵箱驗證",
-      [PAGE.onboard1]: "小搭基礎資訊對話",
+      [PAGE.onboard1]: "小搭基礎資訊問卷",
       [PAGE.onboard2]: "小搭人物畫像對話",
       [PAGE.onboard3]: "小搭社交路徑選擇",
       [PAGE.home]: "首頁",
@@ -117,6 +131,25 @@
     return `pages/${page}/code.html?v=${PAGE_ASSET_VERSION}`;
   }
 
+  function hashMatchesPage(page) {
+    const raw = decodeURIComponent((window.location.hash || "").replace(/^#/, "")).trim();
+    return raw === page;
+  }
+
+  function pageFromFrameSrc() {
+    const match = (frame.src || "").match(/\/pages\/([^/]+)\/code\.html/);
+    return match && PAGES.has(match[1]) ? match[1] : null;
+  }
+
+  function syncRouteFromHash() {
+    const page = pageFromHash();
+    if (!PAGES.has(page)) return;
+    const frameMatches = frame.src && frame.src.includes(pageUrl(page));
+    if (page !== currentPage || !frameMatches || !hashMatchesPage(page)) {
+      navigate(page, { replace: true, immediate: true, force: true, fromHistory: true });
+    }
+  }
+
   function syncHash(page, replace) {
     const target = `#${encodeURIComponent(page)}`;
     if (window.location.hash === target) return;
@@ -141,7 +174,11 @@
 
   function navigate(page, options = {}) {
     if (!PAGES.has(page)) return;
-    if (page === currentPage && frame.src.includes(pageUrl(page))) return;
+    const frameMatches = frame.src && frame.src.includes(pageUrl(page));
+    if (!options.force && page === currentPage && frameMatches) {
+      if (!hashMatchesPage(page)) syncHash(page, true);
+      return;
+    }
 
     const nextToken = ++routeToken;
     const oldPage = currentPage;
@@ -408,6 +445,13 @@
       ["mystery icon #1", "jackie-chan"],
       ["mystery icon #2", "shing-tung-yau"],
       ["mystery icon #3", "elon-musk"],
+      ["丘*桐", "shing-tung-yau"],
+      ["成*", "jackie-chan"],
+      ["马*克", "elon-musk"],
+      ["馬*克", "elon-musk"],
+      ["j* · action", "jackie-chan"],
+      ["m* k · mars", "elon-musk"],
+      ["y* yau · geometry", "shing-tung-yau"],
     ];
     const found = pairs.find(([needle]) => combined.includes(needle));
     return found ? found[1] : "";
@@ -438,13 +482,17 @@
   }
 
   function previousForBack() {
+    const inMainApp = currentPage && !ONBOARD_PAGES.has(currentPage);
     while (pageHistory.length) {
       const page = pageHistory.pop();
-      if (page && page !== currentPage && PAGES.has(page)) return page;
+      if (!page || page === currentPage || !PAGES.has(page)) continue;
+      if (inMainApp && ONBOARD_PAGES.has(page)) continue;
+      return page;
     }
     if (currentPage === PAGE.login) return LANDING;
     if (currentPage === PAGE.onboard2) return PAGE.onboard1;
     if (currentPage === PAGE.onboard3) return PAGE.onboard2;
+    if (BACK_PARENT[currentPage]) return BACK_PARENT[currentPage];
     if ([PAGE.digitalPlaza, PAGE.exploreChat, PAGE.xiaodaChat, PAGE.study, PAGE.culinary, PAGE.romance, PAGE.matching, PAGE.matchChat, PAGE.community, PAGE.celebrityChallenge, PAGE.profile].includes(currentPage)) {
       return previousPage || PAGE.home;
     }
@@ -452,12 +500,6 @@
   }
 
   function routeForPage(element, label, event) {
-    const hashPage = pageFromHash();
-    if (hashPage !== currentPage && PAGES.has(hashPage)) {
-      currentPage = hashPage;
-      window.__DARLINK_FLOW_CURRENT_PAGE = currentPage;
-    }
-
     const localLabel = directText(element);
     if (isSearchControl(element, localLabel || label)) return null;
     if (isRefreshControl(element, localLabel || label)) return null;
@@ -551,7 +593,7 @@
     if (flowTarget && flowTarget.dataset.darlinkFlowTarget) return false;
     return Boolean(
       element.closest(
-        "#darlinkAuthForm, .darlink-onboarding-shell, .darlink-profile-modal, [data-darlink-local-control]"
+        "#darlinkAuthForm, .darlink-onboarding-shell, .darlink-profile-modal, .darlink-yau-guess-body, .darlink-celebrity-challenge-body, [data-darlink-local-control]"
       )
     );
   }
@@ -593,9 +635,16 @@
   }
 
   frame.addEventListener("load", () => {
+    const srcPage = pageFromFrameSrc();
+    if (srcPage && srcPage !== currentPage) {
+      currentPage = srcPage;
+      window.__DARLINK_FLOW_CURRENT_PAGE = currentPage;
+      if (!hashMatchesPage(srcPage)) syncHash(srcPage, true);
+    }
     bindFrameClicks();
+    const enhancePage = srcPage || currentPage || pageFromHash();
     if (window.DarlinkEnhancer && frame.contentDocument) {
-      window.DarlinkEnhancer.enhanceFrame(frame.contentDocument, currentPage, {
+      window.DarlinkEnhancer.enhanceFrame(frame.contentDocument, enhancePage, {
         navigate,
         page: PAGE,
       });
@@ -625,8 +674,15 @@
   });
 
   window.addEventListener("hashchange", () => {
-    const page = pageFromHash();
-    if (page !== currentPage) navigate(page, { replace: true, immediate: true });
+    syncRouteFromHash();
+  });
+
+  window.addEventListener("popstate", () => {
+    syncRouteFromHash();
+  });
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) syncRouteFromHash();
   });
 
   function resolveInitialPage() {

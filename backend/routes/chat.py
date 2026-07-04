@@ -25,10 +25,13 @@ async def chat_self_start(req: SelfChatStartReq):
     if not user:
         return {'ok': False, 'reason': 'auth_required'}
 
-    # 检查是否有蒸馏画像
-    traits = distillation.get_user_distillation(user.id)
-    if not traits:
-        return {'ok': False, 'reason': 'not_distilled_yet', 'message': '还没有足够的聊天记录生成你的数字分身，多和AI人物聊聊吧'}
+    # 检查是否有数字人（问卷 onboarding 或后续聊天蒸馏）
+    if not distillation.user_has_digital_twin(user.id):
+        return {
+            'ok': False,
+            'reason': 'not_distilled_yet',
+            'message': '请先完成问卷生成你的数字人，再来这里继续聊。',
+        }
 
     sid = crud.create_self_session(req.user_token)
     if not sid:
@@ -82,35 +85,33 @@ async def chat_message(req: ChatMessageReq, background_tasks: BackgroundTasks):
 
 
 async def _self_avatar_reply(user_id: int, text: str) -> str:
-    """用蒸馏画像生成数字分身的回复"""
+    """用蒸馏画像或问卷资料生成「本人自聊」回复"""
     system_prompt = distillation.build_self_avatar_prompt(user_id)
     if not system_prompt:
-        return '你的数字分身还没准备好，多聊聊天让我更了解你吧'
+        return '我还没准备好，先多聊几句让我更了解你吧'
 
-    client = AsyncOpenAI(
-        api_key=os.getenv('OPENAI_API_KEY'),
-        base_url=os.getenv('OPENAI_BASE_URL'),
-    )
+    traits = distillation.get_user_distillation(user_id)
+    budget = distillation._resolve_reply_budget(user_id, traits)
+
     try:
-        response = await client.chat.completions.create(
-            model=os.getenv('OPENAI_MODEL', 'deepseek-chat'),
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": text},
-            ],
-            temperature=0.8,
-            max_tokens=350,
+        from routes.ai import _call_llm
+        reply, _provider = await _call_llm(
+            system=system_prompt,
+            user=text,
+            max_tokens=budget["max_tokens"],
+            temperature=0.55,
         )
-        return response.choices[0].message.content
+        return distillation.polish_self_reply(reply, budget["max_reply_chars"])
     except Exception as e:
-        print(f"[数字分身] 调用失败: {e}")
-        return '数字分身暂时不在线，稍后再试'
+        print(f"[自聊] 调用失败: {e}")
+        return '这会儿有点卡，稍后再试'
 
 
 async def maybe_distill(user_id: int):
     """检查消息数量，满足条件则后台蒸馏（不阻塞聊天）"""
     msg_count = distillation.get_user_message_count(user_id)
-    if msg_count < 10 or msg_count % 10 != 0:
+    min_msgs = distillation.MIN_DISTILL_MESSAGES
+    if msg_count < min_msgs or msg_count % min_msgs != 0:
         return
     print(f"[自动蒸馏] user_id={user_id}, msg_count={msg_count}")
     await distillation.distill_user(user_id)
@@ -122,3 +123,22 @@ async def chat_history(session_id: str):
     if msgs is None:
         return {'ok': False, 'reason': 'not_found'}
     return {'ok': True, 'messages': [{'role': m.role, 'text': m.text, 'created_at': m.created_at.isoformat()} for m in msgs]}
+
+
+# ===== /api/ 前缀别名：前端统一走 /api/ 路由，避免 nginx 只代理 /api/ 时 /chat/* 404 =====
+
+@router.post('/api/self-chat/start')
+async def api_self_chat_start(req: SelfChatStartReq):
+    """同 /chat/self/start：开始和自己的数字分身对话。"""
+    return await chat_self_start(req)
+
+
+@router.post('/api/self-chat/message')
+async def api_self_chat_message(req: ChatMessageReq, background_tasks: BackgroundTasks):
+    """同 /chat/message：给数字分身发消息（session 是 self_avatar 会话时走分身回复）。"""
+    return await chat_message(req, background_tasks)
+
+
+@router.get('/api/self-chat/history/{session_id}')
+async def api_self_chat_history(session_id: str):
+    return await chat_history(session_id)

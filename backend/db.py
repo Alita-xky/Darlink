@@ -21,3 +21,25 @@ def ensure_session_skill_column():
         column_names = {row[1] for row in rows}
         if "skill_name" not in column_names:
             conn.exec_driver_sql("ALTER TABLE sessions ADD COLUMN skill_name VARCHAR(128)")
+
+
+def ensure_auth_columns():
+    """认证系统改造：给已存在的 users / email_verifications 表补新列。
+
+    create_all() 只建新表，不会给旧表加列，所以线上已有数据的表要在这里手动 ALTER。幂等。
+    """
+    with engine.begin() as conn:
+        # users.password_hash
+        rows = conn.exec_driver_sql("PRAGMA table_info(users)").fetchall()
+        user_cols = {row[1] for row in rows}
+        if user_cols and "password_hash" not in user_cols:
+            conn.exec_driver_sql("ALTER TABLE users ADD COLUMN password_hash VARCHAR(256)")
+
+        # email_verifications.code / expires_at
+        rows = conn.exec_driver_sql("PRAGMA table_info(email_verifications)").fetchall()
+        ev_cols = {row[1] for row in rows}
+        if ev_cols:
+            if "code" not in ev_cols:
+                conn.exec_driver_sql("ALTER TABLE email_verifications ADD COLUMN code VARCHAR(6)")
+            if "expires_at" not in ev_cols:
+                conn.exec_driver_sql("ALTER TABLE email_verifications ADD COLUMN expires_at DATETIME")

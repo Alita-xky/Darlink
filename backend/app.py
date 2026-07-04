@@ -50,11 +50,22 @@ app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
 
 
 @app.on_event('startup')
-def on_startup():
+async def on_startup():
     _db.create_tables()
     _db.ensure_session_skill_column()
+    _db.ensure_auth_columns()  # 认证系统改造：给 users/email_verifications 补新列
     from routes import persona as persona_routes
+    from routes.ai import init_http_client
+    import skill_loader
     persona_routes.sync_personas()
+    await init_http_client()
+    skill_loader.warm_cache()
+
+
+@app.on_event('shutdown')
+async def on_shutdown():
+    from routes.ai import close_http_client
+    await close_http_client()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -95,7 +106,7 @@ async def index():
     return HTMLResponse("<h1>Darlink</h1><p>Front-end not found</p>")
 
 
-from routes import auth, persona, chat, profile, distill, ai
+from routes import auth, persona, chat, profile, distill, ai, contextual_chat, user_onboarding, plaza, friends, matching
 
 app.include_router(auth.router)
 app.include_router(persona.router)
@@ -103,6 +114,11 @@ app.include_router(chat.router)
 app.include_router(profile.router)
 app.include_router(distill.router)
 app.include_router(ai.router)
+app.include_router(contextual_chat.router)
+app.include_router(user_onboarding.router)
+app.include_router(plaza.router)
+app.include_router(friends.router)
+app.include_router(matching.router)
 
 
 @app.get('/health')
