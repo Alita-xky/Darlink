@@ -44,7 +44,7 @@
       [PAGE.digitalPlaza]: "数字人广场",
       [PAGE.exploreChat]: "数字人潜力探索",
       [PAGE.xiaodaChat]: "小搭自由聊天",
-      [PAGE.study]: "学习搭子发现",
+      [PAGE.study]: "学习伙伴发现",
       [PAGE.culinary]: "社交搭子发现",
       [PAGE.romance]: "恋爱对象发现",
       [PAGE.matching]: "共振匹配网络",
@@ -248,7 +248,7 @@
     if (page === PAGE.home) {
       if (hasAny(label, ["view detailed insights", "view digital humans", "查看数字人", "查看數字人", "数字人广场", "數字人廣場", "digital human plaza", "digital humans"])) return PAGE.digitalPlaza;
       if (hasAny(label, ["explore potential", "探索潜力", "探索潛力"])) return PAGE.exploreChat;
-      if (hasAny(label, ["study sync", "学习搭子", "學習搭子", "社交搭子", "深度恋爱", "深度戀愛", "deep romance", "culinary match", "饭搭子", "飯搭子"])) return PAGE.digitalPlaza;
+      if (hasAny(label, ["study sync", "study partner", "学习伙伴", "學習夥伴", "学习搭子", "學習搭子", "社交搭子", "romance partner", "恋爱对象", "戀愛對象", "深度恋爱", "深度戀愛", "deep romance", "culinary match", "饭搭子", "飯搭子"])) return PAGE.digitalPlaza;
     }
 
     if ([PAGE.exploreChat, PAGE.study, PAGE.culinary, PAGE.romance].includes(page) && hasAny(label, ["ask xiaoda anything", "问小搭", "問小搭", "小搭聊天"])) {
@@ -547,6 +547,8 @@
 
   function isEnhancedFlowControl(element) {
     if (!element || !element.closest) return false;
+    const flowTarget = element.closest("[data-darlink-flow-target]");
+    if (flowTarget && flowTarget.dataset.darlinkFlowTarget) return false;
     return Boolean(
       element.closest(
         "#darlinkAuthForm, .darlink-onboarding-shell, .darlink-profile-modal, [data-darlink-local-control]"
@@ -627,5 +629,11 @@
     if (page !== currentPage) navigate(page, { replace: true, immediate: true });
   });
 
-  navigate(pageFromHash(), { replace: true, immediate: true });
+  function resolveInitialPage() {
+    const sessionPage = window.DarlinkSession?.resolveInitialPage?.();
+    if (sessionPage && PAGES.has(sessionPage)) return sessionPage;
+    return pageFromHash();
+  }
+
+  navigate(resolveInitialPage(), { replace: true, immediate: true });
 })();
