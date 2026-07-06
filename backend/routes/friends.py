@@ -133,3 +133,73 @@ async def list_friends(user_token: str = Query(...)):
     if err:
         return err
     return {"ok": True, "friends": crud.list_friends(user.id)}
+
+class DmOpenBody(BaseModel):
+    user_token: str
+    target_profile_id: str
+
+
+class DmSendBody(BaseModel):
+    user_token: str
+    text: str
+
+
+@router.post("/dm/open")
+async def open_dm(req: DmOpenBody):
+    user, err = _require_user(req.user_token)
+    if err:
+        return err
+    to_user_id, err = _parse_target(req.target_profile_id)
+    if err:
+        return err
+    conv, reason = crud.get_or_create_dm_conversation(user.id, to_user_id)
+    if reason == "not_friends":
+        return {"ok": False, "reason": "not_friends"}
+    if not conv:
+        return {"ok": False, "reason": "open_failed"}
+    messages, _ = crud.list_dm_messages(conv.id, user.id, after_id=0, limit=100)
+    other = crud._public_user_summary(to_user_id)
+    return {
+        "ok": True,
+        "conversation_id": conv.id,
+        "other_user": other,
+        "messages": messages or [],
+        "my_user_id": user.id,
+    }
+
+
+@router.get("/dm/conversations")
+async def dm_conversations(user_token: str = Query(...)):
+    user, err = _require_user(user_token)
+    if err:
+        return err
+    return {"ok": True, "conversations": crud.list_dm_conversations(user.id)}
+
+
+@router.get("/dm/{conversation_id}/messages")
+async def dm_messages(conversation_id: int, user_token: str = Query(...), after_id: int = Query(0)):
+    user, err = _require_user(user_token)
+    if err:
+        return err
+    messages, reason = crud.list_dm_messages(conversation_id, user.id, after_id=after_id)
+    if reason == "not_found":
+        return {"ok": False, "reason": "not_found"}
+    if reason == "forbidden":
+        return {"ok": False, "reason": "forbidden"}
+    return {"ok": True, "messages": messages or []}
+
+
+@router.post("/dm/{conversation_id}/messages")
+async def dm_send(conversation_id: int, req: DmSendBody):
+    user, err = _require_user(req.user_token)
+    if err:
+        return err
+    msg, reason = crud.send_dm_message(conversation_id, user.id, req.text)
+    if reason == "not_found":
+        return {"ok": False, "reason": "not_found"}
+    if reason == "forbidden":
+        return {"ok": False, "reason": "forbidden"}
+    if reason == "empty_message":
+        return {"ok": False, "reason": "empty_message"}
+    return {"ok": True, "message": msg}
+

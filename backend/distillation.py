@@ -440,7 +440,7 @@ def polish_self_reply(text: str, max_chars: int = 90) -> str:
         return cleaned
 
     chunk = cleaned[: max_chars + 1]
-    for sep in ("。", "！", "？", "~", "…", "\n"):
+    for sep in ("。", "！", "？", "~", "…", ".", "!", "?", "\n"):
         idx = chunk.rfind(sep)
         if idx >= max_chars // 3:
             return chunk[: idx + 1].strip()
@@ -586,3 +586,109 @@ def _build_self_avatar_prompt_from_traits(traits: dict, identity: str, user_id: 
 {_format_voice_layer(user_id, traits)}
 
 {_SELF_CHAT_RULES.format(identity=identity)}"""
+
+def _resolve_twin_display_name(user_id: int) -> str:
+    from crud import get_onboarding_profile_by_user_id, get_plaza_card_by_profile_id
+
+    card = get_plaza_card_by_profile_id(f"user-{user_id}") or {}
+    public = card.get("public_card") or {}
+    if card.get("twinName") or public.get("name"):
+        return card.get("twinName") or public.get("name")
+
+    data = get_onboarding_profile_by_user_id(user_id) or {}
+    onboarding = data.get("onboarding") or {}
+    q = onboarding.get("questionnaire") or {}
+    return (
+        onboarding.get("twinName")
+        or onboarding.get("nickname")
+        or q.get("nickname")
+        or "校园孪生"
+    )
+
+
+def build_plaza_twin_system_prompt(user_id: int, lang: str = "zhHans", *, adaptive_lang: bool = False) -> str:
+    """把主人的 onboarding_skill / 蒸馏画像转成「广场陌生人聊天」system prompt。"""
+    from conversation_lang import twin_contextual_lang_rule
+    from skill_loader import (
+        _lang_rule,
+        build_user_twin_conversation_layer,
+        build_user_twin_safety_rules,
+        build_user_twin_system_prompt,
+        load_user_twin_skill,
+    )
+
+    twin_name = _resolve_twin_display_name(user_id)
+    skill = load_user_twin_skill(user_id)
+    if skill:
+        return build_user_twin_system_prompt(twin_name, skill, lang, adaptive_lang=adaptive_lang)
+
+    traits = get_user_distillation(user_id)
+    profile_lines = _format_onboarding_for_distillation(user_id)
+    summary = (traits or {}).get("summary") or profile_lines or f"你是{twin_name}，校园里的一个同学。"
+
+    lang_block = twin_contextual_lang_rule(lang) if adaptive_lang else _lang_rule(lang)
+    return "".join(
+        [
+            lang_block,
+            build_user_twin_safety_rules(lang),
+            build_user_twin_conversation_layer(twin_name, lang),
+            summary,
+            "\nStay in character. Do not output JSON.\n",
+        ]
+    )
+
+
+def build_self_chat_user_prompt(
+    message: str,
+    session_id: Optional[str] = None,
+    recent_messages: Optional[list] = None,
+    audience: str = "plaza",
+) -> str:
+    lines = ["Recent conversation:"]
+    for item in (recent_messages or [])[-6:]:
+        content = (item.get("content") or "").strip()
+        if not content:
+            continue
+        role = (item.get("role") or "").strip().lower()
+        label = "User" if role in ("user", "human") else "Twin"
+        lines.append(f"{label}: {content}")
+    lines.extend(
+        [
+            "",
+            f"User: {(message or '').strip()}",
+            "",
+            "Reply in character. Pick reply language from the full thread above — "
+            "match how the user is chatting; short acks like OK or ? should not force a switch.",
+        ]
+    )
+    return "\n".join(lines)
+
+
+async def generate_user_persona_reply(
+    user_id: int,
+    message: str,
+    audience: str = "plaza",
+    session_id: Optional[str] = None,
+    recent_messages: Optional[list] = None,
+    lang: str = "zhHans",
+) -> str:
+    from routes.ai import _call_llm
+
+    system_prompt = build_plaza_twin_system_prompt(user_id, lang, adaptive_lang=True)
+    user_prompt = build_self_chat_user_prompt(
+        message,
+        session_id,
+        recent_messages=recent_messages,
+        audience=audience,
+    )
+    traits = get_user_distillation(user_id)
+    budget = _resolve_reply_budget(user_id, traits)
+
+    reply, _provider = await _call_llm(
+        system=system_prompt,
+        user=user_prompt,
+        max_tokens=max(int(budget["max_tokens"]), 128),
+        temperature=0.62,
+    )
+    return polish_self_reply(reply, budget["max_reply_chars"])
+

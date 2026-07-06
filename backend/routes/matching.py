@@ -70,6 +70,7 @@ async def get_matches(
                     "tags": card.get("tags") or [],
                     "initials": card.get("initials") or "DT",
                     "colors": card.get("colors") or ["#6f5092", "#fcaad6"],
+                    "avatar": card.get("avatar") or "",
                 },
             }
         )

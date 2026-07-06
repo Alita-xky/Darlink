@@ -54,10 +54,13 @@ async def on_startup():
     _db.create_tables()
     _db.ensure_session_skill_column()
     _db.ensure_auth_columns()  # 认证系统改造：给 users/email_verifications 补新列
+    _db.ensure_community_comment_columns()
     from routes import persona as persona_routes
     from routes.ai import init_http_client
+    import community_store
     import skill_loader
     persona_routes.sync_personas()
+    community_store.ensure_community_seed_posts()
     await init_http_client()
     skill_loader.warm_cache()
 
@@ -106,7 +109,7 @@ async def index():
     return HTMLResponse("<h1>Darlink</h1><p>Front-end not found</p>")
 
 
-from routes import auth, persona, chat, profile, distill, ai, contextual_chat, user_onboarding, plaza, friends, matching
+from routes import auth, persona, chat, profile, distill, ai, contextual_chat, user_onboarding, plaza, friends, matching, community
 
 app.include_router(auth.router)
 app.include_router(persona.router)
@@ -119,6 +122,7 @@ app.include_router(user_onboarding.router)
 app.include_router(plaza.router)
 app.include_router(friends.router)
 app.include_router(matching.router)
+app.include_router(community.router)
 
 
 @app.get('/health')

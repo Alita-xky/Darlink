@@ -140,3 +140,65 @@ async def send_verification_code(email: str, code: str, lang: str = None) -> boo
     # 3) 都没配 → dev 模式
     log.warning("No email backend configured, dev mode. email=%s code=%s", email, code)
     return False
+
+def _reset_subject_and_body(code: str, lang: str = None):
+    if lang == "zhHant":
+        subject = "Darlink 重設密碼驗證碼"
+        title, greet, intro = "重設你的 Darlink 密碼", "你好，", "我們收到了重設密碼的請求。請使用以下驗證碼完成密碼重設："
+        label, expire, ignore, footer = "驗證碼", "此驗證碼 10 分鐘內有效，請勿洩露給他人。", "如果這不是你本人的操作，請忽略此郵件。", "此郵件由 Darlink 自動發送，請勿直接回覆。"
+    elif lang == "en":
+        subject = "Reset your Darlink password"
+        title, greet, intro = "Reset your Darlink password", "Hi,", "We received a request to reset your password. Use the verification code below to continue:"
+        label, expire, ignore, footer = "Verification Code", "This code expires in 10 minutes. Do not share it with anyone.", "If you didn't request this, please ignore this email.", "This email was sent automatically by Darlink. Please do not reply."
+    else:
+        subject = "Darlink 重置密码验证码"
+        title, greet, intro = "重置你的 Darlink 密码", "你好，", "我们收到了重置密码的请求。请使用以下验证码完成密码重置："
+        label, expire, ignore, footer = "验证码", "此验证码 10 分钟内有效，请勿泄露给他人。", "如果这不是你本人的操作，请忽略此邮件。", "此邮件由 Darlink 自动发送，请勿直接回复。"
+
+    html = (
+        f"<div style='font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:0 auto;padding:20px;'>"
+        f"<h1 style='color:#1a1a1a;font-size:24px;margin-bottom:20px;'>{title}</h1>"
+        f"<p style='color:#4a4a4a;font-size:16px;line-height:1.6;'>{greet}</p>"
+        f"<p style='color:#4a4a4a;font-size:16px;line-height:1.6;'>{intro}</p>"
+        f"<div style='background:#f5f5f5;border-radius:8px;padding:24px;margin:24px 0;text-align:center;'>"
+        f"<div style='color:#888;font-size:14px;margin-bottom:8px;'>{label}</div>"
+        f"<div style='font-size:32px;font-weight:bold;letter-spacing:0.5em;font-family:monospace;color:#1a1a1a;'>{code}</div>"
+        f"</div>"
+        f"<p style='color:#888;font-size:14px;line-height:1.6;'>{expire}</p>"
+        f"<p style='color:#888;font-size:14px;line-height:1.6;'>{ignore}</p>"
+        f"<hr style='border:none;border-top:1px solid #eee;margin:32px 0;'>"
+        f"<p style='color:#aaa;font-size:12px;'>{footer}</p>"
+        f"</div>"
+    )
+    return subject, html
+
+
+async def send_password_reset_code(email: str, code: str, lang: str = None) -> bool:
+    subject, html = _reset_subject_and_body(code, lang)
+    if _smtp_configured():
+        try:
+            await asyncio.to_thread(_smtp_send_sync, email, subject, html)
+            log.info("SMTP password reset code sent to %s", email)
+            return True
+        except Exception as e:
+            log.exception("SMTP password reset send failed: %s", e)
+            return False
+    if RESEND_API_KEY:
+        payload = {"from": RESEND_FROM, "to": [email], "subject": subject, "html": html}
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                r = await client.post(
+                    "https://api.resend.com/emails",
+                    headers={"Authorization": f"Bearer {RESEND_API_KEY}"},
+                    json=payload,
+                )
+                if r.status_code >= 300:
+                    log.error("Resend password reset failed: %s %s", r.status_code, r.text[:300])
+                    return False
+                return True
+        except Exception as e:
+            log.exception("Resend password reset exception: %s", e)
+            return False
+    log.warning("No email backend configured, dev mode. email=%s code=%s", email, code)
+    return False
+

@@ -2,9 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="darlink-release-id" content="20260704-restore-2">
+  <meta name="darlink-release-id" content="20260705-match-self-node-router-1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Darlink App Flow</title>
+  <script>
+    (function () {
+      var RELEASE = "20260705-match-self-node-router-1";
+      window.__DARLINK_RELEASE = RELEASE;
+      window.addEventListener("pageshow", function (event) {
+        if (!event.persisted) return;
+        var url = new URL(window.location.href);
+        if (url.searchParams.get("darlink_bf") === RELEASE) return;
+        url.searchParams.set("darlink_bf", RELEASE);
+        window.location.replace(url.toString());
+      });
+    })();
+  </script>
   <style>
     html,
     body {
@@ -97,8 +110,8 @@
   <button id="profileHotspot" type="button" aria-label="Open profile" hidden></button>
   <div id="flowStatus" class="sr-status" aria-live="polite"></div>
   <!-- CACHE_BUST: bump questionnaire-data + prototype-engine together -->
-  <script src="/questionnaire-data.js?v=20260704-restore-2"></script>
-  <script src="/prototype-engine.js?v=20260704-restore-2-matching"></script>
-  <script src="/flow-router.js?v=20260704-restore-2"></script>
+  <script src="/questionnaire-data.js?v=20260705-match-network-copy-1"></script>
+  <script src="/prototype-engine.js?v=20260705-match-self-node-router-1"></script>
+  <script src="/flow-router.js?v=20260705-home-refine-self-chat-1"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text, ForeignKey, JSON, UniqueConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from db import Base
@@ -73,3 +73,78 @@ class FriendRequest(Base):
     message = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class CommunityPost(Base):
+    __tablename__ = 'community_posts'
+    id = Column(Integer, primary_key=True)
+    source = Column(String(16), default='user', index=True)
+    preset_key = Column(String(64), unique=True, nullable=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True, index=True)
+    author_name = Column(String(128))
+    author_title = Column(String(256), nullable=True)
+    author_avatar = Column(String(16), nullable=True)
+    badge = Column(String(64), nullable=True)
+    body = Column(Text)
+    tags = Column(JSON, nullable=True)
+    image_url = Column(Text, nullable=True)
+    image_alt = Column(Text, nullable=True)
+    sort_rank = Column(Integer, default=0, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    user = relationship('User')
+
+
+class CommunityLike(Base):
+    __tablename__ = 'community_likes'
+    __table_args__ = (UniqueConstraint('post_id', 'user_id', name='uq_community_like_post_user'),)
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey('community_posts.id'), index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class CommunityComment(Base):
+    __tablename__ = 'community_comments'
+    id = Column(Integer, primary_key=True)
+    post_id = Column(Integer, ForeignKey('community_posts.id'), index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True, index=True)
+    author_type = Column(String(16), default='user', index=True)
+    author_name = Column(String(128), nullable=True)
+    author_title = Column(String(256), nullable=True)
+    author_avatar = Column(Text, nullable=True)
+    badge = Column(String(64), nullable=True)
+    meta = Column(JSON, nullable=True)
+    body = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+
+class PlazaClickStat(Base):
+    __tablename__ = 'plaza_click_stats'
+    __table_args__ = (UniqueConstraint('item_type', 'item_id', name='uq_plaza_click_item'),)
+    id = Column(Integer, primary_key=True)
+    item_type = Column(String(32), nullable=False, index=True)
+    item_id = Column(String(128), nullable=False, index=True)
+    name = Column(String(256), default='')
+    meta = Column(String(512), default='')
+    count = Column(Integer, default=0)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class DmConversation(Base):
+    __tablename__ = 'dm_conversations'
+    __table_args__ = (UniqueConstraint('user_low_id', 'user_high_id', name='uq_dm_conversation_pair'),)
+    id = Column(Integer, primary_key=True)
+    user_low_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    user_high_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class DmMessage(Base):
+    __tablename__ = 'dm_messages'
+    id = Column(Integer, primary_key=True)
+    conversation_id = Column(Integer, ForeignKey('dm_conversations.id'), nullable=False, index=True)
+    sender_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    text = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)

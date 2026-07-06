@@ -1,8 +1,16 @@
 from fastapi import APIRouter
+from pydantic import BaseModel, Field
 
 import crud
 
 router = APIRouter(prefix="/api/plaza")
+
+
+class PlazaClickRequest(BaseModel):
+    id: str = Field(..., min_length=1, max_length=128)
+    type: str = Field(..., min_length=1, max_length=32)
+    name: str = Field(default="", max_length=256)
+    meta: str = Field(default="", max_length=512)
 
 
 def _real_card(item: dict) -> dict:
@@ -18,6 +26,7 @@ def _real_card(item: dict) -> dict:
         "tags": public.get("tags") or [],
         "initials": public.get("initials") or "DT",
         "colors": public.get("colors") or ["#6f5092", "#fcaad6"],
+        "avatar": public.get("avatar") or "",
     }
 
 
@@ -26,6 +35,23 @@ async def plaza_feed():
     real_rows = crud.list_published_plaza_users()
     real_users = [_real_card(item) for item in real_rows]
     return {"ok": True, "real_users": real_users, "demo_users": []}
+
+
+@router.get("/leaderboard")
+async def plaza_leaderboard(limit: int = 3):
+    items = crud.get_plaza_leaderboard(limit)
+    return {"ok": True, "items": items}
+
+
+@router.post("/click")
+async def plaza_click(req: PlazaClickRequest):
+    allowed_types = {"user_twin", "celebrity", "module"}
+    item_type = (req.type or "").strip()
+    item_id = (req.id or "").strip()
+    if item_type not in allowed_types or not item_id:
+        return {"ok": False, "reason": "invalid_item"}
+    row = crud.increment_plaza_click(item_type, item_id, req.name or "", req.meta or "")
+    return {"ok": True, "item": row}
 
 
 @router.get("/card/{profile_id}")
@@ -51,6 +77,7 @@ async def plaza_card(profile_id: str):
         "tags": public.get("tags") or [],
         "initials": public.get("initials") or "DT",
         "colors": public.get("colors") or ["#6f5092", "#fcaad6"],
+        "avatar": public.get("avatar") or "",
         "cards": card.get("cards") or onboarding.get("cards") or [],
         "school": card.get("school"),
         "grade": card.get("grade"),

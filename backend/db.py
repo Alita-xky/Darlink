@@ -43,3 +43,24 @@ def ensure_auth_columns():
                 conn.exec_driver_sql("ALTER TABLE email_verifications ADD COLUMN code VARCHAR(6)")
             if "expires_at" not in ev_cols:
                 conn.exec_driver_sql("ALTER TABLE email_verifications ADD COLUMN expires_at DATETIME")
+
+
+def ensure_community_comment_columns():
+    """Backfill AI author metadata columns for existing SQLite deployments."""
+    with engine.begin() as conn:
+        rows = conn.exec_driver_sql("PRAGMA table_info(community_comments)").fetchall()
+        cols = {row[1] for row in rows}
+        if not cols:
+            return
+        if "author_type" not in cols:
+            conn.exec_driver_sql("ALTER TABLE community_comments ADD COLUMN author_type VARCHAR(16) DEFAULT 'user'")
+        if "author_name" not in cols:
+            conn.exec_driver_sql("ALTER TABLE community_comments ADD COLUMN author_name VARCHAR(128)")
+        if "author_title" not in cols:
+            conn.exec_driver_sql("ALTER TABLE community_comments ADD COLUMN author_title VARCHAR(256)")
+        if "author_avatar" not in cols:
+            conn.exec_driver_sql("ALTER TABLE community_comments ADD COLUMN author_avatar TEXT")
+        if "badge" not in cols:
+            conn.exec_driver_sql("ALTER TABLE community_comments ADD COLUMN badge VARCHAR(64)")
+        if "meta" not in cols:
+            conn.exec_driver_sql("ALTER TABLE community_comments ADD COLUMN meta JSON")

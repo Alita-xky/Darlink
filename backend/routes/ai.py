@@ -131,6 +131,34 @@ def _is_step3_romance_phase(phase: Any) -> bool:
     return str(phase or "") in {"step3-romance"}
 
 
+BLINDBOX_GUESS_PHASES = frozenset({"celebrity-blindbox-guess", "celebrity-yau-guess"})
+BLINDBOX_GUESS_PROFILE_IDS = frozenset({"jackie-chan", "elon-musk", "shing-tung-yau"})
+
+
+def _is_yau_guess_phase(phase: Any) -> bool:
+    return str(phase or "") == "celebrity-yau-guess"
+
+
+def _is_blindbox_guess_phase(phase: Any) -> bool:
+    return str(phase or "") in BLINDBOX_GUESS_PHASES
+
+
+def _blindbox_guess_profile_id(req: XiaodaChatRequest) -> str:
+    known = req.known_answers or {}
+    profile_id = str(known.get("profile_id") or "").strip()
+    if profile_id in BLINDBOX_GUESS_PROFILE_IDS:
+        return profile_id
+    if _is_yau_guess_phase(req.phase):
+        return "shing-tung-yau"
+    return "jackie-chan"
+
+
+def _blindbox_guess_system_prompt(profile_id: str) -> str:
+    from skill_loader import build_blindbox_guess_system_prompt
+
+    return build_blindbox_guess_system_prompt(profile_id)
+
+
 def _step3_guided_prompt(lang: str, topic: str) -> str:
     lang_lock = _ui_language_lock(lang)
     if lang == "en":
@@ -187,8 +215,13 @@ def _ui_language_lock(lang: str) -> str:
 
 
 
-def _system_prompt(lang: str, phase: Any) -> str:
+def _system_prompt(lang: str, phase: Any, profile_id: str = "") -> str:
     lang_lock = _ui_language_lock(lang)
+    if _is_blindbox_guess_phase(phase):
+        pid = (profile_id or "").strip()
+        if pid not in BLINDBOX_GUESS_PROFILE_IDS:
+            pid = "shing-tung-yau" if _is_yau_guess_phase(phase) else "jackie-chan"
+        return _blindbox_guess_system_prompt(pid)
     if _is_step3_romance_phase(phase):
         return _step3_guided_prompt(lang, "戀愛對象" if lang == "zhHant" else "恋爱对象" if lang != "en" else "romance partner")
     if _is_step3_social_phase(phase):
@@ -267,7 +300,16 @@ def _chat_user_prompt(req: XiaodaChatRequest) -> str:
     )
     known = json.dumps(req.known_answers or {}, ensure_ascii=False)
     persona_note = ""
-    if _is_persona_phase(req.phase):
+    if _is_blindbox_guess_phase(req.phase):
+        profile_id = _blindbox_guess_profile_id(req)
+        anchor = str((req.known_answers or {}).get("anchor_script") or "")
+        lang_note = "Traditional Chinese" if profile_id == "shing-tung-yau" else "Simplified Chinese"
+        persona_note = (
+            f"\nBlindbox guess chat ({profile_id}): reply to user_message first (1-2 short sentences, {lang_note}). "
+            f"Round anchor spirit (do not quote verbatim): {anchor}. "
+            "Never output a single character or nonsense fragment.\n"
+        )
+    elif _is_persona_phase(req.phase):
         persona_note = (
             "\nPersona-distillation rules: acknowledge the user's latest message first; "
             "if next_question is provided, weave it in naturally instead of quoting it; "
@@ -292,18 +334,33 @@ def _chat_user_prompt(req: XiaodaChatRequest) -> str:
     )
 
 
+def _questionnaire_for_intent(questionnaire: dict, intent: str) -> dict:
+    """Keep step-1 fields plus only the current path's step-3 sync payload."""
+    sync_map = {"study": "studySync", "social": "socialSync", "romance": "romanceSync"}
+    normalized = (intent or "").strip().lower()
+    keep = sync_map.get(normalized, "socialSync")
+    base = dict(questionnaire or {})
+    filtered = {k: v for k, v in base.items() if not str(k).endswith("Sync")}
+    if keep in base and base[keep]:
+        filtered[keep] = base[keep]
+    return filtered
+
+
 def _analysis_prompt(req: XiaodaAnalyzeRequest) -> str:
     lang_rule = {
         "en": "Write all card text in English.",
         "zhHant": "所有卡片文字使用繁體中文。",
     }.get(req.lang, "所有卡片文字使用简体中文。")
+    scoped_questionnaire = _questionnaire_for_intent(req.questionnaire, req.intent)
     return (
         f"{lang_rule}\n"
         "Based on the following onboarding data, generate exactly 3 persona profile cards for Darlink.\n"
         "Return strict JSON only with this shape: {\"cards\":[{\"label\":\"...\",\"title\":\"...\",\"body\":\"...\",\"tags\":[\"...\",\"...\"]}]}.\n"
-        "Do not include markdown fences or extra explanation.\n\n"
+        "Do not include markdown fences or extra explanation.\n"
+        f"Generate cards ONLY for intent={req.intent}. Do not reuse or blend content from other paths "
+        "(study/social/romance). Ignore any other-path sync data even if present.\n\n"
         f"intent: {req.intent}\n"
-        f"questionnaire: {json.dumps(req.questionnaire, ensure_ascii=False)}\n"
+        f"questionnaire: {json.dumps(scoped_questionnaire, ensure_ascii=False)}\n"
         f"persona: {json.dumps(req.persona, ensure_ascii=False)}"
     )
 
@@ -853,13 +910,53 @@ async def _sse_generator(
 @router.post("/chat")
 async def ai_chat(req: XiaodaChatRequest):
     try:
-        reply, provider = await _call_llm(
-            system=_system_prompt_prefix(req.lang) + _system_prompt(req.lang, req.phase),
-            user=_chat_user_prompt(req),
-            max_tokens=int(os.getenv("AI_CHAT_MAX_TOKENS", "1024")),
-            temperature=float(os.getenv("AI_CHAT_TEMPERATURE", "0.68")),
-        )
-        reply = await _ensure_reply_language(reply, req.lang)
+        blindbox_guess = _is_blindbox_guess_phase(req.phase)
+        profile_id = _blindbox_guess_profile_id(req) if blindbox_guess else ""
+        system = _system_prompt_prefix(req.lang) + _system_prompt(req.lang, req.phase, profile_id)
+        user = _chat_user_prompt(req)
+        max_tokens = 200 if blindbox_guess else int(os.getenv("AI_CHAT_MAX_TOKENS", "1024"))
+        temperature = 0.52 if blindbox_guess else float(os.getenv("AI_CHAT_TEMPERATURE", "0.68"))
+        attempts = 4 if blindbox_guess else 1
+        reply = ""
+        provider = "volcengine-ark"
+        last_exc: Optional[Exception] = None
+        for attempt in range(attempts):
+            try:
+                reply, provider = await _call_llm(
+                    system=system,
+                    user=user,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                )
+                if not reply or not reply.strip():
+                    last_exc = RuntimeError("empty_llm_response")
+                elif blindbox_guess:
+                    from skill_loader import YAU_SMS_SIGNATURE, min_blindbox_guess_reply_len, polish_blindbox_guess_reply
+
+                    polished = polish_blindbox_guess_reply(profile_id, reply)
+                    body = polished.replace(YAU_SMS_SIGNATURE, "").strip()
+                    if profile_id != "shing-tung-yau":
+                        body = polished.strip()
+                    if len(body) < min_blindbox_guess_reply_len(profile_id):
+                        last_exc = RuntimeError("short_blindbox_guess_reply")
+                    else:
+                        reply = polished
+                        break
+                else:
+                    break
+            except RuntimeError as exc:
+                last_exc = exc
+            if attempt < attempts - 1:
+                await asyncio.sleep(0.7 * (attempt + 1))
+        if not reply or not reply.strip():
+            raise last_exc or RuntimeError("empty_llm_response")
+        if not blindbox_guess:
+            reply = await _ensure_reply_language(reply, req.lang)
+        elif profile_id == "shing-tung-yau":
+            from skill_loader import YAU_SMS_SIGNATURE, polish_blindbox_guess_reply
+
+            if YAU_SMS_SIGNATURE not in reply:
+                reply = polish_blindbox_guess_reply(profile_id, reply)
         return {"ok": True, "provider": provider, "reply": reply, "normalized_answer": req.answer}
     except RuntimeError as exc:
         reason = str(exc)

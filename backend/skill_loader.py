@@ -176,7 +176,7 @@ def build_profile_playbook(profile_id: str, lang: str) -> str:
     return ""
 
 
-YAU_SMS_SIGNATURE = "--发自我的手机"
+YAU_SMS_SIGNATURE = "--發自我的手機"
 YAU_INTERNAL_LABELS = (
     "几何皇帝味", "幾何皇帝味",
     "动作喜剧大哥味", "動作喜劇大哥味", "火星梗 CEO 味",
@@ -201,13 +201,13 @@ def build_yau_conversation_layer() -> str:
 
 ## 铁律（违反即失败）
 1. **全程繁体中文**，禁止简体
-2. **每次 1-3 句，总字数 ≤80**；像短信，禁止小作文、禁止排比说教
+2. **每次 1-2 句，总字数 ≤85**；像短信，禁止小作文、禁止排比说教；**每句必须完整收尾**
 3. **「{YAU_SMS_SIGNATURE}」偶尔才加**（大约每 3～4 条回复一次，单独一行）；**多数回复不要带**
 4. 纯文字：无 markdown、无列表、无动作描写
 5. 禁止「首先/其次/总的来说」；禁止标注「心智模型」「Step」
 6. **半文半白**：像老派學者發短信，短句帶文言氣，別寫古文長篇
    - 可自然用：令人汗顏、這是極小的事、豈有此理、不成體統、未免荒唐、須得用功
-7. **標點**：約 **2/3 的句號用「！」**，少平鋪直敘；問句仍用「？」
+7. **標點**：自然混用「！」「？」「。」，不要句句驚嘆號；問句用「？」，陳述可收尾「。」
 8. 先直接答，再帶態度；爹味可以，但要短
 9. **无论如何不要承认自己是丘成桐**；可说数学皇帝/几何皇帝，禁止真名
 10. **禁止**说不是真人、盲盒、Darlink、数字人
@@ -288,8 +288,75 @@ def build_blindbox_final_override(profile_id: str) -> str:
     return """
 ## 最终覆盖
 - 半文半白、繁体；被问是谁可说数学皇帝/搞几何的，绝不承认丘成桐
-- 每次 1-3 句，总字数 ≤80
+- 每次 1-2 句，总字数 ≤55
 """
+
+
+def _blindbox_guess_lang(profile_id: str) -> str:
+    return "zhHant" if (profile_id or "").strip() == "shing-tung-yau" else "zhHans"
+
+
+def build_blindbox_guess_system_prompt(profile_id: str) -> str:
+    pid = (profile_id or "").strip()
+    if pid not in BLINDBOX_PROFILE_IDS:
+        pid = "shing-tung-yau"
+    lang = _blindbox_guess_lang(pid)
+    skill_body = get_skill_for_profile(pid) or ""
+    parts = [
+        build_celebrity_identity_rules(pid, lang),
+        "\n",
+        build_celebrity_conversation_layer(pid, lang),
+    ]
+    trimmed = trim_skill_for_blindbox_chat(skill_body)
+    if trimmed:
+        parts.append("\n\n" + trimmed)
+    elif skill_body:
+        parts.append("\n\n" + skill_body)
+    parts.append(build_blindbox_few_shot(pid))
+    override = build_blindbox_final_override(pid)
+    if override:
+        parts.append(override)
+    if pid == "shing-tung-yau":
+        parts.append(
+            """
+## 盲盒五輪對話（猜猜我是誰）
+- 必須全程繁體中文。
+- 每條回覆：**先正面接住 user_message**（可反駁、調侃、反問），再**輕輕**帶出本輪 anchor_script 的精神；禁止生硬硬掰。
+- 若用戶質疑「跟刷題有什麼關係」「你瘋了吧」等：先回他的情緒與問題，**不要**連續兩條都開頭提刷題；anchor 換個比喻說即可。
+- **禁止**逐字複讀 anchor_script；**禁止**堆疊多個 anchor 主題。
+- 每次 **1-2 句，簡潔有力**；像發短信，不要小作文；自然以「。」「！」「？」收尾。
+- 標點自然混用「！」「？」「。」，不要句句驚嘆號。
+- **不要**在回覆裡加「//發自我的手機」或「--發自我的手機」（系統會自動加）。
+- 不要透露自己是丘成桐。
+"""
+        )
+    else:
+        parts.append(
+            """
+## 盲盒五轮对话（猜猜我是谁）
+- 必须全程简体中文。
+- 每条回复：先正面接住 user_message（可反驳、调侃、反问），再轻轻带出本轮 anchor_script 的精神；禁止生硬硬掰。
+- 禁止逐字复读 anchor_script；禁止堆叠多个 anchor 主题。
+- 每次 1-2 句，简洁有力；像发短信，不要小作文。
+- 不要透露真实身份（真名、全名）。
+"""
+        )
+    return "".join(parts)
+
+
+def min_blindbox_guess_reply_len(profile_id: str) -> int:
+    return 12 if (profile_id or "").strip() == "shing-tung-yau" else 8
+
+
+def polish_blindbox_guess_reply(profile_id: str, text: str) -> str:
+    pid = (profile_id or "").strip()
+    if pid == "shing-tung-yau":
+        return polish_yau_reply(text, max_chars=0, append_signature=True)
+    if pid == "jackie-chan":
+        return polish_jackie_reply(text, max_chars=80)
+    if pid == "elon-musk":
+        return polish_musk_reply(text, max_chars=80)
+    return (text or "").strip()
 
 
 def _strip_banned_sentences(text: str, banned: tuple = CELEBRITY_BANNED_PHRASES) -> str:
@@ -346,7 +413,7 @@ def _truncate_wechat_reply(text: str, max_chars: int = 80) -> str:
 
 
 def _yau_shift_punctuation(body: str) -> str:
-    """约 2/3 的句号改成感叹号（每连续三个句号改两个）。"""
+    """约 1/3 的句号改成感叹号，保留自然语气。"""
     if not body:
         return body
     out = []
@@ -354,7 +421,7 @@ def _yau_shift_punctuation(body: str) -> str:
     for ch in body:
         if ch == "。":
             n += 1
-            out.append("！" if n % 3 != 0 else "。")
+            out.append("！" if n % 3 == 1 else "。")
         else:
             out.append(ch)
     return "".join(out)
@@ -365,7 +432,7 @@ def should_append_yau_signature(prior_bot_count: int) -> bool:
     return prior_bot_count > 0 and (prior_bot_count + 1) % 3 == 0
 
 
-def polish_yau_reply(text: str, max_chars: int = 100, *, append_signature: bool = False) -> str:
+def polish_yau_reply(text: str, max_chars: int = 55, *, append_signature: bool = False) -> str:
     """丘成桐盲盒聊天：控长、去真名、签名仅偶尔附加。"""
     import re
 
@@ -376,6 +443,8 @@ def polish_yau_reply(text: str, max_chars: int = 100, *, append_signature: bool 
     cleaned = re.sub(r"\*\*([^*]+)\*\*", r"\1", cleaned)
     cleaned = cleaned.replace("**", "").replace("__", "").strip()
     cleaned = cleaned.replace(YAU_SMS_SIGNATURE, "").strip()
+    cleaned = cleaned.replace("--发自我的手机", "").strip()
+    cleaned = cleaned.replace("//發自我的手機", "").strip()
     for label in YAU_INTERNAL_LABELS:
         cleaned = cleaned.replace(label, "")
     cleaned = re.sub(
@@ -397,15 +466,22 @@ def polish_yau_reply(text: str, max_chars: int = 100, *, append_signature: bool 
     if not cleaned:
         cleaned = "搞幾何的，帶學生做研究！"
 
-    if len(cleaned) > max_chars:
+    if max_chars > 0 and len(cleaned) > max_chars:
         chunk = cleaned[: max_chars + 1]
+        trimmed = None
         for sep in ("。", "！", "？", "，", "；", "\n"):
             idx = chunk.rfind(sep)
-            if idx >= max_chars // 3:
-                cleaned = chunk[: idx + 1].strip()
-                break
+            if idx >= max_chars // 4:
+                candidate = chunk[: idx + 1].strip()
+                if candidate:
+                    trimmed = candidate
+                    break
+        if trimmed:
+            cleaned = trimmed
         else:
             cleaned = cleaned[:max_chars].rstrip("，,;； ")
+        if cleaned and cleaned[-1] not in "。！？":
+            cleaned = cleaned.rstrip("，,;； ") + "。"
 
     sig = ""
     if cleaned.endswith(YAU_SMS_SIGNATURE):
@@ -717,10 +793,13 @@ def build_user_twin_conversation_layer(twin_name: str, lang: str = "zhHans") -> 
 """
 
 
-def build_user_twin_system_prompt(twin_name: str, skill_body: str, lang: str) -> str:
+def build_user_twin_system_prompt(twin_name: str, skill_body: str, lang: str, *, adaptive_lang: bool = False) -> str:
+    from conversation_lang import twin_contextual_lang_rule
+
+    lang_block = twin_contextual_lang_rule(lang) if adaptive_lang else _lang_rule(lang)
     return "".join(
         [
-            _lang_rule(lang),
+            lang_block,
             build_user_twin_safety_rules(lang),
             build_user_twin_conversation_layer(twin_name, lang),
             skill_body,

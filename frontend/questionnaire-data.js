@@ -1,5 +1,5 @@
 window.DARLINK_QUESTIONNAIRE = {
-  version: "20260704-step3-chat-10",
+  version: "20260704-restore-2-final",
   registration: [
     { id: "nickname", label: "你的昵称？", type: "text", required: true },
     { id: "school", label: "你来自哪所高校？", type: "text", required: true },

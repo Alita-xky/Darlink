@@ -224,11 +224,7 @@ def _build_system_prompt(req: ContextualChatReq) -> str:
 
     user_id = _parse_user_twin_id(profile_id, req.profile_type)
     if user_id is not None:
-        prompt = distillation.build_self_avatar_prompt(user_id, audience="plaza")
-        if prompt:
-            lang = _lang_rule(req.lang)
-            return f"{lang}\n{prompt}" if lang else prompt
-        return _user_twin_fallback_prompt(req, name)
+        return distillation.build_plaza_twin_system_prompt(user_id, req.lang)
 
     persona = known.get("persona") or f"You are {name}, a Darlink campus digital human twin."
 
@@ -370,6 +366,7 @@ async def contextual_chat(req: ContextualChatReq, background_tasks: BackgroundTa
                 audience="plaza",
                 session_id=session_id,
                 recent_messages=req.recent_messages,
+                lang=req.lang,
             )
             provider = "volcengine-ark-user-persona"
         else:
@@ -428,6 +425,7 @@ async def contextual_chat_stream(req: ContextualChatReq):
                 audience="plaza",
                 session_id=session_id,
                 recent_messages=req.recent_messages,
+                lang=req.lang,
             )
             if session_id and user:
                 await asyncio.to_thread(_persist_bot_message, session_id, reply)
